@@ -1,5 +1,4 @@
 var gulp = require('gulp');
-var babel = require('gulp-babel');
 var watch = require('gulp-watch');
 var del = require('del');
 var browserSync = require('browser-sync').create();
