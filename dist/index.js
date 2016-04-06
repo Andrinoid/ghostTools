@@ -44,7 +44,7 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(5);
+	module.exports = __webpack_require__(7);
 
 
 /***/ },
@@ -434,25 +434,7 @@
 	var ALERT_CSS = exports.ALERT_CSS = "\n        /* Alert styles */\n        .js_alerts {\n            position: absolute;\n            top: 0;\n            left: 0;\n            bottom: 0;\n            right: 0;\n            pointer-events: none;\n        }\n        .js_alerts .js_dialog {\n            pointer-events: all;\n        }\n        .js_alerts .js_alert .js_modal {\n            overflow-y: auto;\n            position: static;\n        }\n        .js_alerts .js_alert .modal-content {\n            padding: 20px;\n            margin: 20px 0;\n            border: 1px solid #eeeeee;\n            border-left-width: 5px;\n            border-radius: 3px;\n            font: inherit;\n        }\n        .js_alerts .js_success .modal-content{\n            border-left-color: #5bc0de;\n        }\n        .js_alerts .js_danger .modal-content{\n            border-left-color: #d9534f;\n        }\n        .js_alerts .js_info .modal-content{\n            border-left-color: #f0ad4e;\n        }\n\n        ";
 
 /***/ },
-/* 5 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var _alert = __webpack_require__(1);
-	
-	var _alert2 = _interopRequireDefault(_alert);
-	
-	var _modal = __webpack_require__(6);
-	
-	var _modal2 = _interopRequireDefault(_modal);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	window.Alert = _alert2.default;
-	window.Modal = _modal2.default;
-
-/***/ },
+/* 5 */,
 /* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -612,6 +594,22 @@
 	
 	exports.default = Modal;
 
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _alert = __webpack_require__(1);
+	
+	var _alert2 = _interopRequireDefault(_alert);
+	
+	var _modal = __webpack_require__(6);
+	
+	var _modal2 = _interopRequireDefault(_modal);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 /***/ }
 /******/ ]);
-//# sourceMappingURL=example.js.map
+//# sourceMappingURL=index.js.map

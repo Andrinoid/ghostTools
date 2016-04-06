@@ -5,14 +5,16 @@
 </head>
 <body>
 hi
-<button>test</button>
-
+<button id="alertBtn">test Alert</button>
+<button id="modalBtn">test modal</button>
 <script src="./dist/example.js"></script>
 <script>
 
-
-    var btn = document.querySelector('button');
+    var btn = document.querySelector('#alertBtn');
     btn.onclick = function() {new Alert('danger', 'hello'); };
+
+    var btn = document.querySelector('#modalBtn');
+    btn.onclick = function() {new Modal({title: 'hello', message: 'lorem ipsum'}); };
 
 </script>
 </body>
