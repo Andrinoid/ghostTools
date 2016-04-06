@@ -2,13 +2,14 @@
   "name": "jsmodal",
   "version": "1.0.0",
   "description": "frontend tools with batteries included for rapid development",
-  "main": "./dist/modal.js",
+  "main": "./dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "modal",
-    "dialog"
+    "dialog",
+    "alert"
   ],
   "repository": {
     "type": "git",
