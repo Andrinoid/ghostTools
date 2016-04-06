@@ -1,6 +1,6 @@
 {
-  "name": "jsmodal",
-  "version": "1.0.0",
+  "name": "ghostTools",
+  "version": "1.0.4",
   "description": "frontend tools with batteries included for rapid development",
   "main": "./dist/index.js",
   "scripts": {
@@ -18,6 +18,8 @@
   "author": "Andri Birgisson",
   "license": "MIT",
   "dependencies": {
+  },
+  "devDependencies": {
     "babel-core": "^6.7.4",
     "babel-loader": "^6.2.4",
     "babel-preset-es2015": "^6.6.0",
@@ -28,8 +30,5 @@
     "vinyl-named": "^1.1.0",
     "webpack": "^1.12.14",
     "webpack-stream": "^3.1.0"
-  },
-  "devDependencies": {
-    "babel-preset-es2015": "^6.6.0"
   }
 }
