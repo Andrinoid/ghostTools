@@ -49,7 +49,7 @@ class Alert {
         this.__proto__.instances.push(this);
         this.buildTemplate();
         this._injectTemplate();
-        if (this.defaults.autoClose) this.autoClose();
+        if (this.defaults.timer) this.autoClose();
 
         this._injectStyles();
 
@@ -58,7 +58,7 @@ class Alert {
     autoClose() {
         setTimeout(() => {
             this.close();
-        }, this.defaults.autoCloseTime);
+        }, this.defaults.timer);
     }
 
     buildTemplate() {
