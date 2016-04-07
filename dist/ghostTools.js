@@ -357,7 +357,6 @@ var Alert = function () {
             size: 'large', //large small
             closeOthers: false,
             timer: 3000,
-
             title: '',
             onClose: function onClose() {},
             onOpen: function onOpen() {}

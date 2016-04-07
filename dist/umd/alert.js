@@ -46,9 +46,8 @@ var Alert = function () {
             customClass: 'js_alert',
             withBackdrop: false,
             size: 'large', //large small
-            closeOthers: 3,
-            timer: false,
-
+            closeOthers: false,
+            timer: 3000,
             title: '',
             onClose: function onClose() {},
             onOpen: function onOpen() {}

@@ -349,7 +349,6 @@ class Alert {
             size: 'large',//large small
             closeOthers: false,
             timer: 3000,
-
             title: '',
             onClose: function () {
             },
