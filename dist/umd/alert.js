@@ -129,7 +129,6 @@ var Alert = function () {
                 var max = this.defaults.closeOthers;
                 if (this.__proto__.instances.length > max) {
                     this.__proto__.instances[this.__proto__.instances.length - 1]._close();
-                    this.__proto__.instances.pop();
                 }
             } else if (this.defaults.closeOthers && typeof this.defaults.closeOthers === 'boolean') {
                 this.__proto__.closeAll();
@@ -146,7 +145,7 @@ var Alert = function () {
                 Utils.fadeOutRemove(this.backdrop);
             }
             Utils.setClass(this.chainDialog, 'fadeOutTop');
-
+            this.__proto__.instances.pop();
             setTimeout(function () {
                 _this3.modal.remove();
                 Utils.removeClass(document.body, 'modal-mode');
