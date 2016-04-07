@@ -1,4 +1,4 @@
-import {normalizeElement} from './utils';
+import Utils from './utils';
 
 /**
  * ------------------------------------------------------------------------
@@ -104,7 +104,7 @@ class Elm {
     }
 
     inject(to) {
-        let parent = normalizeElement(to);
+        let parent = Utils.normalizeElement(to);
         parent.appendChild(this.element);
     }
 

@@ -1,8 +1,8 @@
 {
   "name": "ghostTools",
-  "version": "1.0.4",
+  "version": "1.1.1",
   "description": "frontend tools with batteries included for rapid development",
-  "main": "./dist/index.js",
+  "main": "./dist/npm",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -18,6 +18,7 @@
   "author": "Andri Birgisson",
   "license": "MIT",
   "dependencies": {
+    "gulp-concat": "^2.6.0"
   },
   "devDependencies": {
     "babel-core": "^6.7.4",
@@ -26,9 +27,20 @@
     "browser-sync": "^2.11.2",
     "del": "^2.2.0",
     "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-delete-lines": "0.0.7",
     "gulp-watch": "^4.3.5",
     "vinyl-named": "^1.1.0",
     "webpack": "^1.12.14",
     "webpack-stream": "^3.1.0"
+  },
+  "jspm": {
+    "main": "js/ghostTools",
+    "ignore": [
+      "dist/npm"
+    ],
+    "directories": {
+      "lib": "dist"
+    }
   }
 }
