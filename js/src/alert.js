@@ -1,79 +1,75 @@
 import Utils from './utils';
 import Elm from './element';
 
-const Modalstyles = `
-        /* Modal styles */
-         body.modal-mode {
-             overflow: hidden
-         }
-         .modal-body,
-         .modal-title {
+const Alertsyles = `
+         .js_alerts .modal-body,
+         .js_alerts .modal-title {
              font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
              line-height: 1.42857143;
              color: #333
          }
-         .js_modal,
-         .modal-backdrop {
+         .js_alerts .js_modal,
+         .js_alerts .modal-backdrop {
              position: fixed;
              top: 0;
              right: 0;
              bottom: 0;
              left: 0
          }
-         .modal-backdrop {
+         .js_alerts .modal-backdrop {
              z-index: 1040;
              background-color: #000;
              opacity: .5
          }
 
-         .js_modal {
+         .js_alerts .js_modal {
              z-index: 10000;
              overflow-y: scroll;
              -webkit-overflow-scrolling: touch;
              outline: 0
          }
-         .js_dialog {
+         .js_alerts .js_dialog {
              position: relative;
              width: auto;
              margin: 10px
          }
-         .modal-header .close {
+         .js_alerts .modal-header .close {
              margin-top: -2px;
              position: static;
              height: 30px;
          }
-         .modal-theme-blue .close {
+         .js_alerts .modal-theme-blue .close {
              text-shadow: none;
              opacity: 1;
              font-size: 31px;
              font-weight: normal;
          }
-         .modal-theme-blue .close span {
+         .js_alerts .modal-theme-blue .close span {
              color: white;
          }
-         .modal-theme-blue .close span:hover {
+         .js_alerts .modal-theme-blue .close span:hover {
              color: #fbc217;
          }
-         .close.standalone {
+         .js_alerts .close.standalone {
              position: absolute;
              right: 15px;
              top: 13px;
              z-index: 1;
              height: 30px;
          }
-         .modal-title {
+         .js_alerts .modal-title {
              margin: 0;
              font-size: 18px;
              font-weight: 500
          }
-         button.close {
+         .js_alerts button.close {
              -webkit-appearance: none;
              padding: 0;
              cursor: pointer;
              background: 0 0;
              border: 0
          }
-         .modal-content {
+         .js_alerts .modal-content {
              position: relative;
              background-color: #fff;
              background-clip: padding-box;
@@ -83,24 +79,24 @@ const Modalstyles = `
              outline: 0;
              box-shadow: 0 3px 9px rgba(0, 0, 0, .5)
          }
-         .modal-theme-blue .modal-content {
+         .js_alerts .modal-theme-blue .modal-content {
             background-color: #4a6173;
          }
-         .modal-header {
+         .js_alerts .modal-header {
              min-height: 16.43px;
              padding: 15px;
              border-bottom: 1px solid #e5e5e5;
              min-height: 30px
          }
-         .modal-theme-blue .modal-header {
+         .js_alerts .modal-theme-blue .modal-header {
             border-bottom: none;
          }
-         .modal-body {
+         .js_alerts .modal-body {
              position: relative;
              padding: 15px;
              font-size: 14px
          }
-         .close {
+         .js_alerts .close {
              float: right;
              font-size: 21px;
              font-weight: 700;
@@ -110,19 +106,19 @@ const Modalstyles = `
              opacity: .2
          }
          @media (min-width: 768px) {
-             .js_dialog {
+             .js_alerts .js_dialog {
                  width: 600px;
                  margin: 30px auto
              }
-             .modal-content {
+             .js_alerts .modal-content {
                  box-shadow: 0 5px 15px rgba(0, 0, 0, .5)
              }
-             .js_modal-sm {
+             .js_alerts .js_modal-sm {
                  width: 300px
              }
          }
          @media (min-width: 992px) {
-             .js_modal-lg {
+             .js_alerts .js_modal-lg {
                  width: 900px
              }
          }
@@ -283,9 +279,8 @@ const Modalstyles = `
          .fadeOutTop {
              -webkit-animation-name: fadeOutTop;
              animation-name: fadeOutTop;
-         }`;
+         }
 
-const Alertstyles = `
         /* Alert styles */
         .js_alerts {
             position: absolute;
@@ -320,7 +315,7 @@ const Alertstyles = `
             border-left-color: #f0ad4e;
         }`;
 
-const STYLES = Modalstyles + Alertstyles;
+const STYLES = Alertsyles;
 
 /**
  * ------------------------------------------------------------------------
@@ -354,6 +349,7 @@ class Alert {
             size: 'large',//large small
             closeOthers: false,
             timer: 3000,
+
             title: '',
             onClose: function () {
             },
@@ -363,8 +359,6 @@ class Alert {
 
         this.defaults = Utils.extend(this.defaults, options);
         this.parent = document.body;
-
-        if (this.defaults.closeOthers) this.__proto__.closeAll();
         this.__proto__.instances.push(this);
         this.buildTemplate();
         this._injectTemplate();
@@ -428,16 +422,30 @@ class Alert {
     }
 
     _injectTemplate() {
+        this._closeIfCondition();
         this.parent = document.querySelector('.js_alerts') || new Elm('div.js_alerts', document.body);
-        this.parent.appendChild(this.modal);
+        this.parent.insertBefore(this.modal, this.parent.firstChild);
     }
 
     _injectStyles() {
-        if (!document.querySelector('.styleFallback')) {
-            new Elm('style.styleFallback', {
+        if (!document.querySelector('.js-alert-styles')) {
+            new Elm('style.js-alert-styles', {
                 html: STYLES
             }, document.body);
         }
+    }
+
+    _closeIfCondition() {
+        if (this.defaults.closeOthers && typeof(this.defaults.closeOthers) === 'number') {
+            let max = this.defaults.closeOthers;
+            console.log(max);
+            if(this.__proto__.instances.length > max) {
+                this.__proto__.instances[this.__proto__.instances.length - 1]._close();
+            }
+        } else if (this.defaults.closeOthers && typeof(this.defaults.closeOthers) === 'boolean') {
+            this.__proto__.closeAll();
+        }
+
     }
 
     _close(cb = ()=> {

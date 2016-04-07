@@ -14,7 +14,7 @@ var files = [
     './js/src/alert.js'
 ];
 
-gulp.task('default', ['clean', 'build', 'watch']);
+gulp.task('default', ['build', 'watch']);
 gulp.task('build', ['transpile', 'concat', 'umd']);
 
 gulp.task('transpile', function () {
@@ -53,7 +53,7 @@ gulp.task('clean', function () {
 
 
 gulp.task('watch', ['browser-sync'], function () {
-    gulp.watch('src/*.js', ['build']);
+    gulp.watch('js/src/*.js', ['build']);
 });
 
 gulp.task('browser-sync', function () {
