@@ -6,7 +6,8 @@ const Alertsyles = `
          .js_alerts .modal-title {
              font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
              line-height: 1.42857143;
-             color: #333
+             color: #333,
+             text-align: left;
          }
          .js_alerts .js_modal,
          .js_alerts .modal-backdrop {
@@ -74,10 +75,8 @@ const Alertsyles = `
              background-color: #fff;
              background-clip: padding-box;
              border: 1px solid #999;
-             border: 1px solid rgba(0, 0, 0, .2);
              border-radius: 2px;
              outline: 0;
-             box-shadow: 0 3px 9px rgba(0, 0, 0, .5)
          }
          .js_alerts .modal-theme-blue .modal-content {
             background-color: #4a6173;
@@ -299,8 +298,8 @@ const Alertsyles = `
             position: static;
         }
         .js_alerts .js_alert .modal-content {
-            padding: 20px;
-            margin: 20px 0;
+            padding: 10px;
+            margin: 0;
             border: 1px solid #eeeeee;
             border-left-width: 5px;
             border-radius: 3px;
@@ -348,8 +347,8 @@ class Alert {
             customClass: 'js_alert',
             withBackdrop: false,
             size: 'large',//large small
-            closeOthers: false,
-            timer: false,
+            closeOthers: 6,
+            timer: 3000,
             title: '',
             onClose: function () {
             },
@@ -438,9 +437,9 @@ class Alert {
     _closeIfCondition() {
         if (this.defaults.closeOthers && typeof(this.defaults.closeOthers) === 'number') {
             let max = this.defaults.closeOthers;
-            console.log(max);
             if(this.__proto__.instances.length > max) {
                 this.__proto__.instances[this.__proto__.instances.length - 1]._close();
+
             }
         } else if (this.defaults.closeOthers && typeof(this.defaults.closeOthers) === 'boolean') {
             this.__proto__.closeAll();
@@ -454,6 +453,7 @@ class Alert {
             Utils.fadeOutRemove(this.backdrop);
         }
         Utils.setClass(this.chainDialog, 'fadeOutTop');
+        this.__proto__.instances.pop();
         setTimeout(()=> {
             this.modal.remove();
             Utils.removeClass(document.body, 'modal-mode');
