@@ -2,26 +2,23 @@ var gulp = require('gulp');
 var watch = require('gulp-watch');
 var del = require('del');
 var browserSync = require('browser-sync').create();
-var fs = require("fs");
 var umd = require('gulp-umd');
-var named = require('vinyl-named');
-var webpack = require('webpack-stream');
 var babel = require('gulp-babel');
 var deleteLines = require('gulp-delete-lines');
 var concat = require('gulp-concat');
 
-gulp.task('default', ['build', 'watch']);
-gulp.task('build', ['transpile', 'umd']);
+var files = [
+    './js/src/utils.js',
+    './js/src/elm.js',
+    './js/src/modal.js',
+    './js/src/alert.js'
+];
+
+gulp.task('default', ['clean', 'build', 'watch']);
+gulp.task('build', ['transpile', 'concat', 'umd']);
 
 gulp.task('transpile', function () {
-    return gulp.src([
-        './js/src/utils.js',
-        './js/src/elm.js',
-        //'./js/src/modalstyles.js',
-        //'./js/src/alertstyles.js',
-        './js/src/modal.js',
-        './js/src/alert.js'
-    ])
+    return gulp.src(files)
         .pipe(deleteLines({
             'filters': [/^(export|import).*/gm]
         }))
@@ -38,14 +35,7 @@ gulp.task('umd', function () {
 });
 
 gulp.task('concat', function () {
-    return gulp.src([
-        './js/src/utils.js',
-        './js/src/elm.js',
-        //'./js/src/modalstyles.js',
-        //'./js/src/alertstyles.js',
-        './js/src/modal.js',
-        './js/src/alert.js'
-    ])
+    return gulp.src(files)
         .pipe(deleteLines({
             'filters': [/^(export|import).*/gm]
         }))
@@ -57,8 +47,8 @@ gulp.task('concat', function () {
 });
 
 gulp.task('clean', function () {
-    del('static/js/**/*.js');
-    del('static/css/**/*.css');
+    del('./js/dist/**/*');
+    del('/dist/umd/**/*')
 });
 
 
