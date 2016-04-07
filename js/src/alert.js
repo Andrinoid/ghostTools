@@ -289,6 +289,7 @@ const Alertsyles = `
             bottom: 0;
             right: 0;
             pointer-events: none;
+            z-index: 9999;
         }
         .js_alerts .js_dialog {
             pointer-events: all;
@@ -348,12 +349,12 @@ class Alert {
             withBackdrop: false,
             size: 'large',//large small
             closeOthers: false,
-            timer: 3000,
+            timer: false,
             title: '',
             onClose: function () {
             },
             onOpen: function () {
-            }
+            },
         };
 
         this.defaults = Utils.extend(this.defaults, options);
