@@ -93,7 +93,8 @@ const Alertsyles = `
          .js_alerts .modal-body {
              position: relative;
              padding: 15px;
-             font-size: 14px
+             font-size: 14px;
+             color: #333;
          }
          .js_alerts .close {
              float: right;
@@ -282,7 +283,7 @@ const Alertsyles = `
 
         /* Alert styles */
         .js_alerts {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             bottom: 0;
