@@ -9,6 +9,9 @@
     </style>
 </head>
 <body>
+<div class="parent">
+
+</div>
 hi
 <button id="alertBtn">test Alert</button>
 <button id="modalBtn">test modal</button>
@@ -24,7 +27,7 @@ hi
         });
     };
     var btn = document.querySelector('#modalBtn');
-    btn.onclick = function() {new Modal({title: 'hello', size: 'full', message: rndText[Math.floor(Math.random() * 4) ]}); };
+    btn.onclick = function() {new Modal({parent: document.querySelector('.parent'), title: 'hello', size: 'full', message: rndText[Math.floor(Math.random() * 4) ]}); };
 
 </script>
 </body>

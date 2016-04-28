@@ -321,10 +321,12 @@ class Modal {
             closeOthers: true,
             autoClose: false,
             autoCloseTime: 2000,
-            type: 'modal'
+            type: 'modal',
+            parent: document.body
+
         };
         this.defaults = Utils.extend(this.defaults, options);
-        this.parent = document.body;
+        this.parent = this.defaults.parent;
         this.STYLES = Modalstyles;
 
         if (this.defaults.closeOthers) this.__proto__.closeAll();
