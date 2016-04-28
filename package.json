@@ -1,6 +1,6 @@
 {
   "name": "ghostTools",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "description": "frontend tools with batteries included for rapid development",
   "main": "./dist/npm",
   "scripts": {
