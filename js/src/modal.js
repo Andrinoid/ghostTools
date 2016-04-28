@@ -115,6 +115,17 @@ const Modalstyles = `
              text-shadow: 0 1px 0 #fff;
              opacity: .2
          }
+         .js_dialog.js_modal-full {
+            margin: 0;
+            height: 100%;
+            width: 100%;
+         }
+         .js_dialog.js_modal-full .modal-content {
+            border: none;
+            box-shadow: none;
+            border-radius: 0;
+            height: 100%;
+         }
          @media (min-width: 768px) {
              .js_dialog {
                  width: 600px;
@@ -301,7 +312,7 @@ class Modal {
             message: '',
             theme: 'classic',
             withBackdrop: true,
-            size: 'normal',//large small
+            size: 'normal',//large small full
             customClass: '',
             onClose: function () {
             },
@@ -336,7 +347,8 @@ class Modal {
         let sizeMap = {
             'small': 'js_modal-sm',
             'normal': '',
-            'large': 'js_modal-lg'
+            'large': 'js_modal-lg',
+            'full': 'js_modal-full'
         };
         let sizeClass = sizeMap[this.defaults.size];
 
