@@ -262,11 +262,17 @@ var Modal = function () {
                 cls: this.defaults.customClass
             });
 
-            var btn = this.modal.querySelector('.close');
+            var btn = this.modal.querySelectorAll('.close, .close-trigger');
             this.chainDialog = this.modal.querySelector('.js_dialog');
-            btn.onclick = function () {
-                _this2.close();
-            };
+
+            for (var i = 0; i < btn.length; i++) {
+                btn[i].addEventListener('click', function () {
+                    _this2.close();
+                }, false);
+            }
+            //btn.onclick = ()=> {
+            //    this.close();
+            //};
             if (this.defaults.type === 'modal') {
                 Utils.setClass(document.body, 'modal-mode');
             }

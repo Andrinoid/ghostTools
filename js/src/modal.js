@@ -382,11 +382,13 @@ class Modal {
             cls: this.defaults.customClass
         });
 
-        let btn = this.modal.querySelector('.close');
+        let btn = this.modal.querySelectorAll('.close, .close-trigger');
         this.chainDialog = this.modal.querySelector('.js_dialog');
-        btn.onclick = ()=> {
-            this.close();
-        };
+
+        for (var i=0; i<btn.length; i++) {
+            btn[i].addEventListener('click', ()=> { this.close() }, false);
+        }
+   
         if (this.defaults.type === 'modal') {
             Utils.setClass(document.body, 'modal-mode');
         }

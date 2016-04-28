@@ -37,10 +37,12 @@ var Modal = function () {
             closeOthers: true,
             autoClose: false,
             autoCloseTime: 2000,
-            type: 'modal'
+            type: 'modal',
+            parent: document.body
+
         };
         this.defaults = Utils.extend(this.defaults, options);
-        this.parent = document.body;
+        this.parent = this.defaults.parent;
         this.STYLES = Modalstyles;
 
         if (this.defaults.closeOthers) this.__proto__.closeAll();
@@ -87,11 +89,17 @@ var Modal = function () {
                 cls: this.defaults.customClass
             });
 
-            var btn = this.modal.querySelector('.close');
+            var btn = this.modal.querySelectorAll('.close, .close-trigger');
             this.chainDialog = this.modal.querySelector('.js_dialog');
-            btn.onclick = function () {
-                _this2.close();
-            };
+
+            for (var i = 0; i < btn.length; i++) {
+                btn[i].addEventListener('click', function () {
+                    _this2.close();
+                }, false);
+            }
+            //btn.onclick = ()=> {
+            //    this.close();
+            //};
             if (this.defaults.type === 'modal') {
                 Utils.setClass(document.body, 'modal-mode');
             }
