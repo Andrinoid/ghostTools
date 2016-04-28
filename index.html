@@ -2,6 +2,11 @@
 <html>
 <head>
 	<title>Modal demo</title>
+    <style>
+        body {
+            background: gray;
+        }
+    </style>
 </head>
 <body>
 hi
@@ -17,7 +22,6 @@ hi
             message: rndText[Math.floor(Math.random() * 4)],
 
         });
-
     };
     var btn = document.querySelector('#modalBtn');
     btn.onclick = function() {new Modal({title: 'hello', size: 'full', message: rndText[Math.floor(Math.random() * 4) ]}); };
