@@ -272,6 +272,7 @@ var Modal = function () {
         key: '_injectTemplate',
         value: function _injectTemplate() {
             this.parent.appendChild(this.modal);
+            this.defaults.onOpen();
         }
     }, {
         key: '_injectStyles',

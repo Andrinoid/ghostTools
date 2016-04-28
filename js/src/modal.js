@@ -381,6 +381,7 @@ class Modal {
 
     _injectTemplate() {
         this.parent.appendChild(this.modal);
+        this.defaults.onOpen();
     }
 
     _injectStyles() {
