@@ -388,7 +388,7 @@ class Modal {
         for (var i=0; i<btn.length; i++) {
             btn[i].addEventListener('click', ()=> { this.close() }, false);
         }
-   
+
         if (this.defaults.type === 'modal') {
             Utils.setClass(document.body, 'modal-mode');
         }
@@ -404,7 +404,7 @@ class Modal {
         if (!document.querySelector('.styleFallback')) {
             new Elm('style.styleFallback', {
                 html: this.STYLES
-            }, document.body);
+            }, document.querySelector('head'));
         }
     }
 

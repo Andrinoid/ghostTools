@@ -88,9 +88,7 @@ var Modal = function () {
                     _this2.close();
                 }, false);
             }
-            //btn.onclick = ()=> {
-            //    this.close();
-            //};
+
             if (this.defaults.type === 'modal') {
                 Utils.setClass(document.body, 'modal-mode');
             }
@@ -107,7 +105,7 @@ var Modal = function () {
             if (!document.querySelector('.styleFallback')) {
                 new Elm('style.styleFallback', {
                     html: this.STYLES
-                }, document.body);
+                }, document.querySelector('head'));
             }
         }
     }, {
