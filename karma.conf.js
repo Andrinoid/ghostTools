@@ -15,10 +15,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'js/dist/utils.js'
-      'js/dist/elm.js',
-      'js/dist/alert.js',
-      'js/dist/modal.js',
+      'js/dist/ghostTools.js'
       'js/test/*.js'
     ],
 
