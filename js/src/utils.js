@@ -3,14 +3,33 @@
  * Utilities
  * ------------------------------------------------------------------------
  */
+
+
+var isArray = (function () {
+    if (typeof Array.isArray === 'undefined') {
+        return function (value) {
+            return toString.call(value) === '[object Array]';
+        };
+    }
+    return Array.isArray;
+})();
+
 const Utils = {
 
-    normalizeElement: function (element) {
-        function isElement(obj) {
-            return (obj[0] || obj).nodeType
-        }
+    isArrey: function(obj) {
+        return !!(obj && Array === obj.constructor);
+    },
 
-        if (isElement(element)) {
+    isElement: function (item) {
+        return (item[0] || item).nodeType
+    },
+
+    isObject: function (value) {
+        return value != null && typeof value === 'object';
+    },
+
+    normalizeElement: function (element) {
+        if (this.isElement(element)) {
             return element;
         }
         if (typeof jQuery !== 'undefined') {
@@ -55,6 +74,28 @@ const Utils = {
                 if (arguments[i].hasOwnProperty(key))
                     arguments[0][key] = arguments[i][key];
         return arguments[0];
+    },
+
+    foreach: function (arg, func) {
+        if (this.isElement(arg)) {
+            for (var i = 0; i < arg.length; i++) {
+                if (isElement(arg[i]))
+                    func.call(window, arg[i], i, arg);
+            }
+            return false;
+        }
+
+        if (!isArray(arg) && !this.isObject(arg))
+            var arg = [arg];
+        if (isArray(arg)) {
+            for (var i = 0; i < arg.length; i++) {
+                func.call(window, arg[i], i, arg);
+            }
+        } else if (this.isObject(arg)) {
+            for (var key in arg) {
+                func.call(window, arg[key], key, arg);
+            }
+        }
     }
 
 };

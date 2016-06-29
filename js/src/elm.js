@@ -9,7 +9,7 @@ import Utils from './utils';
 class Elm {
     //Simple element generator. Mootools style
     //tries to find method for keys in options and run it
-    constructor(type, options, parent) {
+    constructor(type, options, parent, injectType) {
         function isElement(obj) {
             return (obj[0] || obj).nodeType
         }
@@ -38,14 +38,24 @@ class Elm {
                 continue;
             }
             let val = this.options[key];
+
+            if (key === 'class')//fix for class name conflict
+                key = 'cls';
+
             try {
-                if (key === 'class')//fix for class name conflict
-                    key = 'cls';
-                this[key](val);
+                if(this[key]) {
+                    this[key](val);
+                } else {
+                    //no special method found for key
+                    this.tryDefault(key, val);
+                }
+
             }
             catch (err) {
                 //pass
             }
+
+            this.injectType = injectType || null; // can be null, top
         }
 
         if (parent) {
@@ -53,6 +63,14 @@ class Elm {
         }
 
         return this.element;
+    }
+
+    tryDefault(key, val) {
+        /*
+        * In many cases the element property key is nice so we only pass it forward
+        * e.q this.element.value = value
+        */
+        this.element[key] = val;
     }
 
     _setClass(el, className) {
@@ -73,11 +91,6 @@ class Elm {
         clsList.forEach(name=> {
             this._setClass(this.element, name);
         });
-
-    }
-
-    id(value) {
-        this.element.id = value;
     }
 
     html(str) {
@@ -105,7 +118,11 @@ class Elm {
 
     inject(to) {
         let parent = Utils.normalizeElement(to);
-        parent.appendChild(this.element);
+        if(this.injectType === 'top') {
+            parent.insertBefore(this.element, parent.childNodes[0]);
+        } else {
+            parent.appendChild(this.element);
+        }
     }
 
 }

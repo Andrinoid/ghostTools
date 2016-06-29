@@ -1,5 +1,5 @@
 import Utils from './utils';
-import Elm from './element';
+import Elm from './elm';
 
 /**
  * ------------------------------------------------------------------------

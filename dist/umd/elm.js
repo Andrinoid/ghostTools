@@ -24,7 +24,7 @@ var Elm = function () {
     //Simple element generator. Mootools style
     //tries to find method for keys in options and run it
 
-    function Elm(type, options, parent) {
+    function Elm(type, options, parent, injectType) {
         _classCallCheck(this, Elm);
 
         function isElement(obj) {
@@ -54,13 +54,22 @@ var Elm = function () {
                 continue;
             }
             var val = this.options[key];
+
+            if (key === 'class') //fix for class name conflict
+                key = 'cls';
+
             try {
-                if (key === 'class') //fix for class name conflict
-                    key = 'cls';
-                this[key](val);
+                if (this[key]) {
+                    this[key](val);
+                } else {
+                    //no special method found for key
+                    this.tryDefault(key, val);
+                }
             } catch (err) {
                 //pass
             }
+
+            this.injectType = injectType || null; // can be null, top
         }
 
         if (parent) {
@@ -71,6 +80,15 @@ var Elm = function () {
     }
 
     _createClass(Elm, [{
+        key: 'tryDefault',
+        value: function tryDefault(key, val) {
+            /*
+            * In many cases the element property key is nice so we only pass it forward
+            * e.q this.element.value = value
+            */
+            this.element[key] = val;
+        }
+    }, {
         key: '_setClass',
         value: function _setClass(el, className) {
             //Method credit http://youmightnotneedjquery.com/
@@ -92,11 +110,6 @@ var Elm = function () {
             clsList.forEach(function (name) {
                 _this._setClass(_this.element, name);
             });
-        }
-    }, {
-        key: 'id',
-        value: function id(value) {
-            this.element.id = value;
         }
     }, {
         key: 'html',
@@ -129,7 +142,11 @@ var Elm = function () {
         key: 'inject',
         value: function inject(to) {
             var parent = Utils.normalizeElement(to);
-            parent.appendChild(this.element);
+            if (this.injectType === 'top') {
+                parent.insertBefore(this.element, parent.childNodes[0]);
+            } else {
+                parent.appendChild(this.element);
+            }
         }
     }]);
 
