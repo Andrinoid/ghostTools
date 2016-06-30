@@ -127,16 +127,64 @@ var FormGenerator = function () {
         this.form = form;
         this.parent = parent || document.body;
         this.typeModels = typeModels;
-        this.keychain = [];
-        this.buildAllItems(this.form, this.parent, this.keychain);
+        this.keyHistory = [];
+        this.keyChain = [];
+        this.arrayIndex = null;
+        this.buildAllItems(this.form, this.parent);
+
+        rivets.bind(this.parent, { form: this.form });
     }
 
     /**
-     * Returns the model for given form item
+     * Climbs the dom tree and gathers the keychain for given element
+     * returns keychain
      */
 
 
     _createClass(FormGenerator, [{
+        key: 'getKeychain',
+        value: function getKeychain(el) {
+            var keyList = ['value'];
+            while (el.parentNode && el.parentNode != document.body) {
+                if ((' ' + el.className + ' ').indexOf(' ' + 'keypoint' + ' ') > -1) {
+                    keyList.push(el.getAttribute('data-key'));
+                }
+                el = el.parentNode;
+            }
+            keyList.push('form');
+            return keyList.reverse().join('.');
+        }
+
+        /**
+         * Returns javascript valid keychain from the generated dot seperated
+         * e.g foo.bar.4.bas -> foo.bar[4].baz
+         */
+
+    }, {
+        key: 'jsKeychain',
+        value: function jsKeychain(str) {
+            return str.replace(new RegExp('\.[0-9]+'), '[' + str.match('\.[0-9]+')[0].slice(1) + ']');
+        }
+
+        /**
+         * if we are inside a loop prepend the index to the key
+         * e.g if arrayIndex is 2 and key is foo we return 2
+         */
+
+    }, {
+        key: 'getCycleKey',
+        value: function getCycleKey(key) {
+            if (this.arrayIndex || this.arrayIndex === 0) {
+                if (key) return this.arrayIndex + '.' + key;else return this.arrayIndex;
+            }
+            return key;
+        }
+
+        /**
+         * Returns the model for given form item
+         */
+
+    }, {
         key: 'getModel',
         value: function getModel(item) {
             var model = this.typeModels[item.type];
@@ -150,8 +198,9 @@ var FormGenerator = function () {
 
     }, {
         key: 'defaultWrapper',
-        value: function defaultWrapper(model, parent) {
-            var wrapper = new Elm('div.form-group', parent);
+        value: function defaultWrapper(model, parent, key) {
+            key = this.getCycleKey(key);
+            var wrapper = new Elm('div.form-group', { 'data-key': key, cls: 'keypoint' }, parent);
             var label = model.label && new Elm('label', { text: model.label }, wrapper);
             return wrapper;
         }
@@ -162,24 +211,37 @@ var FormGenerator = function () {
 
     }, {
         key: 'checkboxWrapper',
-        value: function checkboxWrapper(model, parent) {
-            var wrapper = new Elm('div.checkbox', parent);
+        value: function checkboxWrapper(model, parent, key) {
+            key = this.getCycleKey(key);
+            var wrapper = new Elm('div.checkbox', { 'data-key': key, cls: 'keypoint' }, parent);
             var label = new Elm('label', wrapper);
             model['checked'] = model.value; // We only use checkbox as bool so if value is true its checked
             new Elm('span', { text: model.label }, label);
             return label;
         }
+
+        /**
+         * Returns wrapper element for subform or simply an bootstrap panel
+         */
+
     }, {
         key: 'subFormWrapper',
-        value: function subFormWrapper(parent) {
-            var panel = new Elm('div', { cls: 'panel panel-default' }, parent);
+        value: function subFormWrapper(parent, key) {
+            key = this.getCycleKey(key);
+            var panel = new Elm('div', { cls: 'panel panel-default keypoint', 'data-key': key }, parent);
             var body = new Elm('div.panel-body', panel);
             return body;
         }
+
+        /**
+         * Returns wrapper element for array with plus button
+         */
+
     }, {
         key: 'subFormWrapperPlus',
-        value: function subFormWrapperPlus(parent) {
-            var panel = new Elm('div', { cls: 'panel panel-default' }, parent);
+        value: function subFormWrapperPlus(parent, key) {
+            key = this.getCycleKey(key);
+            var panel = new Elm('div', { cls: 'panel panel-default keypoint', 'data-key': key }, parent);
             var body = new Elm('div.panel-body', panel);
             var plus = new Elm('div', {
                 cls: 'btn btn-default',
@@ -190,28 +252,27 @@ var FormGenerator = function () {
         }
     }, {
         key: 'buildOneItem',
-        value: function buildOneItem(item, parent, key, keychain) {
+        value: function buildOneItem(item, parent, key) {
             var _this = this;
 
-            keychain.push(key);
-            console.log(keychain);
             /**
              * If item is array we need special wrapper
              */
             if (Utils.isArrey(item)) {
                 new Elm('h4', { html: key, style: 'margin: 35px 0 0' }, parent);
                 new Elm('hr', parent);
-                parent = this.subFormWrapperPlus(parent);
-                Utils.foreach(item, function (subitem) {
+                parent = this.subFormWrapperPlus(parent, key);
+                Utils.foreach(item, function (subitem, i) {
+                    _this.arrayIndex = i;
                     var isSubform = !subitem.hasOwnProperty('type');
-
                     if (isSubform) {
                         _this.buildAllItems(subitem, parent);
                     } else {
-                        _this.buildOneItem(subitem, parent, keychain); //dirti fix to wrap item in object. find better solution
+                        _this.buildOneItem(subitem, parent); //dirti fix to wrap item in object. find better solution
                     }
                     new Elm('hr', parent);
                 });
+                this.arrayIndex = null;
                 return;
             }
 
@@ -221,7 +282,7 @@ var FormGenerator = function () {
              */
             var isSubform = !item.hasOwnProperty('type');
             if (isSubform) {
-                parent = this.subFormWrapper(parent);
+                parent = this.subFormWrapper(parent, key);
                 new Elm('h4', { html: key }, parent);
                 new Elm('hr', parent);
                 this.buildAllItems(item, parent);
@@ -233,11 +294,14 @@ var FormGenerator = function () {
 
             // Generate wrapper template for given type
             if (model.type === 'checkbox') {
-                wrapper = this.checkboxWrapper(model, parent);
+                wrapper = this.checkboxWrapper(model, parent, key);
+                model['data-keychain'] = this.getKeychain(wrapper);
                 element = new Elm(model.element, model, wrapper, 'top'); //top because label comes after input
             } else {
-                    wrapper = this.defaultWrapper(model, parent);
+                    wrapper = this.defaultWrapper(model, parent, key);
+                    model['data-keychain'] = this.getKeychain(wrapper);
                     element = new Elm(model.element, model, wrapper);
+                    element.setAttribute('rv-value', this.getKeychain(wrapper));
                 }
 
             // Some form elements have children. E.g select menus
@@ -251,16 +315,15 @@ var FormGenerator = function () {
             } catch (err) {
                 // No childnodes defined
             }
-
-            this.keychain = [];
         }
     }, {
         key: 'buildAllItems',
-        value: function buildAllItems(form, parent, keychain) {
+        value: function buildAllItems(form, parent) {
             var _this2 = this;
 
             Utils.foreach(form, function (item, key) {
-                _this2.buildOneItem(item, parent, key, keychain);
+                _this2.keyHistory.push(key);
+                _this2.buildOneItem(item, parent, key);
             });
         }
     }]);

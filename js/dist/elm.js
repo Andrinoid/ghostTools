@@ -77,6 +77,9 @@ var Elm = function () {
             * In many cases the element property key is nice so we only pass it forward
             * e.q this.element.value = value
             */
+            if (key.indexOf('data-') > -1) {
+                this.attr(key, val);
+            }
             this.element[key] = val;
         }
     }, {
@@ -106,6 +109,11 @@ var Elm = function () {
         key: 'html',
         value: function html(str) {
             this.element.innerHTML = str;
+        }
+    }, {
+        key: 'attr',
+        value: function attr(key, val) {
+            this.element.setAttribute(key, val);
         }
     }, {
         key: 'text',

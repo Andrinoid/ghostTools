@@ -70,6 +70,9 @@ class Elm {
         * In many cases the element property key is nice so we only pass it forward
         * e.q this.element.value = value
         */
+        if(key.indexOf('data-') > -1) {
+            this.attr(key, val);
+        }
         this.element[key] = val;
     }
 
@@ -95,6 +98,10 @@ class Elm {
 
     html(str) {
         this.element.innerHTML = str;
+    }
+
+    attr(key, val) {
+        this.element.setAttribute(key, val);
     }
 
     text(str) {
