@@ -107,6 +107,15 @@ let typeModels = {
         type: 'checkbox',
         label: 'dfdf',
         value: ''
+    },
+    image: {
+        element: 'div',
+        label: 'imagefield',
+        width: 'auto',
+        height: 'auto',
+        quality: 60,
+        value: '',
+        //currentImage: 'profileImage.jpg',
     }
 };
 
@@ -294,12 +303,22 @@ class FormGenerator {
             element = new Elm(model.element, model, wrapper, 'top'); //top because label comes after input
             element.setAttribute('rv-checked', this.getKeychain(wrapper));
 
+        } else if (model.type === 'image') {
+            wrapper = this.defaultWrapper(model, parent, key);
+            var keychain = this.getKeychain(wrapper);
+            element = new Elm(model.element, model, wrapper);
+
+            var imagePortal = new ImageCloud(element, model);
+            imagePortal.on('success', (rsp)=> {
+                console.log(rsp.url);
+                new Function('this.' + keychain + '="' + rsp.url + '"')();
+            });
+
         } else {
             wrapper = this.defaultWrapper(model, parent, key);
             model['data-keychain'] = this.getKeychain(wrapper);
             element = new Elm(model.element, model, wrapper);
             element.setAttribute('rv-value', this.getKeychain(wrapper));
-
         }
 
         // Some form elements have children. E.g select menus

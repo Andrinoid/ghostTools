@@ -8,189 +8,208 @@
           integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/rivets/0.9.0/rivets.bundled.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.min.js"></script>
+    <script src="http://apps.tweecode.com/media/js/imagecloud/dropzone.js"></script>
+    <script src="http://apps.tweecode.com/media/js/imagecloud/imagecloud.js"></script>
 
 </head>
 <body>
 <div class="container">
     <h2>From</h2>
     <hr>
-    <div id="formWrap" class="col-sm-6"</div>
-    <script src="./dist/ghostTools.js"></script>
-    <script>
+    <div id="formWrap" class="col-sm-6"
+</div>
+<script src="./dist/ghostTools.js"></script>
+<script>
 
 
-        var form = {
-            active: {
-                type: 'checkbox',
-                label: 'Is active',
-                value: true
-            },
-            brandId: {
-                type: 'number',
-                label: 'brand id',
-                value: 121,
-                placeholder: 'BrandId'
-            },
-            intro: {
+    var form = {
+        profile: {
+            type: 'image',
+            label: 'my profile image',
+            width: 'auto',
+            height: 'auto',
+            quality: 60,
+            value: ''
+        },
+        active: {
+            type: 'checkbox',
+            label: 'Is active',
+            value: true
+        },
+        brandId: {
+            type: 'number',
+            label: 'brand id',
+            value: 121,
+            placeholder: 'BrandId'
+        },
+        intro: {
+            type: 'text',
+            label: 'intro',
+            placeholder: '',
+            value: 'Making food and drink ‘healthier, tastier and easier’ is at the very heart of everything that we do and has been since our first store opened on Cornhill in 1998. We call our food Fit Food. We don\'t preach, but we want our customers to have the best choice of fit food - whenever they want or need it. To us, it’s a lifestyle thing, a philosophy, that gets us jumping out of bed in the morning. Our food is handmade every day in Crussh\’s own kitchen. Juices and smoothies are freshly made-to-order in store.',
+        },
+        dos: {
+            type: 'text',
+            label: 'Do\'s',
+            placeholder: 'This is what influencer should do',
+            value: '',
+        },
+        logo: {
+            type: 'text',
+            label: 'intro',
+            placeholder: '',
+            value: '/media/users/skildingur.png',
+        },
+        brandName: {
+            type: 'text',
+            label: 'Brand name',
+            placeholder: '',
+            value: 'Crussh'
+        },
+        budget: {
+            type: 'number',
+            label: 'brand id',
+            value: 1500
+        },
+        coverPhoto: {
+            type: 'text',
+            label: 'intro',
+            placeholder: 'Cover Photo URL',
+            value: 'https://slack-imgs.com/?c=1&url=http%3A%2F%2Fwww.crussh.com%2Fassets%2Fimage%2Fimage_1465292964_575698a4d7d56.jpg'
+        },
+        namespace: {
+            type: 'text',
+            label: 'Namespace',
+            placeholder: 'Cover Photo URL',
+            value: 'crusshlondon'
+        },
+        website: {
+            url: {
                 type: 'text',
-                label: 'intro',
+                label: 'Url',
                 placeholder: '',
-                value: 'Making food and drink ‘healthier, tastier and easier’ is at the very heart of everything that we do and has been since our first store opened on Cornhill in 1998. We call our food Fit Food. We don\'t preach, but we want our customers to have the best choice of fit food - whenever they want or need it. To us, it’s a lifestyle thing, a philosophy, that gets us jumping out of bed in the morning. Our food is handmade every day in Crussh\’s own kitchen. Juices and smoothies are freshly made-to-order in store.',
+                value: 'http://www.crussh.com'
             },
-            dos: {
+            display: {
                 type: 'text',
-                label: 'Do\'s',
-                placeholder: 'This is what influencer should do',
-                value: '',
-            },
-            logo: {
-                type: 'text',
-                label: 'intro',
+                label: 'Display',
                 placeholder: '',
-                value: '/media/users/skildingur.png',
-            },
-            brandName: {
-                type: 'text',
-                label: 'Brand name',
-                placeholder: '',
-                value: 'Crussh'
-            },
-            budget: {
-                type: 'number',
-                label: 'brand id',
-                value: 1500
-            },
-            coverPhoto: {
-                type: 'text',
-                label: 'intro',
-                placeholder: 'Cover Photo URL',
-                value: 'https://slack-imgs.com/?c=1&url=http%3A%2F%2Fwww.crussh.com%2Fassets%2Fimage%2Fimage_1465292964_575698a4d7d56.jpg'
-            },
-            namespace: {
-                type: 'text',
-                label: 'Namespace',
-                placeholder: 'Cover Photo URL',
-                value: 'crusshlondon'
-            },
-            website: {
-                url: {
-                    type: 'text',
-                    label: 'Url',
-                    placeholder: '',
-                    value: 'http://www.crussh.com'
-                },
-                display: {
-                    type: 'text',
-                    label: 'Display',
-                    placeholder: '',
-                    value: 'http://www.crussh.com'
-                }
-            },
-            map: {
-
-                lat: {
-                    type: 'number',
-                    label: 'Lat',
-                    value: 51.524392
-                },
-                lng: {
-                    type: 'number',
-                    label: 'Lng',
-                    value: -0.12399
-                },
-                zoom: {
-                    type: 'number',
-                    label: 'Zoom',
-                    value: 14
-                },
-
-                markers: [
-                    {
-                        lat: {
-                            type: 'number',
-                            label: 'Lat',
-                            placeholder: 'Lat',
-                            value: 51.524392
-                        },
-                        lng: {
-                            type: 'number',
-                            label: 'Lng',
-                            placeholder: 'Lng',
-                            value: -0.12399
-                        }
-                    },
-                    {
-                        lat: {
-                            type: 'number',
-                            label: 'Lat',
-                            value: 51.524392
-                        },
-                        lng: {
-                            type: 'number',
-                            label: 'Lng',
-                            value: -0.12399
-                        }
-                    }
-                ]
-
-            },
-
-
-            images: [
-                {
-                    type: 'text',
-                    label: 'image',
-                    placeholder: '',
-                    value: '/crussh1.jpg'
-                },
-                {
-                    type: 'text',
-                    label: 'image',
-                    placeholder: '',
-                    value: '/crussh2.jpg'
-                },
-                {
-                    type: 'text',
-                    label: 'image',
-                    placeholder: '',
-                    value: '/crussh3.jpg'
-                },
-                {
-                    type: 'text',
-                    label: 'image',
-                    placeholder: '',
-                    value: '/crussh4.jpg'
-                }
-            ],
-
-            brief: {
-                type: 'textarea',
-                label: 'brief',
-                placeholder: '',
-                value: 'All you have to do is come to our location, have a sandwich or a smoothie and if you love it we ask that you create content that captures your experiance and post it on Instagram. Please rembember that the goal is to promote Crussh, so we ask that you make sure your content conveys that.',
-            },
-            publishDeadline: {
-                type: 'date',
-                label: 'Publish date',
-                value: 'Tue Jun 25 2016 16:26:20 GMT+0000 (GMT)'
-            },
-            acceptanceDeadline: {
-                type: 'date',
-                label: 'Acceptance deadline',
-                value: 'Tue Jun 25 2016 16:26:20 GMT+0000 (GMT)'
-            },
-
-            submit: {
-                type: 'submit',
-                value: 'For Glory!'
+                value: 'http://www.crussh.com'
             }
+        },
+        map: {
+
+            lat: {
+                type: 'number',
+                label: 'Lat',
+                value: 51.524392
+            },
+            lng: {
+                type: 'number',
+                label: 'Lng',
+                value: -0.12399
+            },
+            zoom: {
+                type: 'number',
+                label: 'Zoom',
+                value: 14
+            },
+
+            markers: [
+                {
+                    lat: {
+                        type: 'number',
+                        label: 'Lat',
+                        placeholder: 'Lat',
+                        value: 51.524392
+                    },
+                    lng: {
+                        type: 'number',
+                        label: 'Lng',
+                        placeholder: 'Lng',
+                        value: -0.12399
+                    }
+                },
+                {
+                    lat: {
+                        type: 'number',
+                        label: 'Lat',
+                        value: 51.524392
+                    },
+                    lng: {
+                        type: 'number',
+                        label: 'Lng',
+                        value: -0.12399
+                    }
+                }
+            ]
+
+        },
 
 
-        };
+        images: [
+            {
+                type: 'image',
+                label: 'campaign image',
+                width: 'auto',
+                height: 'auto',
+                quality: 80,
+                value: ''
+            },
+            {
+                type: 'image',
+                label: 'campaign image',
+                width: 'auto',
+                height: 'auto',
+                quality: 80,
+                value: ''
+            },
+            {
+                type: 'image',
+                label: 'campaign image',
+                width: 'auto',
+                height: 'auto',
+                quality: 80,
+                value: ''
+            },
+            {
+                type: 'image',
+                label: 'campaign image',
+                width: 'auto',
+                height: 'auto',
+                quality: 80,
+                value: ''
+            }
+        ],
+
+        brief: {
+            type: 'textarea',
+            label: 'brief',
+            placeholder: '',
+            value: 'All you have to do is come to our location, have a sandwich or a smoothie and if you love it we ask that you create content that captures your experiance and post it on Instagram. Please rembember that the goal is to promote Crussh, so we ask that you make sure your content conveys that.',
+        },
+        publishDeadline: {
+            type: 'date',
+            label: 'Publish date',
+            value: 'Tue Jun 25 2016 16:26:20 GMT+0000 (GMT)'
+        },
+        acceptanceDeadline: {
+            type: 'date',
+            label: 'Acceptance deadline',
+            value: 'Tue Jun 25 2016 16:26:20 GMT+0000 (GMT)'
+        },
+
+        submit: {
+            type: 'submit',
+            value: 'For Glory!'
+        }
 
 
-        var formgen = new FormGenerator(form, document.querySelector('#formWrap'));
+    };
 
-    </script>
+
+    var formgen = new FormGenerator(form, document.querySelector('#formWrap'));
+
+</script>
 </body>
 </html>
