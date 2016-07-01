@@ -7,6 +7,8 @@ import Elm from './elm';
  * Generates form from json schema
  * ------------------------------------------------------------------------
  */
+
+
 //Demo form
 //    var form = [
 //        {
@@ -129,7 +131,7 @@ class FormGenerator {
      * Climbs the dom tree and gathers the keychain for given element
      * returns keychain
      */
-    getKeychain(el, raw=false) {
+    getKeychain(el, raw = false) {
         var keyList = ['value'];
         while (el.parentNode && el.parentNode != document.body) {
             if ((' ' + el.className + ' ').indexOf(' ' + 'keypoint' + ' ') > -1) {
@@ -222,11 +224,23 @@ class FormGenerator {
             click: ()=> {
                 //TODO this undbind and rebind feels hacky.
                 this.binding.unbind();
+
                 let list = new Function('return this.' + keychain)();
-                list.push(Object.assign({}, list[0]));
+                let listClone = _.cloneDeep(list);
+
+                let clone = listClone[0];
+                list.push(clone);
                 this.arrayIndex = list.length - 1;
-                this.buildOneItem(list[0], body);
+
+                let isSubform = !clone.hasOwnProperty('type');
+                if (isSubform) {
+                    this.buildAllItems(clone, body);
+                } else {
+                    this.buildOneItem(clone, body);
+                }
+
                 new Elm('hr', body);
+
                 this.bind();
             }
         }, panel);
@@ -249,7 +263,7 @@ class FormGenerator {
                 if (isSubform) {
                     this.buildAllItems(subitem, parent);
                 } else {
-                    this.buildOneItem(subitem, parent);//dirti fix to wrap item in object. find better solution
+                    this.buildOneItem(subitem, parent);
                 }
                 new Elm('hr', parent);
             });

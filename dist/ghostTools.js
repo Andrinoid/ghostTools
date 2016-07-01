@@ -563,6 +563,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * Generates form from json schema
  * ------------------------------------------------------------------------
  */
+
 //Demo form
 //    var form = [
 //        {
@@ -808,11 +809,23 @@ var FormGenerator = function () {
                 click: function click() {
                     //TODO this undbind and rebind feels hacky.
                     _this.binding.unbind();
+
                     var list = new Function('return this.' + keychain)();
-                    list.push(Object.assign({}, list[0]));
+                    var listClone = _.cloneDeep(list);
+
+                    var clone = listClone[0];
+                    list.push(clone);
                     _this.arrayIndex = list.length - 1;
-                    _this.buildOneItem(list[0], body);
+
+                    var isSubform = !clone.hasOwnProperty('type');
+                    if (isSubform) {
+                        _this.buildAllItems(clone, body);
+                    } else {
+                        _this.buildOneItem(clone, body);
+                    }
+
                     new Elm('hr', body);
+
                     _this.bind();
                 }
             }, panel);
@@ -837,7 +850,7 @@ var FormGenerator = function () {
                     if (isSubform) {
                         _this2.buildAllItems(subitem, parent);
                     } else {
-                        _this2.buildOneItem(subitem, parent); //dirti fix to wrap item in object. find better solution
+                        _this2.buildOneItem(subitem, parent);
                     }
                     new Elm('hr', parent);
                 });
