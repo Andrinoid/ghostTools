@@ -115,18 +115,21 @@ class FormGenerator {
         this.parent = parent || document.body;
         this.typeModels = typeModels;
         this.keyHistory = [];
-        this.keyChain = [];
         this.arrayIndex = null;
         this.buildAllItems(this.form, this.parent);
+        this.bind();
+        //this.binding = rivets.bind(this.parent, {form: this.form});
+    }
 
-        rivets.bind(this.parent, {form: this.form});
+    bind() {
+        this.binding = rivets.bind(this.parent, {form: this.form});
     }
 
     /**
      * Climbs the dom tree and gathers the keychain for given element
      * returns keychain
      */
-    getKeychain(el) {
+    getKeychain(el, raw=false) {
         var keyList = ['value'];
         while (el.parentNode && el.parentNode != document.body) {
             if ((' ' + el.className + ' ').indexOf(' ' + 'keypoint' + ' ') > -1) {
@@ -135,7 +138,9 @@ class FormGenerator {
             el = el.parentNode;
         }
         keyList.push('form');
-        return keyList.reverse().join('.');
+
+        return raw ? keyList.reverse() : keyList.reverse().join('.');
+
     }
 
     /**
@@ -205,11 +210,27 @@ class FormGenerator {
         key = this.getCycleKey(key);
         let panel = new Elm('div', {cls: 'panel panel-default keypoint', 'data-key': key}, parent);
         let body = new Elm('div.panel-body', panel);
+
+        let keychain = this.getKeychain(panel, true);
+        keychain.pop();
+        keychain = keychain.join('.');
+
         let plus = new Elm('div', {
             cls: 'btn btn-default',
             html: '<i class="glyphicon glyphicon-plus"></i> Add',
-            style: 'margin:0 15px 15px'
+            style: 'margin:0 15px 15px',
+            click: ()=> {
+                //TODO this undbind and rebind feels hacky.
+                this.binding.unbind();
+                let list = new Function('return this.' + keychain)();
+                list.push(Object.assign({}, list[0]));
+                this.arrayIndex = list.length - 1;
+                this.buildOneItem(list[0], body);
+                new Elm('hr', body);
+                this.bind();
+            }
         }, panel);
+
         return body;
     }
 
@@ -257,6 +278,8 @@ class FormGenerator {
             wrapper = this.checkboxWrapper(model, parent, key);
             model['data-keychain'] = this.getKeychain(wrapper);
             element = new Elm(model.element, model, wrapper, 'top'); //top because label comes after input
+            element.setAttribute('rv-checked', this.getKeychain(wrapper));
+
         } else {
             wrapper = this.defaultWrapper(model, parent, key);
             model['data-keychain'] = this.getKeychain(wrapper);
