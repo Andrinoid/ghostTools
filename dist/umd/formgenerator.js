@@ -69,7 +69,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 //            type: 'submit',
 //            value: 'Lets Go'
 //        }
-//    ];
+//        "images": [
+//                {
+//                    "type": "image",
+//                    "label": "campaign image",
+//                    "width": "auto",
+//                    "height": "auto",
+//                    "quality": 80,
+//                    "value": ""
+//                }
+//            ],
+//        ];
 var typeModels = {
     text: {
         element: 'input',
@@ -125,11 +135,10 @@ var typeModels = {
         width: 'auto',
         height: 'auto',
         quality: 60,
-        value: ''
+        value: '',
+        currentImage: ''
     }
 };
-
-//currentImage: 'profileImage.jpg',
 
 var FormGenerator = function () {
     function FormGenerator(form, parent) {
@@ -138,11 +147,10 @@ var FormGenerator = function () {
         this.form = form;
         this.parent = parent || document.body;
         this.typeModels = typeModels;
-        this.keyHistory = [];
         this.arrayIndex = null;
+        this.cleanForm = {};
         this.buildAllItems(this.form, this.parent);
         this.bind();
-        //this.binding = rivets.bind(this.parent, {form: this.form});
     }
 
     _createClass(FormGenerator, [{
@@ -161,7 +169,7 @@ var FormGenerator = function () {
         value: function getKeychain(el) {
             var raw = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
 
-            var keyList = ['value'];
+            var keyList = ['value']; //list is reversed so this is the end key
             while (el.parentNode && el.parentNode != document.body) {
                 if ((' ' + el.className + ' ').indexOf(' ' + 'keypoint' + ' ') > -1) {
                     keyList.push(el.getAttribute('data-key'));
@@ -181,7 +189,11 @@ var FormGenerator = function () {
     }, {
         key: 'jsKeychain',
         value: function jsKeychain(str) {
-            return str.replace(new RegExp('\.[0-9]+'), '[' + str.match('\.[0-9]+')[0].slice(1) + ']');
+            try {
+                return str.replace(new RegExp('\.[0-9]+'), '[' + str.match('\.[0-9]+')[0].slice(1) + ']');
+            } catch (err) {
+                return str;
+            }
         }
 
         /**
@@ -260,6 +272,7 @@ var FormGenerator = function () {
         value: function subFormWrapperPlus(parent, key) {
             var _this = this;
 
+            var self = this;
             key = this.getCycleKey(key);
             var panel = new Elm('div', { cls: 'panel panel-default keypoint', 'data-key': key }, parent);
             var body = new Elm('div.panel-body', panel);
@@ -276,7 +289,7 @@ var FormGenerator = function () {
                     //TODO this undbind and rebind feels hacky.
                     _this.binding.unbind();
 
-                    var list = new Function('return this.' + keychain)();
+                    var list = eval('self.' + keychain);
                     var listClone = _.cloneDeep(list);
 
                     var clone = listClone[0];
@@ -303,6 +316,7 @@ var FormGenerator = function () {
         value: function buildOneItem(item, parent, key) {
             var _this2 = this;
 
+            var self = this;
             /**
              * If item is array we need special wrapper
              */
@@ -340,28 +354,44 @@ var FormGenerator = function () {
             var wrapper = null;
             var element = null;
 
-            // Generate wrapper template for given type
+            /**
+             * Bellow are special model types. They either don't fit the defaultWrapper pattern
+             * or need some special treatment e.g image will be converted to image Droppad
+             * using our IMAGECLOUD service
+             */
+
+            /**
+             * Checkboxes don't fit in the defaultWrapper
+             */
             if (model.type === 'checkbox') {
                 wrapper = this.checkboxWrapper(model, parent, key);
                 model['data-keychain'] = this.getKeychain(wrapper);
                 element = new Elm(model.element, model, wrapper, 'top'); //top because label comes after input
                 element.setAttribute('rv-checked', this.getKeychain(wrapper));
-            } else if (model.type === 'image') {
-                wrapper = this.defaultWrapper(model, parent, key);
-                var keychain = this.getKeychain(wrapper);
-                element = new Elm(model.element, model, wrapper);
-
-                var imagePortal = new ImageCloud(element, model);
-                imagePortal.on('success', function (rsp) {
-                    console.log(rsp.url);
-                    new Function('this.' + keychain + '=' + rsp.url)();
-                });
-            } else {
-                wrapper = this.defaultWrapper(model, parent, key);
-                model['data-keychain'] = this.getKeychain(wrapper);
-                element = new Elm(model.element, model, wrapper);
-                element.setAttribute('rv-value', this.getKeychain(wrapper));
             }
+            /**
+             * Image is converted to droppad using ImageCloud
+             */
+            else if (model.type === 'image') {
+                    wrapper = this.defaultWrapper(model, parent, key);
+                    var keychain = this.getKeychain(wrapper);
+                    keychain = this.jsKeychain(keychain);
+                    element = new Elm(model.element, model, wrapper);
+                    model.currentImage = model.value;
+                    var imagePortal = new ImageCloud(element, model);
+                    imagePortal.on('success', function (rsp) {
+                        eval('self.' + keychain + '="' + rsp.url + '"');
+                    });
+                }
+                /**
+                 * No special treatment needed
+                 */
+                else {
+                        wrapper = this.defaultWrapper(model, parent, key);
+                        model['data-keychain'] = this.getKeychain(wrapper);
+                        element = new Elm(model.element, model, wrapper);
+                        element.setAttribute('rv-value', this.getKeychain(wrapper));
+                    }
 
             // Some form elements have children. E.g select menus
             try {
@@ -380,9 +410,23 @@ var FormGenerator = function () {
         value: function buildAllItems(form, parent) {
             var _this3 = this;
 
-            Utils.foreach(form, function (item, key) {
-                _this3.keyHistory.push(key);
-                _this3.buildOneItem(item, parent, key);
+            var orderKeys = form._order || [];
+            var AllKeys = Object.keys(form);
+            var diff = _.difference(AllKeys, orderKeys);
+            var order = orderKeys.concat(diff);
+
+            Utils.foreach(order, function (key) {
+                if (!form.hasOwnProperty(key)) {
+                    console.warn('Schema has no key: ' + key + '. Looks like _order list is outdated.');
+                    return;
+                }
+                var item = form[key];
+                if (typeof item !== 'string') {
+                    if (key.substring(0, 1) !== '_') {
+                        _this3.cleanForm[key] = null;
+                        _this3.buildOneItem(item, parent, key);
+                    }
+                }
             });
         }
     }]);
