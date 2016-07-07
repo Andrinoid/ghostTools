@@ -75,7 +75,8 @@ let typeModels = {
         type: 'text',
         cls: 'form-control',
         value: '',
-        placeholder: ''
+        placeholder: '',
+        helpText: ''
     },
     number: {
         element: 'input',
@@ -129,7 +130,11 @@ let typeModels = {
     }
 };
 
-
+//TODO list
+/**
+ * add validation for types
+ * remove instance
+ */
 class FormGenerator {
 
     constructor(form, parent) {
@@ -192,7 +197,8 @@ class FormGenerator {
      */
     getModel(item) {
         let model = this.typeModels[item.type];
-        return Utils.extend(model, item);
+        let clone = _.clone(model);
+        return Utils.extend(clone, item);
     }
 
     /**
@@ -203,7 +209,9 @@ class FormGenerator {
         key = this.getCycleKey(key);
         let wrapper = new Elm('div.form-group', {'data-key': key, cls: 'keypoint'}, parent);
         let label = model.label && new Elm('label', {text: model.label}, wrapper);
-        return wrapper;
+        let inputContainer = new Elm('div', wrapper);
+        let helptext = model.helpText && new Elm('span.help-block', {text: model.helpText}, wrapper);
+        return inputContainer;
     }
 
     /**
@@ -215,6 +223,7 @@ class FormGenerator {
         let label = new Elm('label', wrapper);
         model['checked'] = model.value; // We only use checkbox as bool so if value is true its checked
         new Elm('span', {text: model.label}, label);
+        let helptext = model.helpText && new Elm('span.help-block', {text: model.helpText}, wrapper);
         return label;
     }
 

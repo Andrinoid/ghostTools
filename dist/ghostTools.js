@@ -630,7 +630,8 @@ var typeModels = {
         type: 'text',
         cls: 'form-control',
         value: '',
-        placeholder: ''
+        placeholder: '',
+        helpText: ''
     },
     number: {
         element: 'input',
@@ -683,6 +684,12 @@ var typeModels = {
         currentImage: ''
     }
 };
+
+//TODO list
+/**
+ * add validation for types
+ * remove instance
+ */
 
 var FormGenerator = function () {
     function FormGenerator(form, parent) {
@@ -762,7 +769,8 @@ var FormGenerator = function () {
         key: 'getModel',
         value: function getModel(item) {
             var model = this.typeModels[item.type];
-            return Utils.extend(model, item);
+            var clone = _.clone(model);
+            return Utils.extend(clone, item);
         }
 
         /**
@@ -776,7 +784,9 @@ var FormGenerator = function () {
             key = this.getCycleKey(key);
             var wrapper = new Elm('div.form-group', { 'data-key': key, cls: 'keypoint' }, parent);
             var label = model.label && new Elm('label', { text: model.label }, wrapper);
-            return wrapper;
+            var inputContainer = new Elm('div', wrapper);
+            var helptext = model.helpText && new Elm('span.help-block', { text: model.helpText }, wrapper);
+            return inputContainer;
         }
 
         /**
@@ -791,6 +801,7 @@ var FormGenerator = function () {
             var label = new Elm('label', wrapper);
             model['checked'] = model.value; // We only use checkbox as bool so if value is true its checked
             new Elm('span', { text: model.label }, label);
+            var helptext = model.helpText && new Elm('span.help-block', { text: model.helpText }, wrapper);
             return label;
         }
 
@@ -921,8 +932,7 @@ var FormGenerator = function () {
                     var keychain = this.getKeychain(wrapper);
                     keychain = this.jsKeychain(keychain);
                     element = new Elm(model.element, model, wrapper);
-                    //model.currentImage = model.value;
-                console.log(model);
+                    model.currentImage = model.value;
                     var imagePortal = new ImageCloud(element, model);
                     imagePortal.on('success', function (rsp) {
                         eval('self.' + keychain + '="' + rsp.url + '"');
