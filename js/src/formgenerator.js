@@ -116,7 +116,7 @@ let typeModels = {
     checkbox: {
         element: 'input',
         type: 'checkbox',
-        label: 'dfdf',
+        label: '',
         value: ''
     },
     image: {
