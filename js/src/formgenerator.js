@@ -122,6 +122,7 @@ let typeModels = {
     image: {
         element: 'div',
         label: 'imagefield',
+        description: '',
         width: 'auto',
         height: 'auto',
         quality: 60,
@@ -185,8 +186,11 @@ class FormGenerator {
      * if we are inside a loop prepend the index to the key
      * e.g if arrayIndex is 2 and key is foo we return 2
      */
-    getCycleKey(key) {
+    getCycleKey(key, reverse = false) {
         if (this.arrayIndex || this.arrayIndex === 0) {
+            if(reverse) {
+                 return key ? key + '.' + this.arrayIndex : this.arrayIndex;
+            }
             return key ? this.arrayIndex + '.' + key : this.arrayIndex;
         }
         return key;
@@ -209,6 +213,7 @@ class FormGenerator {
         key = this.getCycleKey(key);
         let wrapper = new Elm('div.form-group', {'data-key': key, cls: 'keypoint'}, parent);
         let label = model.label && new Elm('label', {text: model.label}, wrapper);
+        let description = model.description && new Elm('p', {text: model.description}, wrapper);
         let inputContainer = new Elm('div', wrapper);
         let helptext = model.helpText && new Elm('span.help-block', {text: model.helpText}, wrapper);
         return inputContainer;
@@ -267,18 +272,45 @@ class FormGenerator {
 
                 let isSubform = !clone.hasOwnProperty('type');
                 if (isSubform) {
-                    this.buildAllItems(clone, body);
+                    this.buildSubForm(clone, body, key);
                 } else {
                     this.buildOneItem(clone, body);
                 }
 
-                new Elm('hr', body);
+                //new Elm('hr', body);
 
                 this.bind();
             }
         }, panel);
 
         return body;
+    }
+
+    buildSubForm(subitem, parent, key) {
+        let wrapper = new Elm('div.subform', parent);
+        let keychain = this.getKeychain(wrapper, true);
+        keychain.pop();
+        keychain = keychain.join('.');
+
+
+        let remove = new Elm('div.delSubForm', {
+            cls: 'pull-right',
+            html: '<i class="glyphicon glyphicon-remove"></i>',
+            css: {color: 'gray', cursor: 'pointer'},
+            'data-key': keychain,
+            click: (e)=> {
+                this.binding.unbind();
+                let list = eval('self.' + this.jsKeychain(keychain));
+                let index = this.arrayIndex || 0;
+                list.splice(index, 1);
+                Utils.fadeOutRemove(wrapper);
+
+                setTimeout(()=> {
+                    this.bind();
+                });
+            }
+        }, wrapper);
+        this.buildAllItems(subitem, wrapper);
     }
 
     buildOneItem(item, parent, key) {
@@ -294,11 +326,12 @@ class FormGenerator {
                 this.arrayIndex = i;
                 let isSubform = !subitem.hasOwnProperty('type');
                 if (isSubform) {
-                    this.buildAllItems(subitem, parent);
+                    this.buildSubForm(subitem, parent, key);
+
                 } else {
                     this.buildOneItem(subitem, parent);
                 }
-                new Elm('hr', parent);
+                //new Elm('hr', parent);
             });
             this.arrayIndex = null;
             return;
@@ -388,6 +421,7 @@ class FormGenerator {
             }
             let item = form[key];
             if (typeof(item) !== 'string') {
+                // Don't populate private keys
                 if (key.substring(0, 1) !== '_') {
                     this.cleanForm[key] = null;
                     this.buildOneItem(item, parent, key);

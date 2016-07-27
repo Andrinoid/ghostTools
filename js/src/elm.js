@@ -118,8 +118,8 @@ class Elm {
     }
 
     click(fn) {
-        this.element.addEventListener('click', function () {
-            fn();
+        this.element.addEventListener('click', function (e) {
+            fn(e);
         });
     }
 

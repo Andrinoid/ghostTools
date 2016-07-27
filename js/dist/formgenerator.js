@@ -118,12 +118,13 @@ var typeModels = {
     checkbox: {
         element: 'input',
         type: 'checkbox',
-        label: 'dfdf',
+        label: '',
         value: ''
     },
     image: {
         element: 'div',
         label: 'imagefield',
+        description: '',
         width: 'auto',
         height: 'auto',
         quality: 60,
@@ -202,7 +203,12 @@ var FormGenerator = function () {
     }, {
         key: 'getCycleKey',
         value: function getCycleKey(key) {
+            var reverse = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+
             if (this.arrayIndex || this.arrayIndex === 0) {
+                if (reverse) {
+                    return key ? key + '.' + this.arrayIndex : this.arrayIndex;
+                }
                 return key ? this.arrayIndex + '.' + key : this.arrayIndex;
             }
             return key;
@@ -231,6 +237,7 @@ var FormGenerator = function () {
             key = this.getCycleKey(key);
             var wrapper = new Elm('div.form-group', { 'data-key': key, cls: 'keypoint' }, parent);
             var label = model.label && new Elm('label', { text: model.label }, wrapper);
+            var description = model.description && new Elm('p', { text: model.description }, wrapper);
             var inputContainer = new Elm('div', wrapper);
             var helptext = model.helpText && new Elm('span.help-block', { text: model.helpText }, wrapper);
             return inputContainer;
@@ -300,12 +307,12 @@ var FormGenerator = function () {
 
                     var isSubform = !clone.hasOwnProperty('type');
                     if (isSubform) {
-                        _this.buildAllItems(clone, body);
+                        _this.buildSubForm(clone, body, key);
                     } else {
                         _this.buildOneItem(clone, body);
                     }
 
-                    new Elm('hr', body);
+                    //new Elm('hr', body);
 
                     _this.bind();
                 }
@@ -314,9 +321,38 @@ var FormGenerator = function () {
             return body;
         }
     }, {
+        key: 'buildSubForm',
+        value: function buildSubForm(subitem, parent, key) {
+            var _this2 = this;
+
+            var wrapper = new Elm('div.subform', parent);
+            var keychain = this.getKeychain(wrapper, true);
+            keychain.pop();
+            keychain = keychain.join('.');
+
+            var remove = new Elm('div.delSubForm', {
+                cls: 'pull-right',
+                html: '<i class="glyphicon glyphicon-remove"></i>',
+                css: { color: 'gray', cursor: 'pointer' },
+                'data-key': keychain,
+                click: function click(e) {
+                    _this2.binding.unbind();
+                    var list = eval('self.' + _this2.jsKeychain(keychain));
+                    var index = _this2.arrayIndex || 0;
+                    list.splice(index, 1);
+                    Utils.fadeOutRemove(wrapper);
+
+                    setTimeout(function () {
+                        _this2.bind();
+                    });
+                }
+            }, wrapper);
+            this.buildAllItems(subitem, wrapper);
+        }
+    }, {
         key: 'buildOneItem',
         value: function buildOneItem(item, parent, key) {
-            var _this2 = this;
+            var _this3 = this;
 
             var self = this;
             /**
@@ -327,14 +363,14 @@ var FormGenerator = function () {
                 new Elm('hr', parent);
                 parent = this.subFormWrapperPlus(parent, key);
                 Utils.foreach(item, function (subitem, i) {
-                    _this2.arrayIndex = i;
+                    _this3.arrayIndex = i;
                     var isSubform = !subitem.hasOwnProperty('type');
                     if (isSubform) {
-                        _this2.buildAllItems(subitem, parent);
+                        _this3.buildSubForm(subitem, parent, key);
                     } else {
-                        _this2.buildOneItem(subitem, parent);
+                        _this3.buildOneItem(subitem, parent);
                     }
-                    new Elm('hr', parent);
+                    //new Elm('hr', parent);
                 });
                 this.arrayIndex = null;
                 return;
@@ -399,7 +435,7 @@ var FormGenerator = function () {
             try {
                 if (model.childnodes.length) {
                     Utils.foreach(model.childnodes, function (item) {
-                        var model = _this2.getModel(item);
+                        var model = _this3.getModel(item);
                         new Elm(model.element, model, element);
                     });
                 }
@@ -410,7 +446,7 @@ var FormGenerator = function () {
     }, {
         key: 'buildAllItems',
         value: function buildAllItems(form, parent) {
-            var _this3 = this;
+            var _this4 = this;
 
             var orderKeys = form._order || [];
             var AllKeys = Object.keys(form);
@@ -424,9 +460,10 @@ var FormGenerator = function () {
                 }
                 var item = form[key];
                 if (typeof item !== 'string') {
+                    // Don't populate private keys
                     if (key.substring(0, 1) !== '_') {
-                        _this3.cleanForm[key] = null;
-                        _this3.buildOneItem(item, parent, key);
+                        _this4.cleanForm[key] = null;
+                        _this4.buildOneItem(item, parent, key);
                     }
                 }
             });
