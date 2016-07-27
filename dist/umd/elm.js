@@ -142,8 +142,8 @@ var Elm = function () {
     }, {
         key: 'click',
         value: function click(fn) {
-            this.element.addEventListener('click', function () {
-                fn();
+            this.element.addEventListener('click', function (e) {
+                fn(e);
             });
         }
     }, {
