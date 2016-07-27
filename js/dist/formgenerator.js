@@ -149,7 +149,7 @@ var FormGenerator = function () {
         this.arrayIndex = null;
         this.cleanForm = {};
         this.buildAllItems(this.form, this.parent);
-        this.bind();
+        //this.bind();
     }
 
     _createClass(FormGenerator, [{
@@ -237,7 +237,7 @@ var FormGenerator = function () {
             key = this.getCycleKey(key);
             var wrapper = new Elm('div.form-group', { 'data-key': key, cls: 'keypoint' }, parent);
             var label = model.label && new Elm('label', { text: model.label }, wrapper);
-            var description = model.description && new Elm('p', { text: model.description }, wrapper);
+            var description = model.description && new Elm('p', { html: model.description }, wrapper);
             var inputContainer = new Elm('div', wrapper);
             var helptext = model.helpText && new Elm('span.help-block', { text: model.helpText }, wrapper);
             return inputContainer;
@@ -296,7 +296,7 @@ var FormGenerator = function () {
                 style: 'margin:0 15px 15px',
                 click: function click() {
                     //TODO this undbind and rebind feels hacky.
-                    _this.binding.unbind();
+                    //this.binding.unbind();
 
                     var list = eval('self.' + keychain);
                     var listClone = _.cloneDeep(list);
@@ -313,8 +313,7 @@ var FormGenerator = function () {
                     }
 
                     //new Elm('hr', body);
-
-                    _this.bind();
+                    //this.bind();
                 }
             }, panel);
 
@@ -336,14 +335,14 @@ var FormGenerator = function () {
                 css: { color: 'gray', cursor: 'pointer' },
                 'data-key': keychain,
                 click: function click(e) {
-                    _this2.binding.unbind();
+                    //this.binding.unbind();
                     var list = eval('self.' + _this2.jsKeychain(keychain));
                     var index = _this2.arrayIndex || 0;
                     list.splice(index, 1);
                     Utils.fadeOutRemove(wrapper);
 
                     setTimeout(function () {
-                        _this2.bind();
+                        //this.bind();
                     });
                 }
             }, wrapper);
@@ -431,6 +430,23 @@ var FormGenerator = function () {
                         element.setAttribute('rv-value', this.getKeychain(wrapper));
                     }
 
+            if (model.toggle) {
+                (function () {
+                    var label = wrapper.previousElementSibling;
+                    var plus = new Elm('span', {
+                        cls: 'glyphicon glyphicon-plus',
+                        css: { 'margin-left': '10px', 'cursor': 'pointer' }
+                    }, label);
+                    label.addEventListener('click', function (e) {
+                        wrapper.style.display = 'block';
+                        Utils.fadeOutRemove(plus);
+                    });
+                    wrapper.style.display = 'none';
+
+                    //new Elm('div.lorem', {text: 'toggle'}, wrapper);
+                    //TODO add posibility to hide wrappers and show them
+                })();
+            }
             // Some form elements have children. E.g select menus
             try {
                 if (model.childnodes.length) {
@@ -467,6 +483,14 @@ var FormGenerator = function () {
                     }
                 }
             });
+        }
+
+        //
+
+    }, {
+        key: 'getData',
+        value: function getData() {
+            console.log(this.parent);
         }
     }]);
 

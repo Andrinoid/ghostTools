@@ -145,7 +145,7 @@ class FormGenerator {
         this.arrayIndex = null;
         this.cleanForm = {};
         this.buildAllItems(this.form, this.parent);
-        this.bind();
+        //this.bind();
     }
 
     bind() {
@@ -213,7 +213,7 @@ class FormGenerator {
         key = this.getCycleKey(key);
         let wrapper = new Elm('div.form-group', {'data-key': key, cls: 'keypoint'}, parent);
         let label = model.label && new Elm('label', {text: model.label}, wrapper);
-        let description = model.description && new Elm('p', {text: model.description}, wrapper);
+        let description = model.description && new Elm('p', {html: model.description}, wrapper);
         let inputContainer = new Elm('div', wrapper);
         let helptext = model.helpText && new Elm('span.help-block', {text: model.helpText}, wrapper);
         return inputContainer;
@@ -261,7 +261,7 @@ class FormGenerator {
             style: 'margin:0 15px 15px',
             click: ()=> {
                 //TODO this undbind and rebind feels hacky.
-                this.binding.unbind();
+                //this.binding.unbind();
 
                 let list = eval('self.' + keychain);
                 let listClone = _.cloneDeep(list);
@@ -278,8 +278,7 @@ class FormGenerator {
                 }
 
                 //new Elm('hr', body);
-
-                this.bind();
+                //this.bind();
             }
         }, panel);
 
@@ -299,14 +298,14 @@ class FormGenerator {
             css: {color: 'gray', cursor: 'pointer'},
             'data-key': keychain,
             click: (e)=> {
-                this.binding.unbind();
+                //this.binding.unbind();
                 let list = eval('self.' + this.jsKeychain(keychain));
                 let index = this.arrayIndex || 0;
                 list.splice(index, 1);
                 Utils.fadeOutRemove(wrapper);
 
                 setTimeout(()=> {
-                    this.bind();
+                    //this.bind();
                 });
             }
         }, wrapper);
@@ -395,6 +394,21 @@ class FormGenerator {
             element.setAttribute('rv-value', this.getKeychain(wrapper));
         }
 
+        if(model.toggle) {
+            let label = wrapper.previousElementSibling;
+            let plus = new Elm('span', {
+                cls: 'glyphicon glyphicon-plus',
+                css: {'margin-left': '10px', 'cursor': 'pointer'}
+            }, label);
+            label.addEventListener('click', (e)=> {
+                wrapper.style.display = 'block';
+                Utils.fadeOutRemove(plus);
+            });
+            wrapper.style.display = 'none';
+
+            //new Elm('div.lorem', {text: 'toggle'}, wrapper);
+            //TODO add posibility to hide wrappers and show them
+        }
         // Some form elements have children. E.g select menus
         try {
             if (model.childnodes.length) {
@@ -428,6 +442,11 @@ class FormGenerator {
                 }
             }
         });
+    }
+
+    //
+    getData() {
+        console.log(this.parent);
     }
 
 }
