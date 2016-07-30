@@ -289,7 +289,7 @@ const Alertsyles = `
             bottom: 0;
             right: 0;
             pointer-events: none;
-            z-index: 9999;
+            z-index: 10001;
         }
         .js_alerts .js_dialog {
             pointer-events: all;
