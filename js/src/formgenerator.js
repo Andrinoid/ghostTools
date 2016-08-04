@@ -1,6 +1,18 @@
 import Utils from './utils';
 import Elm from './elm';
 
+
+
+//_.mixin({
+//    deeply: function (map) {
+//        return function(obj, fn) {
+//            return map(_.mapValues(obj, function (v) {
+//                return _.isPlainObject(v) ? _.deeply(map)(v, fn) : v;
+//            }), fn);
+//        }
+//    },
+//});
+
 /**
  * ------------------------------------------------------------------------
  * Form generator
@@ -140,16 +152,12 @@ class FormGenerator {
 
     constructor(form, parent) {
         this.form = form;
+        //remove private keys from output object
+
         this.parent = parent || document.body;
         this.typeModels = typeModels;
         this.arrayIndex = null;
-        this.cleanForm = {};
         this.buildAllItems(this.form, this.parent);
-        //this.bind();
-    }
-
-    bind() {
-        this.binding = rivets.bind(this.parent, {form: this.form});
     }
 
     /**
@@ -157,18 +165,20 @@ class FormGenerator {
      * returns keychain
      */
     getKeychain(el, raw = false) {
-        var keyList = ['value']; //list is reversed so this is the end key
+        //var keyList = ['value']; //list is reversed so this is the end key // reference for adding value to the end
+        var keyList = []; //list is reversed so this is the end key
         while (el.parentNode && el.parentNode != document.body) {
             if ((' ' + el.className + ' ').indexOf(' ' + 'keypoint' + ' ') > -1) {
                 keyList.push(el.getAttribute('data-key'));
             }
             el = el.parentNode;
         }
-        keyList.push('form');
+        //keyList.push('form');
 
         return raw ? keyList.reverse() : keyList.reverse().join('.');
 
     }
+
 
     /**
      * Returns javascript valid keychain from the generated dot seperated
@@ -188,8 +198,8 @@ class FormGenerator {
      */
     getCycleKey(key, reverse = false) {
         if (this.arrayIndex || this.arrayIndex === 0) {
-            if(reverse) {
-                 return key ? key + '.' + this.arrayIndex : this.arrayIndex;
+            if (reverse) {
+                return key ? key + '.' + this.arrayIndex : this.arrayIndex;
             }
             return key ? this.arrayIndex + '.' + key : this.arrayIndex;
         }
@@ -252,7 +262,7 @@ class FormGenerator {
         let body = new Elm('div.panel-body', panel);
 
         let keychain = this.getKeychain(panel, true);
-        keychain.pop();
+        //keychain.pop();
         keychain = keychain.join('.');
 
         let plus = new Elm('div', {
@@ -260,10 +270,8 @@ class FormGenerator {
             html: '<i class="glyphicon glyphicon-plus"></i> Add',
             style: 'margin:0 15px 15px',
             click: ()=> {
-                //TODO this undbind and rebind feels hacky.
-                //this.binding.unbind();
+                let list = eval('self.form.' + keychain);
 
-                let list = eval('self.' + keychain);
                 let listClone = _.cloneDeep(list);
 
                 let clone = listClone[0];
@@ -276,9 +284,6 @@ class FormGenerator {
                 } else {
                     this.buildOneItem(clone, body);
                 }
-
-                //new Elm('hr', body);
-                //this.bind();
             }
         }, panel);
 
@@ -288,7 +293,7 @@ class FormGenerator {
     buildSubForm(subitem, parent, key) {
         let wrapper = new Elm('div.subform', parent);
         let keychain = this.getKeychain(wrapper, true);
-        keychain.pop();
+        //keychain.pop();
         keychain = keychain.join('.');
 
 
@@ -298,15 +303,11 @@ class FormGenerator {
             css: {color: 'gray', cursor: 'pointer'},
             'data-key': keychain,
             click: (e)=> {
-                //this.binding.unbind();
-                let list = eval('self.' + this.jsKeychain(keychain));
+                console.log(this.jsKeychain(keychain));
+                let list = eval('self.form' + this.jsKeychain(keychain));
                 let index = this.arrayIndex || 0;
                 list.splice(index, 1);
                 Utils.fadeOutRemove(wrapper);
-
-                setTimeout(()=> {
-                    //this.bind();
-                });
             }
         }, wrapper);
         this.buildAllItems(subitem, wrapper);
@@ -366,7 +367,11 @@ class FormGenerator {
             wrapper = this.checkboxWrapper(model, parent, key);
             model['data-keychain'] = this.getKeychain(wrapper);
             element = new Elm(model.element, model, wrapper, 'top'); //top because label comes after input
-            element.setAttribute('rv-checked', this.getKeychain(wrapper));
+
+            //set value as attribute on change
+            element.addEventListener('change', function (e) {
+                this.setAttribute('elm-value', this.checked);
+            });
 
         }
         /**
@@ -374,27 +379,33 @@ class FormGenerator {
          */
         else if (model.type === 'image') {
             wrapper = this.defaultWrapper(model, parent, key);
-            var keychain = this.getKeychain(wrapper);
-            keychain = this.jsKeychain(keychain);
+            model['data-keychain'] = this.getKeychain(wrapper);
             element = new Elm(model.element, model, wrapper);
             model.currentImage = model.value;
             var imagePortal = new ImageCloud(element, model);
             imagePortal.on('success', (rsp)=> {
-                eval('self.' + keychain + '="' + rsp.url + '"');
+                element.setAttribute('rv-checked', this.getKeychain(wrapper));
+                element.setAttribute('elm-value', rsp.url);
             });
 
         }
         /**
          * No special treatment needed
+         * these elements are normal html inputs and should have onchange event
          */
         else {
             wrapper = this.defaultWrapper(model, parent, key);
             model['data-keychain'] = this.getKeychain(wrapper);
             element = new Elm(model.element, model, wrapper);
-            element.setAttribute('rv-value', this.getKeychain(wrapper));
+
+            //set value as attribute on change
+            element.addEventListener('change', function (e) {
+                this.setAttribute('elm-value', this.value);
+            });
+
         }
 
-        if(model.toggle) {
+        if (model.toggle) {
             let label = wrapper.previousElementSibling;
             let plus = new Elm('span', {
                 cls: 'glyphicon glyphicon-plus',
@@ -405,9 +416,6 @@ class FormGenerator {
                 Utils.fadeOutRemove(plus);
             });
             wrapper.style.display = 'none';
-
-            //new Elm('div.lorem', {text: 'toggle'}, wrapper);
-            //TODO add posibility to hide wrappers and show them
         }
         // Some form elements have children. E.g select menus
         try {
@@ -437,18 +445,39 @@ class FormGenerator {
             if (typeof(item) !== 'string') {
                 // Don't populate private keys
                 if (key.substring(0, 1) !== '_') {
-                    this.cleanForm[key] = null;
                     this.buildOneItem(item, parent, key);
                 }
             }
         });
     }
 
-    //
+
     getData() {
-        console.log(this.parent);
+        let self = this;
+        let elms = this.parent.querySelectorAll('[data-keychain]');
+        this.output = _.cloneDeep(this.form);
+        _.forEach(elms, (item) => {
+            let keyList = item.getAttribute('data-keychain').split('.');
+            let lastKey = keyList.pop();
+            let keyChain = keyList.join('.');
+            let jsKeychain = this.jsKeychain(keyChain);
+
+            let val = item.getAttribute('elm-value');
+            let parentObj;
+            jsKeychain ? parentObj = eval('self.output.' + jsKeychain) : parentObj = this.output;
+
+            parentObj[lastKey] = val;
+
+        });
+        return this.output;
+
+    }
+
+    setData(obj) {
+        
     }
 
 }
+
 
 export default FormGenerator;
