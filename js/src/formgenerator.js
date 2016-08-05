@@ -218,6 +218,20 @@ class FormGenerator {
         return key;
     }
 
+    pushArrayObject(keychain, n) {
+        let list = eval('self.form.' + keychain);
+        let clone = _.clone(list[0]);
+        console.log('list');
+        console.log(clone);
+        let isSubform = !clone.hasOwnProperty('type');
+        console.log(isSubform);
+        while (n - 1) {
+            list.push(clone);
+            --n;
+        }
+
+    }
+
     /**
      * Returns the model for given form item
      */
@@ -264,6 +278,7 @@ class FormGenerator {
         return body;
     }
 
+
     /**
      * Returns wrapper element for array with plus button
      */
@@ -283,13 +298,10 @@ class FormGenerator {
             style: 'margin:0 15px 15px',
             click: ()=> {
                 let list = eval('self.form.' + keychain);
-
                 let listClone = _.cloneDeep(list);
-
                 let clone = listClone[0];
                 list.push(clone);
                 this.arrayIndex = list.length - 1;
-
                 let isSubform = !clone.hasOwnProperty('type');
                 if (isSubform) {
                     this.buildSubForm(clone, body, key);
@@ -315,7 +327,6 @@ class FormGenerator {
             css: {color: 'gray', cursor: 'pointer'},
             'data-key': keychain,
             click: (e)=> {
-                console.log(this.jsKeychain(keychain));
                 let list = eval('self.form.' + this.jsKeychain(keychain));
                 let index = this.arrayIndex || 0;
                 list.splice(index, 1);
@@ -361,6 +372,8 @@ class FormGenerator {
             this.buildAllItems(item, parent);
             return false;
         }
+
+
         let model = this.getModel(item);
         let wrapper = null;
         let element = null;
@@ -414,6 +427,9 @@ class FormGenerator {
             });
         }
 
+        /**
+         * If there is value defined on the model, we add it as elm-value attribute
+         */
         if (model.value) {
             element.setAttribute('elm-value', model.value);
         }
@@ -487,20 +503,47 @@ class FormGenerator {
 
     setData(obj) {
         let self = this;
+
+        // Get keychains from the populated form
         let keychains = this.getAllKeychains();
 
-
-        _.forEach(keychains, (keyChain)=> {
+        // obj can have populated lists but schema only defines one item so...
+        // Iterate through keychains. and update schema for array's
+        for (let i = 0; i < keychains.length; i++) {
+            let keyChain = keychains[i];
             let jsKeychain = this.jsKeychain(keyChain);
-            let val = eval('obj.' + jsKeychain);
-            if (val && typeof(val) !== 'object') { //FIXME this is a layzy fix. real solution is to not set data-key to non input elements
+            let val;
+            try {
+                val = eval('obj.' + jsKeychain)
+            } catch(err) {
+                val = null;
+            }
+            if (Utils.isArrey(val)) {
+                this.pushArrayObject(keyChain, val.length);
+            }
+        }
+
+        // build form again. Kida hacky
+        this.buildAllItems(this.form, this.parent);
+
+        keychains = this.getAllKeychains();
+        for (let i = 0; i < keychains.length; i++) {
+            let keyChain = keychains[i];
+            let jsKeychain = this.jsKeychain(keyChain);
+            let val;
+            try {
+                val = eval('obj.' + jsKeychain)
+            } catch(err) {
+                val = null;
+            }
+            if (val && typeof(val) !== 'object') {
                 let parentObj = eval('self.form.' + jsKeychain);
                 parentObj['value'] = val;
                 this.parent.innerHTML = '';
-                this.buildAllItems(this.form, this.parent);
             }
 
-        });
+        }
+        this.buildAllItems(this.form, this.parent);
         return false;
     }
 

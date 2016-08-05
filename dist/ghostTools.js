@@ -793,6 +793,20 @@ var FormGenerator = function () {
             }
             return key;
         }
+    }, {
+        key: 'pushArrayObject',
+        value: function pushArrayObject(keychain, n) {
+            var list = eval('self.form.' + keychain);
+            var clone = _.clone(list[0]);
+            console.log('list');
+            console.log(clone);
+            var isSubform = !clone.hasOwnProperty('type');
+            console.log(isSubform);
+            while (n - 1) {
+                list.push(clone);
+                --n;
+            }
+        }
 
         /**
          * Returns the model for given form item
@@ -876,13 +890,10 @@ var FormGenerator = function () {
                 style: 'margin:0 15px 15px',
                 click: function click() {
                     var list = eval('self.form.' + keychain);
-
                     var listClone = _.cloneDeep(list);
-
                     var clone = listClone[0];
                     list.push(clone);
                     _this2.arrayIndex = list.length - 1;
-
                     var isSubform = !clone.hasOwnProperty('type');
                     if (isSubform) {
                         _this2.buildSubForm(clone, body, key);
@@ -910,7 +921,6 @@ var FormGenerator = function () {
                 css: { color: 'gray', cursor: 'pointer' },
                 'data-key': keychain,
                 click: function click(e) {
-                    console.log(_this3.jsKeychain(keychain));
                     var list = eval('self.form.' + _this3.jsKeychain(keychain));
                     var index = _this3.arrayIndex || 0;
                     list.splice(index, 1);
@@ -958,6 +968,7 @@ var FormGenerator = function () {
                 this.buildAllItems(item, parent);
                 return false;
             }
+
             var model = this.getModel(item);
             var wrapper = null;
             var element = null;
@@ -1008,6 +1019,9 @@ var FormGenerator = function () {
                         });
                     }
 
+            /**
+             * If there is value defined on the model, we add it as elm-value attribute
+             */
             if (model.value) {
                 element.setAttribute('elm-value', model.value);
             }
@@ -1087,22 +1101,47 @@ var FormGenerator = function () {
     }, {
         key: 'setData',
         value: function setData(obj) {
-            var _this7 = this;
-
             var self = this;
+
+            // Get keychains from the populated form
             var keychains = this.getAllKeychains();
 
-            _.forEach(keychains, function (keyChain) {
-                var jsKeychain = _this7.jsKeychain(keyChain);
-                var val = eval('obj.' + jsKeychain);
-                if (val && (typeof val === 'undefined' ? 'undefined' : _typeof(val)) !== 'object') {
-                    //FIXME this is a layzy fix. real solution is to not set data-key to non input elements
-                    var parentObj = eval('self.form.' + jsKeychain);
-                    parentObj['value'] = val;
-                    _this7.parent.innerHTML = '';
-                    _this7.buildAllItems(_this7.form, _this7.parent);
+            // obj can have populated lists but schema only defines one item so...
+            // Iterate through keychains. and update schema for array's
+            for (var i = 0; i < keychains.length; i++) {
+                var keyChain = keychains[i];
+                var jsKeychain = this.jsKeychain(keyChain);
+                var val = void 0;
+                try {
+                    val = eval('obj.' + jsKeychain);
+                } catch (err) {
+                    val = null;
                 }
-            });
+                if (Utils.isArrey(val)) {
+                    this.pushArrayObject(keyChain, val.length);
+                }
+            }
+
+            // build form again. Kida hacky
+            this.buildAllItems(this.form, this.parent);
+
+            keychains = this.getAllKeychains();
+            for (var _i = 0; _i < keychains.length; _i++) {
+                var _keyChain = keychains[_i];
+                var _jsKeychain = this.jsKeychain(_keyChain);
+                var _val = void 0;
+                try {
+                    _val = eval('obj.' + _jsKeychain);
+                } catch (err) {
+                    _val = null;
+                }
+                if (_val && (typeof _val === 'undefined' ? 'undefined' : _typeof(_val)) !== 'object') {
+                    var parentObj = eval('self.form.' + _jsKeychain);
+                    parentObj['value'] = _val;
+                    this.parent.innerHTML = '';
+                }
+            }
+            this.buildAllItems(this.form, this.parent);
             return false;
         }
     }]);
