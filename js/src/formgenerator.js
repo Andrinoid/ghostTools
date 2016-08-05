@@ -221,10 +221,8 @@ class FormGenerator {
     pushArrayObject(keychain, n) {
         let list = eval('self.form.' + keychain);
         let clone = _.clone(list[0]);
-        console.log('list');
-        console.log(clone);
         let isSubform = !clone.hasOwnProperty('type');
-        console.log(isSubform);
+        console.log('isSubform', isSubform, clone);
         while (n - 1) {
             list.push(clone);
             --n;
@@ -289,7 +287,6 @@ class FormGenerator {
         let body = new Elm('div.panel-body', panel);
 
         let keychain = this.getKeychain(panel, true);
-        //keychain.pop();
         keychain = keychain.join('.');
 
         let plus = new Elm('div', {
@@ -297,6 +294,7 @@ class FormGenerator {
             html: '<i class="glyphicon glyphicon-plus"></i> Add',
             style: 'margin:0 15px 15px',
             click: ()=> {
+                let elmWrapper = new Elm('div', body);
                 let list = eval('self.form.' + keychain);
                 let listClone = _.cloneDeep(list);
                 let clone = listClone[0];
@@ -306,7 +304,20 @@ class FormGenerator {
                 if (isSubform) {
                     this.buildSubForm(clone, body, key);
                 } else {
-                    this.buildOneItem(clone, body);
+                    // MERGE *
+                    let remove = new Elm('div.delSubForm', {
+                        cls: 'pull-right',
+                        html: '<i class="glyphicon glyphicon-remove"></i>',
+                        css: {color: 'gray', cursor: 'pointer'},
+                        'data-key': keychain,
+                        click: (e)=> {
+                            let list = eval('self.form.' + this.jsKeychain(keychain));
+                            let index = this.arrayIndex || 0;
+                            list.splice(index, 1);
+                            Utils.fadeOutRemove(elmWrapper);
+                        }
+                    }, elmWrapper);
+                    this.buildOneItem(clone, elmWrapper);
                 }
             }
         }, panel);
@@ -320,19 +331,22 @@ class FormGenerator {
         //keychain.pop();
         keychain = keychain.join('.');
 
-
-        let remove = new Elm('div.delSubForm', {
-            cls: 'pull-right',
-            html: '<i class="glyphicon glyphicon-remove"></i>',
-            css: {color: 'gray', cursor: 'pointer'},
-            'data-key': keychain,
-            click: (e)=> {
-                let list = eval('self.form.' + this.jsKeychain(keychain));
-                let index = this.arrayIndex || 0;
-                list.splice(index, 1);
-                Utils.fadeOutRemove(wrapper);
-            }
-        }, wrapper);
+        // No remove button on first item in array
+        if (this.arrayIndex) {
+            // MERGE *
+            let remove = new Elm('div.delSubForm', {
+                cls: 'pull-right',
+                html: '<i class="glyphicon glyphicon-remove"></i>',
+                css: {color: 'gray', cursor: 'pointer'},
+                'data-key': keychain,
+                click: (e)=> {
+                    let list = eval('self.form.' + this.jsKeychain(keychain));
+                    let index = this.arrayIndex || 0;
+                    list.splice(index, 1);
+                    Utils.fadeOutRemove(wrapper);
+                }
+            }, wrapper);
+        }
         this.buildAllItems(subitem, wrapper);
     }
 
@@ -515,7 +529,7 @@ class FormGenerator {
             let val;
             try {
                 val = eval('obj.' + jsKeychain)
-            } catch(err) {
+            } catch (err) {
                 val = null;
             }
             if (Utils.isArrey(val)) {
@@ -533,7 +547,9 @@ class FormGenerator {
             let val;
             try {
                 val = eval('obj.' + jsKeychain)
-            } catch(err) {
+            } catch (err) {
+                console.warn('object has fields not represented in schema');
+                console.log(jsKeychain);
                 val = null;
             }
             if (val && typeof(val) !== 'object') {
