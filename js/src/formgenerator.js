@@ -218,16 +218,19 @@ class FormGenerator {
         return key;
     }
 
-    pushArrayObject(keychain, n) {
-        let list = eval('self.form.' + keychain);
-        let clone = _.clone(list[0]);
+    /**
+     * Populate list n times with default object
+     */
+    pushArrayObject(keychain, list) {
+        let schemaList = eval('self.form.' + keychain);
+        let clone = _.clone(schemaList[0]);
         let isSubform = !clone.hasOwnProperty('type');
-        console.log('isSubform', isSubform, clone);
-        while (n - 1) {
-            list.push(clone);
-            --n;
-        }
-
+        console.log('subform', isSubform);
+        schemaList.pop();
+        _.forEach(list, (item)=> {
+            clone.value = item;
+            schemaList.push(clone);
+        });
     }
 
     /**
@@ -277,6 +280,47 @@ class FormGenerator {
     }
 
 
+    removeItemElm(parent, keychain) {
+        let remove = new Elm('div.delSubForm', {
+            cls: 'pull-right',
+            html: '<i class="glyphicon glyphicon-remove"></i>',
+            css: {color: 'gray', cursor: 'pointer'},
+            'data-key': keychain,
+            click: (e)=> {
+                let list = eval('self.form.' + this.jsKeychain(keychain));
+                let index = this.arrayIndex || 0;
+                let removed = list.splice(index, 1);
+                console.log(removed); //// removes only one item if removed is triggered in a row
+                Utils.fadeOutRemove(parent);
+            }
+        }, parent);
+    }
+
+    addItemElm(parent, body, keychain) {
+        let plus = new Elm('div', {
+            cls: 'btn btn-default',
+            html: '<i class="glyphicon glyphicon-plus"></i> Add',
+            style: 'margin:0 15px 15px',
+            click: ()=> {
+                let elmWrapper = new Elm('div', body);
+                let list = eval('self.form.' + keychain);
+                let listClone = _.cloneDeep(list);
+                let clone = listClone[0];
+                clone.value = '';
+                list.push(clone);
+                this.arrayIndex = list.length - 1;
+                let isSubform = !clone.hasOwnProperty('type');
+                if (isSubform) {
+                    this.buildSubForm(clone, body);
+                } else {
+                    this.removeItemElm(elmWrapper, keychain);
+                    this.buildOneItem(clone, elmWrapper);
+                }
+            }
+        }, parent);
+    }
+
+
     /**
      * Returns wrapper element for array with plus button
      */
@@ -289,43 +333,11 @@ class FormGenerator {
         let keychain = this.getKeychain(panel, true);
         keychain = keychain.join('.');
 
-        let plus = new Elm('div', {
-            cls: 'btn btn-default',
-            html: '<i class="glyphicon glyphicon-plus"></i> Add',
-            style: 'margin:0 15px 15px',
-            click: ()=> {
-                let elmWrapper = new Elm('div', body);
-                let list = eval('self.form.' + keychain);
-                let listClone = _.cloneDeep(list);
-                let clone = listClone[0];
-                list.push(clone);
-                this.arrayIndex = list.length - 1;
-                let isSubform = !clone.hasOwnProperty('type');
-                if (isSubform) {
-                    this.buildSubForm(clone, body, key);
-                } else {
-                    // MERGE *
-                    let remove = new Elm('div.delSubForm', {
-                        cls: 'pull-right',
-                        html: '<i class="glyphicon glyphicon-remove"></i>',
-                        css: {color: 'gray', cursor: 'pointer'},
-                        'data-key': keychain,
-                        click: (e)=> {
-                            let list = eval('self.form.' + this.jsKeychain(keychain));
-                            let index = this.arrayIndex || 0;
-                            list.splice(index, 1);
-                            Utils.fadeOutRemove(elmWrapper);
-                        }
-                    }, elmWrapper);
-                    this.buildOneItem(clone, elmWrapper);
-                }
-            }
-        }, panel);
-
+        this.addItemElm(panel, body, keychain);
         return body;
     }
 
-    buildSubForm(subitem, parent, key) {
+    buildSubForm(subitem, parent) {
         let wrapper = new Elm('div.subform', parent);
         let keychain = this.getKeychain(wrapper, true);
         //keychain.pop();
@@ -333,19 +345,7 @@ class FormGenerator {
 
         // No remove button on first item in array
         if (this.arrayIndex) {
-            // MERGE *
-            let remove = new Elm('div.delSubForm', {
-                cls: 'pull-right',
-                html: '<i class="glyphicon glyphicon-remove"></i>',
-                css: {color: 'gray', cursor: 'pointer'},
-                'data-key': keychain,
-                click: (e)=> {
-                    let list = eval('self.form.' + this.jsKeychain(keychain));
-                    let index = this.arrayIndex || 0;
-                    list.splice(index, 1);
-                    Utils.fadeOutRemove(wrapper);
-                }
-            }, wrapper);
+            this.removeItemElm(wrapper, keychain);
         }
         this.buildAllItems(subitem, wrapper);
     }
@@ -516,6 +516,7 @@ class FormGenerator {
     }
 
     setData(obj) {
+        //TODO consider saving orginal schema and use for set data to prevent doubles if setData is done twice
         let self = this;
 
         // Get keychains from the populated form
@@ -533,34 +534,11 @@ class FormGenerator {
                 val = null;
             }
             if (Utils.isArrey(val)) {
-                this.pushArrayObject(keyChain, val.length);
+                this.pushArrayObject(keyChain, val);
             }
         }
-
-        // build form again. Kida hacky
+        this.parent.innerHTML = '';
         this.buildAllItems(this.form, this.parent);
-
-        keychains = this.getAllKeychains();
-        for (let i = 0; i < keychains.length; i++) {
-            let keyChain = keychains[i];
-            let jsKeychain = this.jsKeychain(keyChain);
-            let val;
-            try {
-                val = eval('obj.' + jsKeychain)
-            } catch (err) {
-                console.warn('object has fields not represented in schema');
-                console.log(jsKeychain);
-                val = null;
-            }
-            if (val && typeof(val) !== 'object') {
-                let parentObj = eval('self.form.' + jsKeychain);
-                parentObj['value'] = val;
-                this.parent.innerHTML = '';
-            }
-
-        }
-        this.buildAllItems(this.form, this.parent);
-        return false;
     }
 
 }

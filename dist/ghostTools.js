@@ -553,8 +553,6 @@ Alert.prototype.closeAll = function () {
 };
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -793,17 +791,23 @@ var FormGenerator = function () {
             }
             return key;
         }
+
+        /**
+         * Populate list n times with default object
+         */
+
     }, {
         key: 'pushArrayObject',
-        value: function pushArrayObject(keychain, n) {
-            var list = eval('self.form.' + keychain);
-            var clone = _.clone(list[0]);
+        value: function pushArrayObject(keychain, list) {
+            var schemaList = eval('self.form.' + keychain);
+            var clone = _.clone(schemaList[0]);
             var isSubform = !clone.hasOwnProperty('type');
-            console.log('isSubform', isSubform, clone);
-            while (n - 1) {
-                list.push(clone);
-                --n;
-            }
+            console.log('subform', isSubform);
+            schemaList.pop();
+            _.forEach(list, function (item) {
+                clone.value = item;
+                schemaList.push(clone);
+            });
         }
 
         /**
@@ -863,23 +867,29 @@ var FormGenerator = function () {
             var body = new Elm('div.panel-body', panel);
             return body;
         }
-
-        /**
-         * Returns wrapper element for array with plus button
-         */
-
     }, {
-        key: 'subFormWrapperPlus',
-        value: function subFormWrapperPlus(parent, key) {
+        key: 'removeItemElm',
+        value: function removeItemElm(parent, keychain) {
             var _this2 = this;
 
-            var self = this;
-            key = this.getCycleKey(key);
-            var panel = new Elm('div', { cls: 'panel panel-default keypoint', 'data-key': key }, parent);
-            var body = new Elm('div.panel-body', panel);
-
-            var keychain = this.getKeychain(panel, true);
-            keychain = keychain.join('.');
+            var remove = new Elm('div.delSubForm', {
+                cls: 'pull-right',
+                html: '<i class="glyphicon glyphicon-remove"></i>',
+                css: { color: 'gray', cursor: 'pointer' },
+                'data-key': keychain,
+                click: function click(e) {
+                    var list = eval('self.form.' + _this2.jsKeychain(keychain));
+                    var index = _this2.arrayIndex || 0;
+                    var removed = list.splice(index, 1);
+                    console.log(removed); //// removes only one item if removed is triggered in a row
+                    Utils.fadeOutRemove(parent);
+                }
+            }, parent);
+        }
+    }, {
+        key: 'addItemElm',
+        value: function addItemElm(parent, body, keychain) {
+            var _this3 = this;
 
             var plus = new Elm('div', {
                 cls: 'btn btn-default',
@@ -890,37 +900,41 @@ var FormGenerator = function () {
                     var list = eval('self.form.' + keychain);
                     var listClone = _.cloneDeep(list);
                     var clone = listClone[0];
+                    clone.value = '';
                     list.push(clone);
-                    _this2.arrayIndex = list.length - 1;
+                    _this3.arrayIndex = list.length - 1;
                     var isSubform = !clone.hasOwnProperty('type');
                     if (isSubform) {
-                        _this2.buildSubForm(clone, body, key);
+                        _this3.buildSubForm(clone, body);
                     } else {
-                        // MERGE *
-                        var remove = new Elm('div.delSubForm', {
-                            cls: 'pull-right',
-                            html: '<i class="glyphicon glyphicon-remove"></i>',
-                            css: { color: 'gray', cursor: 'pointer' },
-                            'data-key': keychain,
-                            click: function click(e) {
-                                var list = eval('self.form.' + _this2.jsKeychain(keychain));
-                                var index = _this2.arrayIndex || 0;
-                                list.splice(index, 1);
-                                Utils.fadeOutRemove(elmWrapper);
-                            }
-                        }, elmWrapper);
-                        _this2.buildOneItem(clone, elmWrapper);
+                        _this3.removeItemElm(elmWrapper, keychain);
+                        _this3.buildOneItem(clone, elmWrapper);
                     }
                 }
-            }, panel);
+            }, parent);
+        }
 
+        /**
+         * Returns wrapper element for array with plus button
+         */
+
+    }, {
+        key: 'subFormWrapperPlus',
+        value: function subFormWrapperPlus(parent, key) {
+            var self = this;
+            key = this.getCycleKey(key);
+            var panel = new Elm('div', { cls: 'panel panel-default keypoint', 'data-key': key }, parent);
+            var body = new Elm('div.panel-body', panel);
+
+            var keychain = this.getKeychain(panel, true);
+            keychain = keychain.join('.');
+
+            this.addItemElm(panel, body, keychain);
             return body;
         }
     }, {
         key: 'buildSubForm',
-        value: function buildSubForm(subitem, parent, key) {
-            var _this3 = this;
-
+        value: function buildSubForm(subitem, parent) {
             var wrapper = new Elm('div.subform', parent);
             var keychain = this.getKeychain(wrapper, true);
             //keychain.pop();
@@ -928,19 +942,7 @@ var FormGenerator = function () {
 
             // No remove button on first item in array
             if (this.arrayIndex) {
-                // MERGE *
-                var remove = new Elm('div.delSubForm', {
-                    cls: 'pull-right',
-                    html: '<i class="glyphicon glyphicon-remove"></i>',
-                    css: { color: 'gray', cursor: 'pointer' },
-                    'data-key': keychain,
-                    click: function click(e) {
-                        var list = eval('self.form.' + _this3.jsKeychain(keychain));
-                        var index = _this3.arrayIndex || 0;
-                        list.splice(index, 1);
-                        Utils.fadeOutRemove(wrapper);
-                    }
-                }, wrapper);
+                this.removeItemElm(wrapper, keychain);
             }
             this.buildAllItems(subitem, wrapper);
         }
@@ -1116,6 +1118,7 @@ var FormGenerator = function () {
     }, {
         key: 'setData',
         value: function setData(obj) {
+            //TODO consider saving orginal schema and use for set data to prevent doubles if setData is done twice
             var self = this;
 
             // Get keychains from the populated form
@@ -1133,33 +1136,11 @@ var FormGenerator = function () {
                     val = null;
                 }
                 if (Utils.isArrey(val)) {
-                    this.pushArrayObject(keyChain, val.length);
+                    this.pushArrayObject(keyChain, val);
                 }
             }
-
-            // build form again. Kida hacky
+            this.parent.innerHTML = '';
             this.buildAllItems(this.form, this.parent);
-
-            keychains = this.getAllKeychains();
-            for (var _i = 0; _i < keychains.length; _i++) {
-                var _keyChain = keychains[_i];
-                var _jsKeychain = this.jsKeychain(_keyChain);
-                var _val = void 0;
-                try {
-                    _val = eval('obj.' + _jsKeychain);
-                } catch (err) {
-                    console.warn('object has fields not represented in schema');
-                    console.log(_jsKeychain);
-                    _val = null;
-                }
-                if (_val && (typeof _val === 'undefined' ? 'undefined' : _typeof(_val)) !== 'object') {
-                    var parentObj = eval('self.form.' + _jsKeychain);
-                    parentObj['value'] = _val;
-                    this.parent.innerHTML = '';
-                }
-            }
-            this.buildAllItems(this.form, this.parent);
-            return false;
         }
     }]);
 
