@@ -1,5 +1,7 @@
 'use strict';
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -185,6 +187,25 @@ var FormGenerator = function () {
 
             return raw ? keyList.reverse() : keyList.reverse().join('.');
         }
+    }, {
+        key: 'getAllKeychains',
+        value: function getAllKeychains() {
+            var _this = this;
+
+            var prefix = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+            var suffix = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+
+            prefix = prefix ? prefix += '.' : '';
+            suffix = suffix ? '.' + suffix : '';
+            var formElms = this.parent.querySelectorAll('[data-key]');
+            var keychains = [];
+            _.forEach(formElms, function (item) {
+                var root = _this.getKeychain(item);
+                var keychain = '' + prefix + root + suffix;
+                keychains.push(keychain);
+            });
+            return keychains;
+        }
 
         /**
          * Returns javascript valid keychain from the generated dot seperated
@@ -285,7 +306,7 @@ var FormGenerator = function () {
     }, {
         key: 'subFormWrapperPlus',
         value: function subFormWrapperPlus(parent, key) {
-            var _this = this;
+            var _this2 = this;
 
             var self = this;
             key = this.getCycleKey(key);
@@ -307,13 +328,13 @@ var FormGenerator = function () {
 
                     var clone = listClone[0];
                     list.push(clone);
-                    _this.arrayIndex = list.length - 1;
+                    _this2.arrayIndex = list.length - 1;
 
                     var isSubform = !clone.hasOwnProperty('type');
                     if (isSubform) {
-                        _this.buildSubForm(clone, body, key);
+                        _this2.buildSubForm(clone, body, key);
                     } else {
-                        _this.buildOneItem(clone, body);
+                        _this2.buildOneItem(clone, body);
                     }
                 }
             }, panel);
@@ -323,7 +344,7 @@ var FormGenerator = function () {
     }, {
         key: 'buildSubForm',
         value: function buildSubForm(subitem, parent, key) {
-            var _this2 = this;
+            var _this3 = this;
 
             var wrapper = new Elm('div.subform', parent);
             var keychain = this.getKeychain(wrapper, true);
@@ -336,9 +357,9 @@ var FormGenerator = function () {
                 css: { color: 'gray', cursor: 'pointer' },
                 'data-key': keychain,
                 click: function click(e) {
-                    console.log(_this2.jsKeychain(keychain));
-                    var list = eval('self.form' + _this2.jsKeychain(keychain));
-                    var index = _this2.arrayIndex || 0;
+                    console.log(_this3.jsKeychain(keychain));
+                    var list = eval('self.form.' + _this3.jsKeychain(keychain));
+                    var index = _this3.arrayIndex || 0;
                     list.splice(index, 1);
                     Utils.fadeOutRemove(wrapper);
                 }
@@ -348,7 +369,7 @@ var FormGenerator = function () {
     }, {
         key: 'buildOneItem',
         value: function buildOneItem(item, parent, key) {
-            var _this3 = this;
+            var _this4 = this;
 
             var self = this;
             /**
@@ -359,12 +380,12 @@ var FormGenerator = function () {
                 new Elm('hr', parent);
                 parent = this.subFormWrapperPlus(parent, key);
                 Utils.foreach(item, function (subitem, i) {
-                    _this3.arrayIndex = i;
+                    _this4.arrayIndex = i;
                     var isSubform = !subitem.hasOwnProperty('type');
                     if (isSubform) {
-                        _this3.buildSubForm(subitem, parent, key);
+                        _this4.buildSubForm(subitem, parent, key);
                     } else {
-                        _this3.buildOneItem(subitem, parent);
+                        _this4.buildOneItem(subitem, parent);
                     }
                     //new Elm('hr', parent);
                 });
@@ -401,7 +422,6 @@ var FormGenerator = function () {
                 wrapper = this.checkboxWrapper(model, parent, key);
                 model['data-keychain'] = this.getKeychain(wrapper);
                 element = new Elm(model.element, model, wrapper, 'top'); //top because label comes after input
-
                 //set value as attribute on change
                 element.addEventListener('change', function (e) {
                     this.setAttribute('elm-value', this.checked);
@@ -417,7 +437,7 @@ var FormGenerator = function () {
                     model.currentImage = model.value;
                     var imagePortal = new ImageCloud(element, model);
                     imagePortal.on('success', function (rsp) {
-                        element.setAttribute('rv-checked', _this3.getKeychain(wrapper));
+                        element.setAttribute('rv-checked', _this4.getKeychain(wrapper));
                         element.setAttribute('elm-value', rsp.url);
                     });
                 }
@@ -429,12 +449,15 @@ var FormGenerator = function () {
                         wrapper = this.defaultWrapper(model, parent, key);
                         model['data-keychain'] = this.getKeychain(wrapper);
                         element = new Elm(model.element, model, wrapper);
-
                         //set value as attribute on change
                         element.addEventListener('change', function (e) {
                             this.setAttribute('elm-value', this.value);
                         });
                     }
+
+            if (model.value) {
+                element.setAttribute('elm-value', model.value);
+            }
 
             if (model.toggle) {
                 (function () {
@@ -454,7 +477,7 @@ var FormGenerator = function () {
             try {
                 if (model.childnodes.length) {
                     Utils.foreach(model.childnodes, function (item) {
-                        var model = _this3.getModel(item);
+                        var model = _this4.getModel(item);
                         new Elm(model.element, model, element);
                     });
                 }
@@ -465,7 +488,7 @@ var FormGenerator = function () {
     }, {
         key: 'buildAllItems',
         value: function buildAllItems(form, parent) {
-            var _this4 = this;
+            var _this5 = this;
 
             var orderKeys = form._order || [];
             var AllKeys = Object.keys(form);
@@ -481,7 +504,7 @@ var FormGenerator = function () {
                 if (typeof item !== 'string') {
                     // Don't populate private keys
                     if (key.substring(0, 1) !== '_') {
-                        _this4.buildOneItem(item, parent, key);
+                        _this5.buildOneItem(item, parent, key);
                     }
                 }
             });
@@ -489,7 +512,7 @@ var FormGenerator = function () {
     }, {
         key: 'getData',
         value: function getData() {
-            var _this5 = this;
+            var _this6 = this;
 
             var self = this;
             var elms = this.parent.querySelectorAll('[data-keychain]');
@@ -498,15 +521,36 @@ var FormGenerator = function () {
                 var keyList = item.getAttribute('data-keychain').split('.');
                 var lastKey = keyList.pop();
                 var keyChain = keyList.join('.');
-                var jsKeychain = _this5.jsKeychain(keyChain);
+                var jsKeychain = _this6.jsKeychain(keyChain);
 
                 var val = item.getAttribute('elm-value');
                 var parentObj = void 0;
-                jsKeychain ? parentObj = eval('self.output.' + jsKeychain) : parentObj = _this5.output;
+                jsKeychain ? parentObj = eval('self.output.' + jsKeychain) : parentObj = _this6.output;
 
                 parentObj[lastKey] = val;
             });
             return this.output;
+        }
+    }, {
+        key: 'setData',
+        value: function setData(obj) {
+            var _this7 = this;
+
+            var self = this;
+            var keychains = this.getAllKeychains();
+
+            _.forEach(keychains, function (keyChain) {
+                var jsKeychain = _this7.jsKeychain(keyChain);
+                var val = eval('obj.' + jsKeychain);
+                if (val && (typeof val === 'undefined' ? 'undefined' : _typeof(val)) !== 'object') {
+                    //FIXME this is a layzy fix. real solution is to not set data-key to non input elements
+                    var parentObj = eval('self.form.' + jsKeychain);
+                    parentObj['value'] = val;
+                    _this7.parent.innerHTML = '';
+                    _this7.buildAllItems(_this7.form, _this7.parent);
+                }
+            });
+            return false;
         }
     }]);
 

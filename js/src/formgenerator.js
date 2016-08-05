@@ -179,6 +179,18 @@ class FormGenerator {
 
     }
 
+    getAllKeychains(prefix = null, suffix = null) {
+        prefix = prefix ? prefix += '.' : '';
+        suffix = suffix ? '.' + suffix : '';
+        let formElms = this.parent.querySelectorAll('[data-key]');
+        let keychains = [];
+        _.forEach(formElms, (item)=> {
+            let root = this.getKeychain(item);
+            let keychain = `${prefix}${root}${suffix}`;
+            keychains.push(keychain);
+        });
+        return keychains;
+    }
 
     /**
      * Returns javascript valid keychain from the generated dot seperated
@@ -304,7 +316,7 @@ class FormGenerator {
             'data-key': keychain,
             click: (e)=> {
                 console.log(this.jsKeychain(keychain));
-                let list = eval('self.form' + this.jsKeychain(keychain));
+                let list = eval('self.form.' + this.jsKeychain(keychain));
                 let index = this.arrayIndex || 0;
                 list.splice(index, 1);
                 Utils.fadeOutRemove(wrapper);
@@ -367,7 +379,6 @@ class FormGenerator {
             wrapper = this.checkboxWrapper(model, parent, key);
             model['data-keychain'] = this.getKeychain(wrapper);
             element = new Elm(model.element, model, wrapper, 'top'); //top because label comes after input
-
             //set value as attribute on change
             element.addEventListener('change', function (e) {
                 this.setAttribute('elm-value', this.checked);
@@ -397,12 +408,14 @@ class FormGenerator {
             wrapper = this.defaultWrapper(model, parent, key);
             model['data-keychain'] = this.getKeychain(wrapper);
             element = new Elm(model.element, model, wrapper);
-
             //set value as attribute on change
             element.addEventListener('change', function (e) {
                 this.setAttribute('elm-value', this.value);
             });
+        }
 
+        if (model.value) {
+            element.setAttribute('elm-value', model.value);
         }
 
         if (model.toggle) {
@@ -451,7 +464,6 @@ class FormGenerator {
         });
     }
 
-
     getData() {
         let self = this;
         let elms = this.parent.querySelectorAll('[data-keychain]');
@@ -474,10 +486,26 @@ class FormGenerator {
     }
 
     setData(obj) {
-        
+        let self = this;
+        let keychains = this.getAllKeychains();
+
+
+        _.forEach(keychains, (keyChain)=> {
+            let jsKeychain = this.jsKeychain(keyChain);
+            let val = eval('obj.' + jsKeychain);
+            if (val && typeof(val) !== 'object') { //FIXME this is a layzy fix. real solution is to not set data-key to non input elements
+                let parentObj = eval('self.form.' + jsKeychain);
+                parentObj['value'] = val;
+                this.parent.innerHTML = '';
+                this.buildAllItems(this.form, this.parent);
+            }
+
+        });
+        return false;
     }
 
 }
 
 
 export default FormGenerator;
+

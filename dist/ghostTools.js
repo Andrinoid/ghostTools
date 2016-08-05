@@ -395,7 +395,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Alertsyles = '\n         .js_alerts .modal-body,\n         .js_alerts .modal-title {\n             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;\n             line-height: 1.42857143;\n             color: #333,\n             text-align: left;\n         }\n         .js_alerts .js_modal,\n         .js_alerts .modal-backdrop {\n             position: fixed;\n             top: 0;\n             right: 0;\n             bottom: 0;\n             left: 0\n         }\n         .js_alerts .modal-backdrop {\n             z-index: 1040;\n             background-color: #000;\n             opacity: .5\n         }\n\n         .js_alerts .js_modal {\n             z-index: 10000;\n             overflow-y: scroll;\n             -webkit-overflow-scrolling: touch;\n             outline: 0\n         }\n         .js_alerts .js_dialog {\n             position: relative;\n             width: auto;\n             margin: 10px\n         }\n         .js_alerts .modal-header .close {\n             margin-top: -2px;\n             position: static;\n             height: 30px;\n         }\n         .js_alerts .modal-theme-blue .close {\n             text-shadow: none;\n             opacity: 1;\n             font-size: 31px;\n             font-weight: normal;\n         }\n         .js_alerts .modal-theme-blue .close span {\n             color: white;\n         }\n         .js_alerts .modal-theme-blue .close span:hover {\n             color: #fbc217;\n         }\n         .js_alerts .close.standalone {\n             position: absolute;\n             right: 15px;\n             top: 13px;\n             z-index: 1;\n             height: 30px;\n         }\n         .js_alerts .modal-title {\n             margin: 0;\n             font-size: 18px;\n             font-weight: 500\n         }\n         .js_alerts button.close {\n             -webkit-appearance: none;\n             padding: 0;\n             cursor: pointer;\n             background: 0 0;\n             border: 0\n         }\n         .js_alerts .modal-content {\n             position: relative;\n             background-color: #fff;\n             background-clip: padding-box;\n             border: 1px solid #999;\n             border-radius: 2px;\n             outline: 0;\n         }\n         .js_alerts .modal-theme-blue .modal-content {\n            background-color: #4a6173;\n         }\n         .js_alerts .modal-header {\n             min-height: 16.43px;\n             padding: 15px;\n             border-bottom: 1px solid #e5e5e5;\n             min-height: 30px\n         }\n         .js_alerts .modal-theme-blue .modal-header {\n            border-bottom: none;\n         }\n         .js_alerts .modal-body {\n             position: relative;\n             padding: 15px;\n             font-size: 14px;\n             color: #333;\n         }\n         .js_alerts .close {\n             float: right;\n             font-size: 21px;\n             font-weight: 700;\n             line-height: 1;\n             color: #000;\n             text-shadow: 0 1px 0 #fff;\n             opacity: .2\n         }\n         @media (min-width: 768px) {\n             .js_alerts .js_dialog {\n                 width: 600px;\n                 margin: 30px auto\n             }\n             .js_alerts .modal-content {\n                 box-shadow: 0 5px 15px rgba(0, 0, 0, .5)\n             }\n             .js_alerts .js_modal-sm {\n                 width: 300px\n             }\n         }\n         @media (min-width: 992px) {\n             .js_alerts .js_modal-lg {\n                 width: 900px\n             }\n         }\n\n         .ghost-focus {\n             background: transparent;\n             z-index: 1000;\n         }\n\n\n         /*** Animations ***/\n         @-webkit-keyframes fadeInDown {\n             from {\n                 opacity: 0;\n                 -webkit-transform: translate3d(0, -10px, 0);\n                 transform: translate3d(0, -10px, 0);\n             }\n             to {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none;\n             }\n         }\n         @keyframes fadeInDown {\n             from {\n                 opacity: 0;\n                 -webkit-transform: translate3d(0, -10px, 0);\n                 transform: translate3d(0, -10px, 0);\n             }\n             to {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none;\n             }\n         }\n         @-webkit-keyframes fadeInTop {\n             from {\n                 opacity: 0;\n                 -webkit-transform: translate3d(0, 10px, 0);\n                 transform: translate3d(0, 10px, 0);\n             }\n             to {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none;\n             }\n         }\n         @keyframes fadeInTop {\n             from {\n                 opacity: 0;\n                 -webkit-transform: translate3d(0, 10px, 0);\n                 transform: translate3d(0, 10px, 0);\n             }\n             to {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none;\n             }\n         }\n         @-webkit-keyframes fadeOutTop {\n             0% {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none\n             }\n             100% {\n                 opacity: 0;\n                 -webkit-transform: translate3d(0, -10px, 0);\n                 transform: translate3d(0, -10px, 0)\n             }\n         }\n         @keyframes fadeOutTop {\n             0% {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none\n             }\n             100% {\n                 opacity: 0;\n                 -webkit-transform: translate3d(0, -10px, 0);\n                 transform: translate3d(0, -10px, 0)\n             }\n         }\n         @-webkit-keyframes fadeInLeft {\n             from {\n                 opacity: 0;\n                 -webkit-transform: translate3d(-10px, 0, 0);\n                 transform: translate3d(-10px, 0, 0);\n             }\n             to {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none;\n             }\n         }\n         @keyframes fadeInLeft {\n             from {\n                 opacity: 0;\n                 -webkit-transform: translate3d(-10px, 0, 0);\n                 transform: translate3d(-10px, 0, 0);\n             }\n             to {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none;\n             }\n         }\n         @-webkit-keyframes fadeInRight {\n             from {\n                 opacity: 0;\n                 -webkit-transform: translate3d(10px, 0, 0);\n                 transform: translate3d(10px, 0, 0);\n             }\n             to {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none;\n             }\n         }\n         @keyframes fadeInRight {\n             from {\n                 opacity: 0;\n                 -webkit-transform: translate3d(10px, 0, 0);\n                 transform: translate3d(10px, 0, 0);\n             }\n             to {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none;\n             }\n         }\n         .fadeInDown,\n         .fadeInLeft,\n         .fadeInRight,\n         .fadeInTop,\n         .fadeOutTop{\n             -webkit-animation-fill-mode: both;\n             -webkit-animation-duration: .5s;\n             animation-duration: .5s;\n             animation-fill-mode: both;\n         }\n         .fadeInDown {\n             -webkit-animation-name: fadeInDown;\n             animation-name: fadeInDown;\n         }\n         .fadeInLeft {\n             -webkit-animation-name: fadeInLeft;\n             animation-name: fadeInLeft;\n         }\n         .fadeInRight {\n             -webkit-animation-name: fadeInRight;\n             animation-name: fadeInRight;\n         }\n         .fadeInTop {\n             -webkit-animation-name: fadeInTop;\n             animation-name: fadeInTop;\n         }\n         .fadeOutTop {\n             -webkit-animation-name: fadeOutTop;\n             animation-name: fadeOutTop;\n         }\n\n        /* Alert styles */\n        .js_alerts {\n            position: fixed;\n            top: 0;\n            left: 0;\n            bottom: 0;\n            right: 0;\n            pointer-events: none;\n            z-index: 9999;\n        }\n        .js_alerts .js_dialog {\n            pointer-events: all;\n        }\n        .js_alerts .js_alert .js_modal {\n            overflow-y: auto;\n            position: static;\n        }\n        .js_alerts .js_alert .modal-content {\n            padding: 10px;\n            margin: 0;\n            border: 1px solid #eeeeee;\n            border-left-width: 5px;\n            border-radius: 3px;\n            font: inherit;\n        }\n        .js_alerts .js_success .modal-content{\n            border-left-color: #5bc0de;\n        }\n        .js_alerts .js_danger .modal-content{\n            border-left-color: #d9534f;\n        }\n        .js_alerts .js_info .modal-content{\n            border-left-color: #f0ad4e;\n        }';
+var Alertsyles = '\n         .js_alerts .modal-body,\n         .js_alerts .modal-title {\n             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;\n             line-height: 1.42857143;\n             color: #333,\n             text-align: left;\n         }\n         .js_alerts .js_modal,\n         .js_alerts .modal-backdrop {\n             position: fixed;\n             top: 0;\n             right: 0;\n             bottom: 0;\n             left: 0\n         }\n         .js_alerts .modal-backdrop {\n             z-index: 1040;\n             background-color: #000;\n             opacity: .5\n         }\n\n         .js_alerts .js_modal {\n             z-index: 10000;\n             overflow-y: scroll;\n             -webkit-overflow-scrolling: touch;\n             outline: 0\n         }\n         .js_alerts .js_dialog {\n             position: relative;\n             width: auto;\n             margin: 10px\n         }\n         .js_alerts .modal-header .close {\n             margin-top: -2px;\n             position: static;\n             height: 30px;\n         }\n         .js_alerts .modal-theme-blue .close {\n             text-shadow: none;\n             opacity: 1;\n             font-size: 31px;\n             font-weight: normal;\n         }\n         .js_alerts .modal-theme-blue .close span {\n             color: white;\n         }\n         .js_alerts .modal-theme-blue .close span:hover {\n             color: #fbc217;\n         }\n         .js_alerts .close.standalone {\n             position: absolute;\n             right: 15px;\n             top: 13px;\n             z-index: 1;\n             height: 30px;\n         }\n         .js_alerts .modal-title {\n             margin: 0;\n             font-size: 18px;\n             font-weight: 500\n         }\n         .js_alerts button.close {\n             -webkit-appearance: none;\n             padding: 0;\n             cursor: pointer;\n             background: 0 0;\n             border: 0\n         }\n         .js_alerts .modal-content {\n             position: relative;\n             background-color: #fff;\n             background-clip: padding-box;\n             border: 1px solid #999;\n             border-radius: 2px;\n             outline: 0;\n         }\n         .js_alerts .modal-theme-blue .modal-content {\n            background-color: #4a6173;\n         }\n         .js_alerts .modal-header {\n             min-height: 16.43px;\n             padding: 15px;\n             border-bottom: 1px solid #e5e5e5;\n             min-height: 30px\n         }\n         .js_alerts .modal-theme-blue .modal-header {\n            border-bottom: none;\n         }\n         .js_alerts .modal-body {\n             position: relative;\n             padding: 15px;\n             font-size: 14px;\n             color: #333;\n         }\n         .js_alerts .close {\n             float: right;\n             font-size: 21px;\n             font-weight: 700;\n             line-height: 1;\n             color: #000;\n             text-shadow: 0 1px 0 #fff;\n             opacity: .2\n         }\n         @media (min-width: 768px) {\n             .js_alerts .js_dialog {\n                 width: 600px;\n                 margin: 30px auto\n             }\n             .js_alerts .modal-content {\n                 box-shadow: 0 5px 15px rgba(0, 0, 0, .5)\n             }\n             .js_alerts .js_modal-sm {\n                 width: 300px\n             }\n         }\n         @media (min-width: 992px) {\n             .js_alerts .js_modal-lg {\n                 width: 900px\n             }\n         }\n\n         .ghost-focus {\n             background: transparent;\n             z-index: 1000;\n         }\n\n\n         /*** Animations ***/\n         @-webkit-keyframes fadeInDown {\n             from {\n                 opacity: 0;\n                 -webkit-transform: translate3d(0, -10px, 0);\n                 transform: translate3d(0, -10px, 0);\n             }\n             to {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none;\n             }\n         }\n         @keyframes fadeInDown {\n             from {\n                 opacity: 0;\n                 -webkit-transform: translate3d(0, -10px, 0);\n                 transform: translate3d(0, -10px, 0);\n             }\n             to {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none;\n             }\n         }\n         @-webkit-keyframes fadeInTop {\n             from {\n                 opacity: 0;\n                 -webkit-transform: translate3d(0, 10px, 0);\n                 transform: translate3d(0, 10px, 0);\n             }\n             to {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none;\n             }\n         }\n         @keyframes fadeInTop {\n             from {\n                 opacity: 0;\n                 -webkit-transform: translate3d(0, 10px, 0);\n                 transform: translate3d(0, 10px, 0);\n             }\n             to {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none;\n             }\n         }\n         @-webkit-keyframes fadeOutTop {\n             0% {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none\n             }\n             100% {\n                 opacity: 0;\n                 -webkit-transform: translate3d(0, -10px, 0);\n                 transform: translate3d(0, -10px, 0)\n             }\n         }\n         @keyframes fadeOutTop {\n             0% {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none\n             }\n             100% {\n                 opacity: 0;\n                 -webkit-transform: translate3d(0, -10px, 0);\n                 transform: translate3d(0, -10px, 0)\n             }\n         }\n         @-webkit-keyframes fadeInLeft {\n             from {\n                 opacity: 0;\n                 -webkit-transform: translate3d(-10px, 0, 0);\n                 transform: translate3d(-10px, 0, 0);\n             }\n             to {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none;\n             }\n         }\n         @keyframes fadeInLeft {\n             from {\n                 opacity: 0;\n                 -webkit-transform: translate3d(-10px, 0, 0);\n                 transform: translate3d(-10px, 0, 0);\n             }\n             to {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none;\n             }\n         }\n         @-webkit-keyframes fadeInRight {\n             from {\n                 opacity: 0;\n                 -webkit-transform: translate3d(10px, 0, 0);\n                 transform: translate3d(10px, 0, 0);\n             }\n             to {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none;\n             }\n         }\n         @keyframes fadeInRight {\n             from {\n                 opacity: 0;\n                 -webkit-transform: translate3d(10px, 0, 0);\n                 transform: translate3d(10px, 0, 0);\n             }\n             to {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none;\n             }\n         }\n         .fadeInDown,\n         .fadeInLeft,\n         .fadeInRight,\n         .fadeInTop,\n         .fadeOutTop{\n             -webkit-animation-fill-mode: both;\n             -webkit-animation-duration: .5s;\n             animation-duration: .5s;\n             animation-fill-mode: both;\n         }\n         .fadeInDown {\n             -webkit-animation-name: fadeInDown;\n             animation-name: fadeInDown;\n         }\n         .fadeInLeft {\n             -webkit-animation-name: fadeInLeft;\n             animation-name: fadeInLeft;\n         }\n         .fadeInRight {\n             -webkit-animation-name: fadeInRight;\n             animation-name: fadeInRight;\n         }\n         .fadeInTop {\n             -webkit-animation-name: fadeInTop;\n             animation-name: fadeInTop;\n         }\n         .fadeOutTop {\n             -webkit-animation-name: fadeOutTop;\n             animation-name: fadeOutTop;\n         }\n\n        /* Alert styles */\n        .js_alerts {\n            position: fixed;\n            top: 0;\n            left: 0;\n            bottom: 0;\n            right: 0;\n            pointer-events: none;\n            z-index: 10001;\n        }\n        .js_alerts .js_dialog {\n            pointer-events: all;\n        }\n        .js_alerts .js_alert .js_modal {\n            overflow-y: auto;\n            position: static;\n        }\n        .js_alerts .js_alert .modal-content {\n            padding: 10px;\n            margin: 0;\n            border: 1px solid #eeeeee;\n            border-left-width: 5px;\n            border-radius: 3px;\n            font: inherit;\n        }\n        .js_alerts .js_success .modal-content{\n            border-left-color: #5bc0de;\n        }\n        .js_alerts .js_danger .modal-content{\n            border-left-color: #d9534f;\n        }\n        .js_alerts .js_info .modal-content{\n            border-left-color: #f0ad4e;\n        }';
 
 var STYLES = Alertsyles;
 
@@ -552,6 +552,8 @@ Alert.prototype.closeAll = function () {
     this.instances.length = 0;
 };
 'use strict';
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -738,6 +740,25 @@ var FormGenerator = function () {
 
             return raw ? keyList.reverse() : keyList.reverse().join('.');
         }
+    }, {
+        key: 'getAllKeychains',
+        value: function getAllKeychains() {
+            var _this = this;
+
+            var prefix = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+            var suffix = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+
+            prefix = prefix ? prefix += '.' : '';
+            suffix = suffix ? '.' + suffix : '';
+            var formElms = this.parent.querySelectorAll('[data-key]');
+            var keychains = [];
+            _.forEach(formElms, function (item) {
+                var root = _this.getKeychain(item);
+                var keychain = '' + prefix + root + suffix;
+                keychains.push(keychain);
+            });
+            return keychains;
+        }
 
         /**
          * Returns javascript valid keychain from the generated dot seperated
@@ -838,7 +859,7 @@ var FormGenerator = function () {
     }, {
         key: 'subFormWrapperPlus',
         value: function subFormWrapperPlus(parent, key) {
-            var _this = this;
+            var _this2 = this;
 
             var self = this;
             key = this.getCycleKey(key);
@@ -860,13 +881,13 @@ var FormGenerator = function () {
 
                     var clone = listClone[0];
                     list.push(clone);
-                    _this.arrayIndex = list.length - 1;
+                    _this2.arrayIndex = list.length - 1;
 
                     var isSubform = !clone.hasOwnProperty('type');
                     if (isSubform) {
-                        _this.buildSubForm(clone, body, key);
+                        _this2.buildSubForm(clone, body, key);
                     } else {
-                        _this.buildOneItem(clone, body);
+                        _this2.buildOneItem(clone, body);
                     }
                 }
             }, panel);
@@ -876,7 +897,7 @@ var FormGenerator = function () {
     }, {
         key: 'buildSubForm',
         value: function buildSubForm(subitem, parent, key) {
-            var _this2 = this;
+            var _this3 = this;
 
             var wrapper = new Elm('div.subform', parent);
             var keychain = this.getKeychain(wrapper, true);
@@ -889,9 +910,9 @@ var FormGenerator = function () {
                 css: { color: 'gray', cursor: 'pointer' },
                 'data-key': keychain,
                 click: function click(e) {
-                    console.log(_this2.jsKeychain(keychain));
-                    var list = eval('self.form' + _this2.jsKeychain(keychain));
-                    var index = _this2.arrayIndex || 0;
+                    console.log(_this3.jsKeychain(keychain));
+                    var list = eval('self.form.' + _this3.jsKeychain(keychain));
+                    var index = _this3.arrayIndex || 0;
                     list.splice(index, 1);
                     Utils.fadeOutRemove(wrapper);
                 }
@@ -901,7 +922,7 @@ var FormGenerator = function () {
     }, {
         key: 'buildOneItem',
         value: function buildOneItem(item, parent, key) {
-            var _this3 = this;
+            var _this4 = this;
 
             var self = this;
             /**
@@ -912,12 +933,12 @@ var FormGenerator = function () {
                 new Elm('hr', parent);
                 parent = this.subFormWrapperPlus(parent, key);
                 Utils.foreach(item, function (subitem, i) {
-                    _this3.arrayIndex = i;
+                    _this4.arrayIndex = i;
                     var isSubform = !subitem.hasOwnProperty('type');
                     if (isSubform) {
-                        _this3.buildSubForm(subitem, parent, key);
+                        _this4.buildSubForm(subitem, parent, key);
                     } else {
-                        _this3.buildOneItem(subitem, parent);
+                        _this4.buildOneItem(subitem, parent);
                     }
                     //new Elm('hr', parent);
                 });
@@ -954,7 +975,6 @@ var FormGenerator = function () {
                 wrapper = this.checkboxWrapper(model, parent, key);
                 model['data-keychain'] = this.getKeychain(wrapper);
                 element = new Elm(model.element, model, wrapper, 'top'); //top because label comes after input
-
                 //set value as attribute on change
                 element.addEventListener('change', function (e) {
                     this.setAttribute('elm-value', this.checked);
@@ -970,7 +990,7 @@ var FormGenerator = function () {
                     model.currentImage = model.value;
                     var imagePortal = new ImageCloud(element, model);
                     imagePortal.on('success', function (rsp) {
-                        element.setAttribute('rv-checked', _this3.getKeychain(wrapper));
+                        element.setAttribute('rv-checked', _this4.getKeychain(wrapper));
                         element.setAttribute('elm-value', rsp.url);
                     });
                 }
@@ -982,12 +1002,15 @@ var FormGenerator = function () {
                         wrapper = this.defaultWrapper(model, parent, key);
                         model['data-keychain'] = this.getKeychain(wrapper);
                         element = new Elm(model.element, model, wrapper);
-
                         //set value as attribute on change
                         element.addEventListener('change', function (e) {
                             this.setAttribute('elm-value', this.value);
                         });
                     }
+
+            if (model.value) {
+                element.setAttribute('elm-value', model.value);
+            }
 
             if (model.toggle) {
                 (function () {
@@ -1007,7 +1030,7 @@ var FormGenerator = function () {
             try {
                 if (model.childnodes.length) {
                     Utils.foreach(model.childnodes, function (item) {
-                        var model = _this3.getModel(item);
+                        var model = _this4.getModel(item);
                         new Elm(model.element, model, element);
                     });
                 }
@@ -1018,7 +1041,7 @@ var FormGenerator = function () {
     }, {
         key: 'buildAllItems',
         value: function buildAllItems(form, parent) {
-            var _this4 = this;
+            var _this5 = this;
 
             var orderKeys = form._order || [];
             var AllKeys = Object.keys(form);
@@ -1034,7 +1057,7 @@ var FormGenerator = function () {
                 if (typeof item !== 'string') {
                     // Don't populate private keys
                     if (key.substring(0, 1) !== '_') {
-                        _this4.buildOneItem(item, parent, key);
+                        _this5.buildOneItem(item, parent, key);
                     }
                 }
             });
@@ -1042,7 +1065,7 @@ var FormGenerator = function () {
     }, {
         key: 'getData',
         value: function getData() {
-            var _this5 = this;
+            var _this6 = this;
 
             var self = this;
             var elms = this.parent.querySelectorAll('[data-keychain]');
@@ -1051,15 +1074,36 @@ var FormGenerator = function () {
                 var keyList = item.getAttribute('data-keychain').split('.');
                 var lastKey = keyList.pop();
                 var keyChain = keyList.join('.');
-                var jsKeychain = _this5.jsKeychain(keyChain);
+                var jsKeychain = _this6.jsKeychain(keyChain);
 
                 var val = item.getAttribute('elm-value');
                 var parentObj = void 0;
-                jsKeychain ? parentObj = eval('self.output.' + jsKeychain) : parentObj = _this5.output;
+                jsKeychain ? parentObj = eval('self.output.' + jsKeychain) : parentObj = _this6.output;
 
                 parentObj[lastKey] = val;
             });
             return this.output;
+        }
+    }, {
+        key: 'setData',
+        value: function setData(obj) {
+            var _this7 = this;
+
+            var self = this;
+            var keychains = this.getAllKeychains();
+
+            _.forEach(keychains, function (keyChain) {
+                var jsKeychain = _this7.jsKeychain(keyChain);
+                var val = eval('obj.' + jsKeychain);
+                if (val && (typeof val === 'undefined' ? 'undefined' : _typeof(val)) !== 'object') {
+                    //FIXME this is a layzy fix. real solution is to not set data-key to non input elements
+                    var parentObj = eval('self.form.' + jsKeychain);
+                    parentObj['value'] = val;
+                    _this7.parent.innerHTML = '';
+                    _this7.buildAllItems(_this7.form, _this7.parent);
+                }
+            });
+            return false;
         }
     }]);
 
