@@ -9,6 +9,8 @@
 }(this, function() {
 'use strict';
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -255,13 +257,14 @@ var FormGenerator = function () {
     }, {
         key: 'pushArrayObject',
         value: function pushArrayObject(keychain, list) {
+            var self = this;
             var schemaList = eval('self.form.' + keychain);
-            var clone = _.clone(schemaList[0]);
-            var isSubform = !clone.hasOwnProperty('type');
-            console.log('subform', isSubform);
+            var item = schemaList[0];
+            var isSubform = !item.hasOwnProperty('type');
             schemaList.pop();
-            _.forEach(list, function (item) {
-                clone.value = item;
+            _.forEach(list, function (val) {
+                var clone = _.clone(item);
+                clone.value = val;
                 schemaList.push(clone);
             });
         }
@@ -328,6 +331,7 @@ var FormGenerator = function () {
         value: function removeItemElm(parent, keychain) {
             var _this2 = this;
 
+            var self = this;
             var remove = new Elm('div.delSubForm', {
                 cls: 'pull-right',
                 html: '<i class="glyphicon glyphicon-remove"></i>',
@@ -337,7 +341,7 @@ var FormGenerator = function () {
                     var list = eval('self.form.' + _this2.jsKeychain(keychain));
                     var index = _this2.arrayIndex || 0;
                     var removed = list.splice(index, 1);
-                    console.log(removed); //// removes only one item if removed is triggered in a row
+                    console.log(removed); //// removes only one item if removed is triggered in a row this.arrayIndex is fixed here
                     Utils.fadeOutRemove(parent);
                 }
             }, parent);
@@ -347,6 +351,7 @@ var FormGenerator = function () {
         value: function addItemElm(parent, body, keychain) {
             var _this3 = this;
 
+            var self = this;
             var plus = new Elm('div', {
                 cls: 'btn btn-default',
                 html: '<i class="glyphicon glyphicon-plus"></i> Add',
@@ -354,8 +359,7 @@ var FormGenerator = function () {
                 click: function click() {
                     var elmWrapper = new Elm('div', body);
                     var list = eval('self.form.' + keychain);
-                    var listClone = _.cloneDeep(list);
-                    var clone = listClone[0];
+                    var clone = list[0];
                     clone.value = '';
                     list.push(clone);
                     _this3.arrayIndex = list.length - 1;
@@ -576,7 +580,6 @@ var FormGenerator = function () {
         value: function setData(obj) {
             //TODO consider saving orginal schema and use for set data to prevent doubles if setData is done twice
             var self = this;
-
             // Get keychains from the populated form
             var keychains = this.getAllKeychains();
 
@@ -594,14 +597,25 @@ var FormGenerator = function () {
                 if (Utils.isArrey(val)) {
                     this.pushArrayObject(keyChain, val);
                 }
+                if (val && (typeof val === 'undefined' ? 'undefined' : _typeof(val)) !== 'object') {
+                    //FIXME this is a layzy fix. real solution is to not set data-key to non input elements
+                    var parentObj = eval('self.form.' + jsKeychain);
+                    parentObj['value'] = val;
+                }
             }
+
             this.parent.innerHTML = '';
             this.buildAllItems(this.form, this.parent);
-            return false;
         }
     }]);
 
     return FormGenerator;
 }();
+
+var SchemaDiscover = function SchemaDiscover(json) {
+    _classCallCheck(this, SchemaDiscover);
+
+    console.log('foo');
+};
 return Formgenerator;
 }));

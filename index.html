@@ -182,7 +182,72 @@
         }
     };
 
-    var formgen = new FormGenerator(form, document.querySelector('#formWrap'));
+    var data =  {
+        name: 'beggi',
+        age: 30,
+        middlename: 'ingi',
+        profileImg: 'http://olympia.sidan.is/iw_cache/6976_Petursson_Bergur_Ingi_PA2036059.jpg',
+        website: {
+            url: 'foobar.com',
+            display: 'foobar'
+        },
+        tags: ['foo', 'bar', 'baz']
+    };
+
+
+
+
+
+    var schema = {
+        _order: ['name', 'middlename'],
+
+        middlename: {
+            label: 'middlename',
+            placeholder: 'middlename',
+            type: 'text',
+            value: '',
+        },
+         name: {
+            label: 'Name',
+            placeholder: 'your name',
+            type: 'text',
+            helpText: 'foobar',
+            value: '',
+
+        },
+        profileImg: {
+            type: 'image',
+            value: '',
+            width: "auto",
+            height: "auto",
+            quality: 60,
+        },
+        website: {
+            url: {
+                type: 'text',
+                value: ''
+            },
+            display: {
+                value: '',
+                type: 'text'
+            }
+        },
+         tags: [
+            {
+                "type": "text",
+                "label": "campaign image",
+                "value": "",
+                "helpText": "Mega image upload"
+            }
+        ]
+
+    };
+
+    var formgen = new FormGenerator(schema, document.querySelector('#formWrap'));
+
+    //var schema = new SchemaDiscover(data);
+    //var formgen = new FormGenerator({}, document.querySelector('#formWrap'));
+
 
 </script>
 </body>

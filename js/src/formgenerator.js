@@ -222,13 +222,14 @@ class FormGenerator {
      * Populate list n times with default object
      */
     pushArrayObject(keychain, list) {
+        var self = this;
         let schemaList = eval('self.form.' + keychain);
-        let clone = _.clone(schemaList[0]);
-        let isSubform = !clone.hasOwnProperty('type');
-        console.log('subform', isSubform);
+        let item = schemaList[0];
+        let isSubform = !item.hasOwnProperty('type');
         schemaList.pop();
-        _.forEach(list, (item)=> {
-            clone.value = item;
+        _.forEach(list, (val)=> {
+            let clone = _.clone(item);
+            clone.value = val;
             schemaList.push(clone);
         });
     }
@@ -281,6 +282,7 @@ class FormGenerator {
 
 
     removeItemElm(parent, keychain) {
+        var self = this;
         let remove = new Elm('div.delSubForm', {
             cls: 'pull-right',
             html: '<i class="glyphicon glyphicon-remove"></i>',
@@ -290,13 +292,14 @@ class FormGenerator {
                 let list = eval('self.form.' + this.jsKeychain(keychain));
                 let index = this.arrayIndex || 0;
                 let removed = list.splice(index, 1);
-                console.log(removed); //// removes only one item if removed is triggered in a row
+                console.log(removed); //// removes only one item if removed is triggered in a row this.arrayIndex is fixed here
                 Utils.fadeOutRemove(parent);
             }
         }, parent);
     }
 
     addItemElm(parent, body, keychain) {
+        var self = this;
         let plus = new Elm('div', {
             cls: 'btn btn-default',
             html: '<i class="glyphicon glyphicon-plus"></i> Add',
@@ -304,8 +307,7 @@ class FormGenerator {
             click: ()=> {
                 let elmWrapper = new Elm('div', body);
                 let list = eval('self.form.' + keychain);
-                let listClone = _.cloneDeep(list);
-                let clone = listClone[0];
+                let clone = list[0];
                 clone.value = '';
                 list.push(clone);
                 this.arrayIndex = list.length - 1;
@@ -517,8 +519,7 @@ class FormGenerator {
 
     setData(obj) {
         //TODO consider saving orginal schema and use for set data to prevent doubles if setData is done twice
-        let self = this;
-
+        var self = this;
         // Get keychains from the populated form
         let keychains = this.getAllKeychains();
 
@@ -536,13 +537,27 @@ class FormGenerator {
             if (Utils.isArrey(val)) {
                 this.pushArrayObject(keyChain, val);
             }
+            if (val && typeof(val) !== 'object') { //FIXME this is a layzy fix. real solution is to not set data-key to non input elements
+                let parentObj = eval('self.form.' + jsKeychain);
+                parentObj['value'] = val;
+            }
+
         }
+
         this.parent.innerHTML = '';
         this.buildAllItems(this.form, this.parent);
     }
 
 }
 
+class SchemaDiscover {
 
-export default FormGenerator;
+    constructor(json) {
+       
+
+    }
+}
+
+
+export default {FormGenerator, SchemaDiscover};
 
