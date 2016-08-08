@@ -16,235 +16,168 @@
 <div class="container">
     <h2>From</h2>
     <hr>
-    <div id="formWrap" class="col-sm-6"></div>
+    <div class="row">
+        <div id="formWrap" class="col-sm-5"></div>
+        <div class="col-sm-7">
+
+            <div>
+                <h3>data</h3>
+
+                <div>
+                    <div class="btn btn-default" id="setData">Set data</div>
+                    <div class="btn btn-default" id="getData">Get data</div>
+                </div>
+                <pre>
+<code>var data = {
+    name: 'Andri',
+    age: 30,
+    lastName: 'Birgisson',
+    img: 'http://tweecode.com/imagecloud/1470502139865_andriProfile.jpg',
+    website: {
+        url: 'foobar.com',
+        display: 'foobar'
+    },
+    tags: ['foo', 'bar', 'baz']
+};</code>
+                </pre>
+            </div>
+            <h3>Schema</h3>
+
+            <div>
+                <pre>
+<code>var schema = {
+    _order: ['name', 'lastName', 'age'],
+    age: {
+        type: 'number',
+        placeholder: 'age'
+    },
+    lastName: {
+        label: 'middlename',
+        placeholder: 'middlename',
+        type: 'text',
+        value: '',
+    },
+    name: {
+        label: 'Name',
+        placeholder: 'your name',
+        type: 'text',
+        helpText: 'foobar',
+        value: '',
+
+    },
+    img: {
+        type: 'image',
+        value: '',
+        width: "auto",
+        height: "auto",
+        quality: 60,
+    },
+    website: {
+        url: {
+            type: 'text',
+            value: ''
+        },
+        display: {
+            value: '',
+            type: 'text'
+        }
+    },
+    tags: [
+        {
+            "type": "text",
+            "label": "campaign image",
+            "value": "",
+            "helpText": "Mega image upload"
+        }
+    ]
+
+};</code>
+                </pre>
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="btn btn-default">Get Data</div>
+        </div>
+    </div>
 </div>
 <script src="./dist/ghostTools.js"></script>
 <script>
 
+var data = {
+    name: 'Andri',
+    age: 30,
+    lastName: 'Birgisson',
+    img: 'http://tweecode.com/imagecloud/1470502139865_andriProfile.jpg',
+    website: {
+        url: 'foobar.com',
+        display: 'foobar'
+    },
+    tags: ['foo', 'bar', 'baz']
+};
 
-    var form = {
-        "_id": "5776990e815b7653b0cffe8e",
-        "_name": "campaign",
-        "_order": [
-            "logo",
-            "brandId",
-            "intro",
-            "brandName",
-            "budget",
-            "coverPhoto",
-            "namespace",
-            "website",
-            "map",
-            "images",
-        ],
-        "brandId": {
-            "description": "fo bar brand id",
-            "type": "number",
-            "label": "brand id",
-            "value": "",
-            "placeholder": "BrandId",
-            "helpText": "blabla",
-            "class": "boolean"
-        },
-        "intro": {
-            "type": "text",
-            "label": "intro",
-            "placeholder": "",
-            "value": "",
-            "disabled": true,
-            "helpText": "Brand id is unused but will be important in the future",
-        },
-        "logo": {
-            "description": "lorem ipsum description",
-            "index": 4,
-            "type": "image",
-            "label": "Company logo",
-            "width": "auto",
-            "height": "auto",
-            "quality": 60,
-            "value": "",
-            "toggle": true,
-            "cls": "foobar"
 
-        },
-        "brandName": {
-            "index": 5,
-            "type": "text",
-            "label": "Brand name",
-            "placeholder": "",
-            "value": "",
-            "toggle": true
-        },
-        "active": {
-            "index": 1,
-            "type": "checkbox",
-            "label": "Is active",
-            "value": "",
-            "helpText": "Yehh you want this to be active right?"
-        },
-        "budget": {
-            "index": 6,
-            "type": "number",
-            "label": "brand id",
-            "value": ""
-        },
-        "coverPhoto": {
-            "index": 7,
-            "type": "image",
-            "label": "Cover photo",
-            "width": "auto",
-            "height": "auto",
-            "quality": 60,
-            "value": ""
-        },
-        "namespace": {
-            "index": 8,
-            "type": "text",
-            "label": "Name space",
-            "placeholder": "",
-            "value": ""
-        },
-        "website": {
-            "url": {
-                "type": "text",
-                "label": "Url",
-                "placeholder": "",
-                "value": ""
-            },
-            "display": {
-                "type": "text",
-                "label": "Display",
-                "placeholder": "",
-                "value": ""
-            }
-        },
-        "map": {
-            "_order": ["lat", "lng"],
+var schema = {
+    _order: ['name', 'lastName', 'age'],
+    age: {
+        type: 'number',
+        placeholder: 'age'
+    },
+    lastName: {
+        label: 'middlename',
+        placeholder: 'middlename',
+        type: 'text',
+        value: '',
+    },
+    name: {
+        label: 'Name',
+        placeholder: 'your name',
+        type: 'text',
+        helpText: 'foobar',
+        value: '',
 
-            "lat": {
-                "type": "number",
-                "label": "Lat",
-                "value": ""
-            },
-            "lng": {
-                "type": "number",
-                "label": "Lng",
-                "value": ""
-            },
-            "zoom": {
-                "type": "number",
-                "label": "Zoom",
-                "value": ""
-            },
-            "markers": [
-                {
-                    "lat": {
-                        "type": "number",
-                        "label": "Lat",
-                        "placeholder": "Lat",
-                        "value": ""
-                    },
-                    "lng": {
-                        "type": "number",
-                        "label": "Lng",
-                        "placeholder": "Lng",
-                        "value": ""
-                    }
-                }
-            ]
+    },
+    img: {
+        type: 'image',
+        value: '',
+        width: "auto",
+        height: "auto",
+        quality: 60,
+    },
+    website: {
+        url: {
+            type: 'text',
+            value: ''
         },
-        "images": [
-            {
-                "type": "image",
-                "label": "campaign image",
-                "width": "auto",
-                "height": "auto",
-                "quality": 80,
-                "value": "",
-                "helpText": "Mega image upload"
-            }
-        ],
-        "brief": {
-            "type": "textarea",
-            "label": "brief",
-            "placeholder": "",
-            "value": ""
-        },
-        "publishDeadline": {
-            "type": "date",
-            "label": "Publish date",
-            "value": ""
-        },
-        "acceptanceDeadline": {
-            "type": "date",
-            "label": "Acceptance deadline",
-            "value": ""
+        display: {
+            value: '',
+            type: 'text'
         }
-    };
+    },
+    tags: [
+        {
+            "type": "text",
+            "label": "campaign image",
+            "value": "",
+            "helpText": "Mega image upload"
+        }
+    ]
 
-    var data =  {
-        name: 'beggi',
-        age: 30,
-        middlename: 'ingi',
-        profileImg: 'http://olympia.sidan.is/iw_cache/6976_Petursson_Bergur_Ingi_PA2036059.jpg',
-        website: {
-            url: 'foobar.com',
-            display: 'foobar'
-        },
-        tags: ['foo', 'bar', 'baz']
-    };
-
-
-
-
-
-    var schema = {
-        _order: ['name', 'middlename'],
-
-        middlename: {
-            label: 'middlename',
-            placeholder: 'middlename',
-            type: 'text',
-            value: '',
-        },
-         name: {
-            label: 'Name',
-            placeholder: 'your name',
-            type: 'text',
-            helpText: 'foobar',
-            value: '',
-
-        },
-        profileImg: {
-            type: 'image',
-            value: '',
-            width: "auto",
-            height: "auto",
-            quality: 60,
-        },
-        website: {
-            url: {
-                type: 'text',
-                value: ''
-            },
-            display: {
-                value: '',
-                type: 'text'
-            }
-        },
-         tags: [
-            {
-                "type": "text",
-                "label": "campaign image",
-                "value": "",
-                "helpText": "Mega image upload"
-            }
-        ]
-
-    };
+};
 
     var formgen = new FormGenerator(schema, document.querySelector('#formWrap'));
 
+    var setdataBtn = document.getElementById('setData');
+    var getdataBtn = document.getElementById('getData');
+    setdataBtn.onclick = function () {
+        formgen.setData(data);
+    };
+    getdataBtn.onclick = function () {
+        var data = formgen.getData();
+        console.log(data);
+    };
     //var schema = new SchemaDiscover(data);
     //var formgen = new FormGenerator({}, document.querySelector('#formWrap'));
 

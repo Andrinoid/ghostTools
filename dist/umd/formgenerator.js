@@ -614,8 +614,6 @@ var FormGenerator = function () {
 
 var SchemaDiscover = function SchemaDiscover(json) {
     _classCallCheck(this, SchemaDiscover);
-
-    console.log('foo');
 };
 return Formgenerator;
 }));

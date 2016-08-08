@@ -553,7 +553,7 @@ class FormGenerator {
 class SchemaDiscover {
 
     constructor(json) {
-       
+
 
     }
 }
