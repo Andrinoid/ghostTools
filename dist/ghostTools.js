@@ -711,6 +711,8 @@ var FormGenerator = function () {
         this.form = form;
         //remove private keys from output object
 
+        this.firstLoop = true;
+
         this.parent = parent || document.body;
         this.typeModels = typeModels;
         this.arrayIndex = null;
@@ -864,9 +866,12 @@ var FormGenerator = function () {
 
     }, {
         key: 'subFormWrapper',
-        value: function subFormWrapper(parent, key) {
+        value: function subFormWrapper(parent) {
+            var key = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+
             key = this.getCycleKey(key);
-            var panel = new Elm('div', { cls: 'panel panel-default keypoint', 'data-key': key }, parent);
+            var cls = this.firstLoop ? '' : 'panel panel-default keypoint';
+            var panel = new Elm('div', { cls: cls, 'data-key': key }, parent);
             var body = new Elm('div.panel-body', panel);
             return body;
         }
@@ -960,8 +965,8 @@ var FormGenerator = function () {
              * If item is array we need special wrapper
              */
             if (Utils.isArrey(item)) {
-                new Elm('h4', { html: key, style: 'margin: 35px 0 0' }, parent);
-                new Elm('hr', parent);
+                //new Elm('hr', parent);
+                new Elm('h4', { html: key, style: 'text-transform: capitalize' }, parent);
                 parent = this.subFormWrapperPlus(parent, key);
                 Utils.foreach(item, function (subitem, i) {
                     _this4.arrayIndex = i;
@@ -983,9 +988,9 @@ var FormGenerator = function () {
              */
             var isSubform = !item.hasOwnProperty('type');
             if (isSubform) {
-                parent = this.subFormWrapper(parent, key);
-                new Elm('h4', { html: key }, parent);
-                new Elm('hr', parent);
+                //parent = this.subFormWrapper(parent, key);
+                new Elm('h4', { html: key, style: 'text-transform: capitalize' }, parent);
+                //new Elm('hr', parent);
                 this.buildAllItems(item, parent);
                 return false;
             }
@@ -1082,7 +1087,11 @@ var FormGenerator = function () {
             var AllKeys = Object.keys(form);
             var diff = _.difference(AllKeys, orderKeys);
             var order = orderKeys.concat(diff);
+            var toggle = form._toggle;
 
+            var wrapper = this.subFormWrapper(parent);
+
+            this.firstLoop = false;
             Utils.foreach(order, function (key) {
                 if (!form.hasOwnProperty(key)) {
                     console.warn('Schema has no key: ' + key + '. Looks like _order list is outdated.');
@@ -1092,7 +1101,7 @@ var FormGenerator = function () {
                 if (typeof item !== 'string') {
                     // Don't populate private keys
                     if (key.substring(0, 1) !== '_') {
-                        _this5.buildOneItem(item, parent, key);
+                        _this5.buildOneItem(item, wrapper, key);
                     }
                 }
             });
@@ -1114,7 +1123,6 @@ var FormGenerator = function () {
                 var val = item.getAttribute('elm-value');
                 var parentObj = void 0;
                 jsKeychain ? parentObj = eval('self.output.' + jsKeychain) : parentObj = _this6.output;
-
                 parentObj[lastKey] = val;
             });
             return this.output;
@@ -1124,6 +1132,8 @@ var FormGenerator = function () {
         value: function setData(obj) {
             //TODO consider saving orginal schema and use for set data to prevent doubles if setData is done twice
             var self = this;
+            this.firstLoop = true;
+
             // Get keychains from the populated form
             var keychains = this.getAllKeychains();
 
@@ -1142,7 +1152,6 @@ var FormGenerator = function () {
                     this.pushArrayObject(keyChain, val);
                 }
                 if (val && (typeof val === 'undefined' ? 'undefined' : _typeof(val)) !== 'object') {
-                    //FIXME this is a layzy fix. real solution is to not set data-key to non input elements
                     var parentObj = eval('self.form.' + jsKeychain);
                     parentObj['value'] = val;
                 }
