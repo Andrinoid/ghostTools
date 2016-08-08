@@ -486,8 +486,8 @@ var FormGenerator = function () {
                 element = new Elm(model.element, model, wrapper, 'top'); //top because label comes after input
                 //set value as attribute on change
                 element.addEventListener('change', function (e) {
-                    _this4.setAttribute('elm-value', _this4.checked);
-                    _this4.onChange(e);
+                    this.setAttribute('elm-value', this.checked);
+                    self.onChange(e);
                 });
             }
             /**
@@ -515,7 +515,7 @@ var FormGenerator = function () {
                         element = new Elm(model.element, model, wrapper);
                         //set value as attribute on change
                         element.addEventListener('change', function (e) {
-                            _this4.setAttribute('elm-value', _this4.value);
+                            this.setAttribute('elm-value', this.value);
                             self.onChange(e);
                         });
                     }
