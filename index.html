@@ -97,11 +97,7 @@
 
         </div>
     </div>
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="btn btn-default">Get Data</div>
-        </div>
-    </div>
+
 </div>
 <script src="./dist/ghostTools.js"></script>
 <script>
@@ -159,6 +155,7 @@ var schema = {
     },
     tags: [
         {
+
             "type": "text",
             "label": "campaign image",
             "value": "",
@@ -169,6 +166,9 @@ var schema = {
 };
 
     var formgen = new FormGenerator(schema, document.querySelector('#formWrap'));
+    formgen.onChange = function(e) {
+      console.log(e);
+    };
 
     var setdataBtn = document.getElementById('setData');
     var getdataBtn = document.getElementById('getData');
