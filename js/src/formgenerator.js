@@ -2,17 +2,6 @@ import Utils from './utils';
 import Elm from './elm';
 
 
-
-//_.mixin({
-//    deeply: function (map) {
-//        return function(obj, fn) {
-//            return map(_.mapValues(obj, function (v) {
-//                return _.isPlainObject(v) ? _.deeply(map)(v, fn) : v;
-//            }), fn);
-//        }
-//    },
-//});
-
 /**
  * ------------------------------------------------------------------------
  * Form generator
@@ -154,10 +143,18 @@ class FormGenerator {
         this.form = form;
         //remove private keys from output object
 
+        this.firstLoop = true;
+        this.currentKey = null;
         this.parent = parent || document.body;
         this.typeModels = typeModels;
         this.arrayIndex = null;
         this.buildAllItems(this.form, this.parent);
+    }
+
+    /**
+     * Events to overide
+     */
+    onChange(e) {
     }
 
     /**
@@ -273,10 +270,43 @@ class FormGenerator {
     /**
      * Returns wrapper element for subform or simply an bootstrap panel
      */
-    subFormWrapper(parent, key) {
-        key = this.getCycleKey(key);
+    subFormWrapper(parent, toggle = false) {
+        let key = this.getCycleKey(this.currentKey);
+        let label;
+        if (key) label = new Elm('h4', {html: key, style: 'text-transform: capitalize'}, parent);
+        let cls = this.firstLoop ? '' : 'panel panel-default keypoint';
+        let panel = new Elm('div', {cls: cls, 'data-key': key}, parent);
+        let body = new Elm('div.panel-body', panel);
+        if (toggle) {
+
+            let plus = new Elm('span', {
+                cls: 'glyphicon glyphicon-plus',
+                css: {'margin-left': '10px', 'cursor': 'pointer', 'font-size': '16px'}
+            }, label);
+            label.addEventListener('click', (e)=> {
+                panel.style.display = 'block';
+                Utils.fadeOutRemove(plus);
+            });
+            panel.style.display = 'none';
+        }
+
+        return body;
+    }
+
+    /**
+     * Returns wrapper element for array with plus button
+     */
+    subFormWrapperPlus(parent) {
+        var self = this;
+        let key = this.getCycleKey(this.currentKey);
+        //new Elm('h4', {html: key, style: 'text-transform: capitalize'}, parent);
         let panel = new Elm('div', {cls: 'panel panel-default keypoint', 'data-key': key}, parent);
         let body = new Elm('div.panel-body', panel);
+
+        let keychain = this.getKeychain(panel, true);
+        keychain = keychain.join('.');
+
+        this.addItemElm(panel, body, keychain);
         return body;
     }
 
@@ -323,22 +353,6 @@ class FormGenerator {
     }
 
 
-    /**
-     * Returns wrapper element for array with plus button
-     */
-    subFormWrapperPlus(parent, key) {
-        var self = this;
-        key = this.getCycleKey(key);
-        let panel = new Elm('div', {cls: 'panel panel-default keypoint', 'data-key': key}, parent);
-        let body = new Elm('div.panel-body', panel);
-
-        let keychain = this.getKeychain(panel, true);
-        keychain = keychain.join('.');
-
-        this.addItemElm(panel, body, keychain);
-        return body;
-    }
-
     buildSubForm(subitem, parent) {
         let wrapper = new Elm('div.subform', parent);
         let keychain = this.getKeychain(wrapper, true);
@@ -358,8 +372,8 @@ class FormGenerator {
          * If item is array we need special wrapper
          */
         if (Utils.isArrey(item)) {
-            new Elm('h4', {html: key, style: 'margin: 35px 0 0'}, parent);
-            new Elm('hr', parent);
+            //new Elm('hr', parent);
+            new Elm('h4', {html: key, style: 'text-transform: capitalize'}, parent);
             parent = this.subFormWrapperPlus(parent, key);
             Utils.foreach(item, (subitem, i)=> {
                 this.arrayIndex = i;
@@ -382,9 +396,9 @@ class FormGenerator {
          */
         let isSubform = !item.hasOwnProperty('type');
         if (isSubform) {
-            parent = this.subFormWrapper(parent, key);
-            new Elm('h4', {html: key}, parent);
-            new Elm('hr', parent);
+            //parent = this.subFormWrapper(parent, key);
+
+            //new Elm('hr', parent);
             this.buildAllItems(item, parent);
             return false;
         }
@@ -411,6 +425,7 @@ class FormGenerator {
             //set value as attribute on change
             element.addEventListener('change', function (e) {
                 this.setAttribute('elm-value', this.checked);
+                self.onChange(e);
             });
 
         }
@@ -426,6 +441,7 @@ class FormGenerator {
             imagePortal.on('success', (rsp)=> {
                 element.setAttribute('rv-checked', this.getKeychain(wrapper));
                 element.setAttribute('elm-value', rsp.url);
+                this.onChange(rsp);
             });
 
         }
@@ -440,6 +456,7 @@ class FormGenerator {
             //set value as attribute on change
             element.addEventListener('change', function (e) {
                 this.setAttribute('elm-value', this.value);
+                self.onChange(e);
             });
         }
 
@@ -480,26 +497,47 @@ class FormGenerator {
         let AllKeys = Object.keys(form);
         let diff = _.difference(AllKeys, orderKeys);
         let order = orderKeys.concat(diff);
+        let toggle = form._toggle;
 
+        let wrapper = this.subFormWrapper(parent, toggle);
+
+        this.firstLoop = false;
         Utils.foreach(order, (key)=> {
             if (!form.hasOwnProperty(key)) {
                 console.warn('Schema has no key: ' + key + '. Looks like _order list is outdated.');
                 return;
             }
+            this.currentKey = key;
             let item = form[key];
             if (typeof(item) !== 'string') {
                 // Don't populate private keys
                 if (key.substring(0, 1) !== '_') {
-                    this.buildOneItem(item, parent, key);
+                    this.buildOneItem(item, wrapper, key);
                 }
             }
         });
     }
 
     getData() {
+        function deepRemoveKeys(obj, key) {
+            let keys = typeof(key) === 'string' ? [key] : key;
+            _.forEach(keys, (key)=> {
+                delete obj[key];
+            });
+            _.forEach(obj, function (item) {
+                if (typeof(item) === 'object') {
+                    _.forEach(keys, (key)=> {
+                        delete item[key];
+                    });
+                    deepRemoveKeys(item, key);
+                }
+            });
+        }
+
         let self = this;
         let elms = this.parent.querySelectorAll('[data-keychain]');
         this.output = _.cloneDeep(this.form);
+
         _.forEach(elms, (item) => {
             let keyList = item.getAttribute('data-keychain').split('.');
             let lastKey = keyList.pop();
@@ -509,17 +547,21 @@ class FormGenerator {
             let val = item.getAttribute('elm-value');
             let parentObj;
             jsKeychain ? parentObj = eval('self.output.' + jsKeychain) : parentObj = this.output;
-
             parentObj[lastKey] = val;
-
         });
+
+        deepRemoveKeys(this.output, ['_order', '_name', '_toggle']);
         return this.output;
 
     }
 
     setData(obj) {
+
         //TODO consider saving orginal schema and use for set data to prevent doubles if setData is done twice
         var self = this;
+        this.firstLoop = true;
+        this.currentKey = null;
+
         // Get keychains from the populated form
         let keychains = this.getAllKeychains();
 
@@ -537,7 +579,7 @@ class FormGenerator {
             if (Utils.isArrey(val)) {
                 this.pushArrayObject(keyChain, val);
             }
-            if (val && typeof(val) !== 'object') { //FIXME this is a layzy fix. real solution is to not set data-key to non input elements
+            if (val && typeof(val) !== 'object') {
                 let parentObj = eval('self.form.' + jsKeychain);
                 parentObj['value'] = val;
             }

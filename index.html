@@ -14,7 +14,7 @@
 </head>
 <body>
 <div class="container">
-    <h2>From</h2>
+    <h2>Form</h2>
     <hr>
     <div class="row">
         <div id="formWrap" class="col-sm-5"></div>
@@ -97,11 +97,7 @@
 
         </div>
     </div>
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="btn btn-default">Get Data</div>
-        </div>
-    </div>
+
 </div>
 <script src="./dist/ghostTools.js"></script>
 <script>
@@ -147,6 +143,7 @@ var schema = {
         quality: 60,
     },
     website: {
+        _toggle: true,
         url: {
             type: 'text',
             value: ''
@@ -158,6 +155,7 @@ var schema = {
     },
     tags: [
         {
+
             "type": "text",
             "label": "campaign image",
             "value": "",
@@ -168,6 +166,9 @@ var schema = {
 };
 
     var formgen = new FormGenerator(schema, document.querySelector('#formWrap'));
+    formgen.onChange = function(e) {
+      console.log(e);
+    };
 
     var setdataBtn = document.getElementById('setData');
     var getdataBtn = document.getElementById('getData');
