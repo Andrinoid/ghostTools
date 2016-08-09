@@ -522,12 +522,12 @@ class FormGenerator {
         function deepRemoveKeys(obj, key) {
             let keys = typeof(key) === 'string' ? [key] : key;
             _.forEach(keys, (key)=> {
-                delete obj[key];
+                if(obj && obj[key]) delete obj[key];
             });
             _.forEach(obj, function (item) {
                 if (typeof(item) === 'object') {
                     _.forEach(keys, (key)=> {
-                        delete item[key];
+                        if(item && item[key]) delete item[key];
                     });
                     deepRemoveKeys(item, key);
                 }
