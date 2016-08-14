@@ -10,6 +10,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.min.js"></script>
     <script src="http://apps.tweecode.com/media/js/imagecloud/dropzone.js"></script>
     <script src="http://apps.tweecode.com/media/js/imagecloud/imagecloud.js"></script>
+    <script src="http://kotturinn.com/upload/js/inline-0.9.4.js"></script>
 
 </head>
 <body>
@@ -34,11 +35,11 @@
     lastName: 'Birgisson',
     img: 'http://tweecode.com/imagecloud/1470502139865_andriProfile.jpg',
     website: {
-        url: 'foobar.com',
-        display: 'foobar'
+    url: 'foobar.com',
+    display: 'foobar'
     },
     tags: ['foo', 'bar', 'baz']
-};</code>
+    };</code>
                 </pre>
             </div>
             <h3>Schema</h3>
@@ -48,50 +49,50 @@
 <code>var schema = {
     _order: ['name', 'lastName', 'age'],
     age: {
-        type: 'number',
-        placeholder: 'age'
+    type: 'number',
+    placeholder: 'age'
     },
     lastName: {
-        label: 'middlename',
-        placeholder: 'middlename',
-        type: 'text',
-        value: '',
+    label: 'middlename',
+    placeholder: 'middlename',
+    type: 'text',
+    value: '',
     },
     name: {
-        label: 'Name',
-        placeholder: 'your name',
-        type: 'text',
-        helpText: 'foobar',
-        value: '',
+    label: 'Name',
+    placeholder: 'your name',
+    type: 'text',
+    helpText: 'foobar',
+    value: '',
 
     },
     img: {
-        type: 'image',
-        value: '',
-        width: "auto",
-        height: "auto",
-        quality: 60,
+    type: 'image',
+    value: '',
+    width: "auto",
+    height: "auto",
+    quality: 60,
     },
     website: {
-        url: {
-            type: 'text',
-            value: ''
-        },
-        display: {
-            value: '',
-            type: 'text'
-        }
+    url: {
+    type: 'text',
+    value: ''
+    },
+    display: {
+    value: '',
+    type: 'text'
+    }
     },
     tags: [
-        {
-            "type": "text",
-            "label": "campaign image",
-            "value": "",
-            "helpText": "Mega image upload"
-        }
+    {
+    "type": "text",
+    "label": "campaign image",
+    "value": "",
+    "helpText": "Mega image upload"
+    }
     ]
 
-};</code>
+    };</code>
                 </pre>
             </div>
 
@@ -99,75 +100,189 @@
     </div>
 
 </div>
+<style>
+    .droppad {
+        background: #ddd;
+        height: 100px;
+    }
+
+    .imageCloud {
+        position: relative;
+        background-size: cover;
+        background-position: 50% 50%;
+        cursor: pointer;
+        font-family: arial, serif;
+        min-height: 200px;
+    }
+
+    .imageCloud .dropSheet {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.5);
+        text-align: center;
+        padding: 10px;
+        opacity: 0;
+        transition: ease all 0.5s;
+        pointer-events: none;
+    }
+
+    .imageCloud .dropSheet.shown {
+        background: rgba(0, 0, 0, 0);
+        opacity: 1;
+    }
+
+    .imageCloud:hover .dropSheet {
+        background: rgba(0, 0, 0, 0.5);
+        opacity: 1;
+    }
+
+    .imageCloud .dropSheet > div {
+        padding: 10px;
+        color: white;
+        border: dashed 2px #fff;
+        position: absolute;
+        top: 10px;
+        bottom: 10px;
+        left: 10px;
+        right: 10px;
+    }
+
+    .imageCloud .dropSheet > div .dropLabel {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        white-space: nowrap;
+    }
+
+    .imageCloud .dropSheet > div p {
+        font-size: 18px;
+    }
+
+    .imageCloud .fallBack {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        pointer-events: none;
+        background-color: gray;
+        background-size: cover;
+        background-position: center;
+    }
+
+    .imageCloud .loadedImage {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        pointer-events: none;
+        opacity: 0;
+        transition: ease opacity 0.5s;
+        background-size: cover;
+        background-position: center;
+    }
+</style>
+<div class="imageCloud">
+    <div class="fallBack" style="opacity: 1; background-image: url(&quot;&quot;);"></div>
+    <div class="loadedImage"></div>
+    <div class="dropSheet shown">
+        <div>
+            <div class="dropLabel"><p>Drop Image here.</p>
+
+                <p>
+                    <small>or click here</small>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="./dist/ghostTools.js"></script>
 <script>
-
-var data = {
-    name: 'Andri',
-    age: 30,
-    lastName: 'Birgisson',
-    img: 'http://tweecode.com/imagecloud/1470502139865_andriProfile.jpg',
-    website: {
-        url: 'foobar.com',
-        display: 'foobar'
-    },
-    tags: ['foo', 'bar', 'baz']
-};
+    var droppad = new Droppad(document.querySelector('.imageCloud'));
+    droppad.on('dragenter', function() {
+      console.log('dragenter');
+      //console.log(e);
+    });
+    droppad.on('dragenter', function(e) {
+      console.log('dragenter2');
+      console.log(e);
+    });
 
 
-var schema = {
-    _order: ['name', 'lastName', 'age'],
-    age: {
-        type: 'number',
-        placeholder: 'age'
-    },
-    lastName: {
-        label: 'middlename',
-        placeholder: 'middlename',
-        type: 'text',
-        value: '',
-    },
-    name: {
-        label: 'Name',
-        placeholder: 'your name',
-        type: 'text',
-        helpText: 'foobar',
-        value: '',
 
-    },
-    img: {
-        type: 'image',
-        value: '',
-        width: "auto",
-        height: "auto",
-        quality: 60,
-    },
-    website: {
-        _toggle: true,
-        url: {
-            type: 'text',
-            value: ''
+
+    var data = {
+        name: 'Andri',
+        age: 30,
+        lastName: 'Birgisson',
+        img: 'http://tweecode.com/imagecloud/1470502139865_andriProfile.jpg',
+        website: {
+            url: 'foobar.com',
+            display: 'foobar'
         },
-        display: {
+        tags: ['foo', 'bar', 'baz']
+    };
+
+
+    var schema = {
+        _order: ['name', 'lastName', 'age'],
+        age: {
+            type: 'number',
+            placeholder: 'age'
+        },
+        lastName: {
+            label: 'middlename',
+            placeholder: 'middlename',
+            type: 'text',
             value: '',
-            type: 'text'
-        }
-    },
-    tags: [
-        {
+        },
+        name: {
+            label: 'Name',
+            placeholder: 'your name',
+            type: 'text',
+            helpText: 'foobar',
+            value: '',
 
-            "type": "text",
-            "label": "campaign image",
-            "value": "",
-            "helpText": "Mega image upload"
-        }
-    ]
+        },
+        img: {
+            type: 'image',
+            value: '',
+            width: "auto",
+            height: "auto",
+            quality: 60,
+        },
+        website: {
+            _toggle: true,
+            url: {
+                type: 'text',
+                value: ''
+            },
+            display: {
+                value: '',
+                type: 'text'
+            }
+        },
+        tags: [
+            {
 
-};
+                "type": "text",
+                "label": "campaign image",
+                "value": "",
+                "helpText": "Mega image upload"
+            }
+        ]
+
+    };
 
     var formgen = new FormGenerator(schema, document.querySelector('#formWrap'));
-    formgen.onChange = function(e) {
-      console.log(e);
+    formgen.onChange = function (e) {
+        console.log(e);
     };
 
     var setdataBtn = document.getElementById('setData');

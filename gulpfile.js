@@ -12,7 +12,10 @@ var files = [
     './js/src/elm.js',
     './js/src/modal.js',
     './js/src/alert.js',
-    './js/src/formgenerator.js'
+    './js/src/formgenerator.js',
+    './js/src/emitter.js',
+    './js/src/droppad.js'
+
 ];
 
 gulp.task('default', ['build', 'watch']);
