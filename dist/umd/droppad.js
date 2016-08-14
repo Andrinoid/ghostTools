@@ -139,9 +139,11 @@ var Droppad = function (_Emitter) {
     return Droppad;
 }(Emitter);
 //TODO
+//build dom and styles
 //add regular input for clickable area
 //show progress on upload
 //Image service should return full path as webkit-overflow-scrolling
 //Check browser support
+//do built in xhr requests
 return Droppad;
 }));
