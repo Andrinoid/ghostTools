@@ -138,6 +138,13 @@ var Elm = function () {
             });
         }
     }, {
+        key: 'change',
+        value: function change(fn) {
+            this.element.addEventListener('change', function (e) {
+                fn(e);
+            });
+        }
+    }, {
         key: 'inject',
         value: function inject(to) {
             var parent = Utils.normalizeElement(to);

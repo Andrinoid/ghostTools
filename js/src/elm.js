@@ -116,9 +116,15 @@ class Elm {
             this.element.style[prop] = obj[prop];
         }
     }
-
+    
     click(fn) {
         this.element.addEventListener('click', function (e) {
+            fn(e);
+        });
+    }
+
+    change(fn) {
+        this.element.addEventListener('change', function (e) {
             fn(e);
         });
     }
