@@ -101,12 +101,4 @@ const Utils = {
 };
 
 
-document.addEventListener('click', function(e) {
-    var clsList = Array.prototype.slice.call(e.target.classList);
-    if(clsList.indexOf('droppad-clickable') > -1) {
-         console.log('hello');
-    }
-});
-
-
 export default utils
