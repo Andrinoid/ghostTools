@@ -1344,9 +1344,10 @@ var Droppad = function (_Emitter) {
             url: 'http://kotturinn.com/icloud/upload/body/test',
             backgroundImage: null,
             //method: "post",
-            maxFilesize: 256, //in MB
+            maxFilesize: 256, //in MB TODO
             paramName: "file",
-            includeStyles: true
+            includeStyles: true,
+            acceptedFiles: 'jpeg, jpg, png, gif'
         };
         _this.defaults = Utils.extend(_this.defaults, options);
         _this.injectStyles();
@@ -1360,15 +1361,17 @@ var Droppad = function (_Emitter) {
         value: function createDOM() {
             var _this2 = this;
 
+            Utils.setClass(this.droppad, 'imageCloud');
             Utils.setClass(this.droppad, 'droppad-clickable');
-            var baseElements = '\n        <div class="fallBack" style="opacity: 1; background-image: url(&quot;&quot;);"></div>\n        <div class="loadedImage"></div> //DO WE NEED THIS?\n        <div class="dropSheet shown">\n            <div>\n                <div class="dropLabel"><p>Drop Image here.</p>\n                    <p>\n                        <small>or click here</small>\n                    </p>\n                </div>\n            </div>\n        </div>\n        ';
+            var baseElements = '\n        <div class="fallBack" style="opacity: 1; background-image: url(\'\';);"></div>\n        <div class="loadedImage"></div>\n        <div class="dropSheet shown">\n            <div>\n                <div class="dropLabel"><p>Drop Image here.</p>\n                    <p>\n                        <small>or click here</small>\n                    </p>\n                </div>\n            </div>\n        </div>\n        ';
             this.droppad.innerHTML = baseElements;
             this.el_clickableInput = new Elm('input.droppad-input', {
                 type: 'file',
                 change: function change(e) {
                     var file = e.target.files[0];
                     _this2.showAsBackground(file);
-                    _this2.sendFile(file);
+                    //this.sendFile(file);
+                    _this2.upload(e.target.files);
                 }
             }, document.body);
             this.droppadElements();
@@ -1449,18 +1452,12 @@ var Droppad = function (_Emitter) {
             reader.readAsDataURL(file);
         }
     }, {
-        key: 'sendFile',
-        value: function sendFile(file) {
-            console.log('sending file');
-
-            function progress(value) {
-                console.log(value);
-            }
-
-            function callback(data) {
-                console.log(data);
-            }
-            inline.upload(this.defaults.url, file, null, progress).run(callback);
+        key: 'isFileValid',
+        value: function isFileValid(file) {
+            var mimeType = file.type;
+            var baseMimeType = file.type.split('/')[0];
+            // check against defaults.acceptedFiles
+            return !file.type.match('image.*');
         }
     }, {
         key: 'dragenter',
@@ -1490,11 +1487,55 @@ var Droppad = function (_Emitter) {
             console.log(file);
             this.showAsBackground(file);
             this.sendFile(file);
+            //this.upload(files);
+        }
+    }, {
+        key: 'sendFile',
+        value: function sendFile(file) {
+            function progress(value) {
+                console.log(value);
+            }
+
+            function callback(data) {
+                console.log(data);
+            }
+            inline.upload(this.defaults.url, file, null, progress).run(callback);
+        }
+    }, {
+        key: 'upload',
+        value: function upload(files) {
+            var headers = {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': '*/*'
+            };
+
+            var formData = new FormData();
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                if (!this.isFileValid) {
+                    continue;
+                }
+                formData.append('file', file, file.name); //file.name is not required Check server side implementation of this
+            }
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', this.defaults.url, true);
+            for (var key in headers) {
+                xhr.setRequestHeader(key, headers[key]);
+            }
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    console.log('file uploaded');
+                } else {
+                    console.log('ohh crap');
+                }
+            };
+            xhr.send(formData);
         }
     }]);
 
     return Droppad;
 }(Emitter);
+
 //TODO
 //change imagecloud to droppad or somthing unique
 // add baseclass to given element
@@ -1504,3 +1545,5 @@ var Droppad = function (_Emitter) {
 //Image service should return full path as webkit-overflow-scrolling
 //Check browser support
 //do built in xhr requests
+// change fallBack to more appropriate name
+// deal with multiple files

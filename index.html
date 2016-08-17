@@ -100,111 +100,12 @@
     </div>
 
 </div>
-<style>
-    .droppad {
-        background: #ddd;
-        height: 100px;
-    }
 
-    .imageCloud {
-        position: relative;
-        background-size: cover;
-        background-position: 50% 50%;
-        cursor: pointer;
-        font-family: arial, serif;
-        min-height: 200px;
-    }
-
-    .imageCloud .dropSheet {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: rgba(0, 0, 0, 0.5);
-        text-align: center;
-        padding: 10px;
-        opacity: 0;
-        transition: ease all 0.5s;
-        pointer-events: none;
-    }
-
-    .imageCloud .dropSheet.shown {
-        background: rgba(0, 0, 0, 0);
-        opacity: 1;
-    }
-
-    .imageCloud:hover .dropSheet {
-        background: rgba(0, 0, 0, 0.5);
-        opacity: 1;
-    }
-
-    .imageCloud .dropSheet > div {
-        padding: 10px;
-        color: white;
-        border: dashed 2px #fff;
-        position: absolute;
-        top: 10px;
-        bottom: 10px;
-        left: 10px;
-        right: 10px;
-    }
-
-    .imageCloud .dropSheet > div .dropLabel {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        white-space: nowrap;
-    }
-
-    .imageCloud .dropSheet > div p {
-        font-size: 18px;
-    }
-
-    .imageCloud .fallBack {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        pointer-events: none;
-        background-color: gray;
-        background-size: cover;
-        background-position: center;
-    }
-
-    .imageCloud .loadedImage {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        pointer-events: none;
-        opacity: 0;
-        transition: ease opacity 0.5s;
-        background-size: cover;
-        background-position: center;
-    }
-</style>
-<div class="imageCloud">
-    <div class="fallBack" style="opacity: 1; background-image: url(&quot;&quot;);"></div>
-    <div class="loadedImage"></div>
-    <div class="dropSheet shown">
-        <div>
-            <div class="dropLabel"><p>Drop Image here.</p>
-
-                <p>
-                    <small>or click here</small>
-                </p>
-            </div>
-        </div>
-    </div>
-</div>
+<div class="dropper"></div>
 
 <script src="./dist/ghostTools.js"></script>
 <script>
-    var droppad = new Droppad(document.querySelector('.imageCloud'));
+    var droppad = new Droppad(document.querySelector('.dropper'));
     droppad.on('dragenter', function() {
       console.log('dragenter');
       //console.log(e);
