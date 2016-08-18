@@ -150,8 +150,6 @@ var Droppad = function (_Emitter) {
                 _this4.el_loadedImage.style.opacity = 1;
                 setTimeout(function () {
                     _this4.el_fallback.style.backgroundImage = 'url(' + event.target.result + ')';
-                    _this4.el_fallback.style.opacity = 1;
-                    _this4.el_loadedImage.style.opacity = 0;
                 }, 500);
             };
             reader.readAsDataURL(file);
@@ -247,6 +245,10 @@ var Droppad = function (_Emitter) {
             this.trigger('success', data);
             this.el_progressbar.style.display = 'none';
             this.el_progressbar.style.width = 0;
+
+            this.el_fallback.style.opacity = 1;
+            this.el_loadedImage.style.opacity = 0;
+
             setTimeout(function () {
                 _this6.el_progressbar.style.display = 'block';
             }, 400);
@@ -265,11 +267,9 @@ var Droppad = function (_Emitter) {
 //add emits all over
 //change imagecloud to droppad or somthing unique
 // add baseclass to given element
-
 //check filesize
 //Image service should return full path as webkit-overflow-scrolling
 //Check browser support
-
 //change fallBack to more appropriate name
 //deal with multiple files
 return Droppad;

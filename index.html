@@ -1,206 +1,240 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Modal demo</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
-          integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
-          integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/rivets/0.9.0/rivets.bundled.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.min.js"></script>
     <script src="http://apps.tweecode.com/media/js/imagecloud/dropzone.js"></script>
     <script src="http://apps.tweecode.com/media/js/imagecloud/imagecloud.js"></script>
     <script src="http://kotturinn.com/upload/js/inline-0.9.4.js"></script>
+    <style media="screen">
+        body {
+            background: #f9f9f9;
+        }
 
+        .wrapper {
+            padding: 40px 0;
+        }
+        .mb20 {
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
+
 <body>
-<div class="container">
-    <h2>Form</h2>
-    <hr>
-    <div class="row">
-        <div id="formWrap" class="col-sm-5"></div>
-        <div class="col-sm-7">
-
-            <div>
-                <h3>data</h3>
-
-                <div>
-                    <div class="btn btn-default" id="setData">Set data</div>
-                    <div class="btn btn-default" id="getData">Get data</div>
+    <div class="wrapper">
+        <header>
+            <div class="container">
+                <h2>GhostTools.js</h2>
+                <hr>
+            </div>
+        </header>
+        <div class="container">
+            <div class="panel">
+                <div class="panel-heading">
+                    <h2>Droppad</h2>
                 </div>
-                <pre>
-<code>var data = {
-    name: 'Andri',
-    age: 30,
-    lastName: 'Birgisson',
-    img: 'http://tweecode.com/imagecloud/1470502139865_andriProfile.jpg',
-    website: {
-    url: 'foobar.com',
-    display: 'foobar'
-    },
-    tags: ['foo', 'bar', 'baz']
-    };</code>
-                </pre>
+                <div class="panel-body">
+                    <div class="dropper"></div>
+                </div>
             </div>
-            <h3>Schema</h3>
-
-            <div>
-                <pre>
-<code>var schema = {
-    _order: ['name', 'lastName', 'age'],
-    age: {
-    type: 'number',
-    placeholder: 'age'
-    },
-    lastName: {
-    label: 'middlename',
-    placeholder: 'middlename',
-    type: 'text',
-    value: '',
-    },
-    name: {
-    label: 'Name',
-    placeholder: 'your name',
-    type: 'text',
-    helpText: 'foobar',
-    value: '',
-
-    },
-    img: {
-    type: 'image',
-    value: '',
-    width: "auto",
-    height: "auto",
-    quality: 60,
-    },
-    website: {
-    url: {
-    type: 'text',
-    value: ''
-    },
-    display: {
-    value: '',
-    type: 'text'
-    }
-    },
-    tags: [
-    {
-    "type": "text",
-    "label": "campaign image",
-    "value": "",
-    "helpText": "Mega image upload"
-    }
-    ]
-
-    };</code>
-                </pre>
-            </div>
-
         </div>
-    </div>
 
-</div>
+        <div class="container">
+            <div class="panel">
+                <div class="panel-heading">
+                    <h2>Form Generator</h2>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div id="formWrap" class="col-sm-5"></div>
+                        <div class="col-sm-7">
 
-<div class="dropper"></div>
+                            <div>
+                                <h3>data</h3>
 
-<script src="./dist/ghostTools.js"></script>
-<script>
-    var droppad = new Droppad(document.querySelector('.dropper'));
-    droppad.on('dragenter', function() {
-      console.log('dragenter');
-      //console.log(e);
-    });
-    droppad.on('success', function(data) {
-      console.log(data);
-    });
-    droppad.on('progress', function(data) {
-      console.log(data);
-    });
-
-
-
-
-    var data = {
-        name: 'Andri',
-        age: 30,
-        lastName: 'Birgisson',
-        img: 'http://tweecode.com/imagecloud/1470502139865_andriProfile.jpg',
-        website: {
+                                <div class="mb20">
+                                    <div class="btn btn-default" id="setData">Set data</div>
+                                    <div class="btn btn-default" id="getData">Get data</div>
+                                </div>
+                                <pre>
+        <code>var data = {
+            name: 'Andri',
+            age: 30,
+            lastName: 'Birgisson',
+            img: 'http://tweecode.com/imagecloud/1470502139865_andriProfile.jpg',
+            website: {
             url: 'foobar.com',
             display: 'foobar'
-        },
-        tags: ['foo', 'bar', 'baz']
-    };
+            },
+            tags: ['foo', 'bar', 'baz']
+            };</code>
+                        </pre>
+                            </div>
+                            <h3>Schema</h3>
 
-
-    var schema = {
-        _order: ['name', 'lastName', 'age'],
-        age: {
+                            <div>
+                                <pre>
+        <code>var schema = {
+            _order: ['name', 'lastName', 'age'],
+            age: {
             type: 'number',
             placeholder: 'age'
-        },
-        lastName: {
+            },
+            lastName: {
             label: 'middlename',
             placeholder: 'middlename',
             type: 'text',
             value: '',
-        },
-        name: {
+            },
+            name: {
             label: 'Name',
             placeholder: 'your name',
             type: 'text',
             helpText: 'foobar',
             value: '',
 
-        },
-        img: {
+            },
+            img: {
             type: 'image',
             value: '',
             width: "auto",
             height: "auto",
             quality: 60,
-        },
-        website: {
-            _toggle: true,
+            },
+            website: {
             url: {
-                type: 'text',
-                value: ''
+            type: 'text',
+            value: ''
             },
             display: {
-                value: '',
-                type: 'text'
+            value: '',
+            type: 'text'
             }
-        },
-        tags: [
+            },
+            tags: [
             {
+            "type": "text",
+            "label": "campaign image",
+            "value": "",
+            "helpText": "Mega image upload"
+            }
+            ]
+
+            };</code>
+                        </pre>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+        </div>
+    </div>
+
+    <script src="./dist/ghostTools.js"></script>
+    <!-- droppad example -->
+    <script>
+        var droppad = new Droppad(document.querySelector('.dropper'));
+        droppad.on('dragenter', function() {
+            console.log('dragenter');
+            //console.log(e);
+        });
+        droppad.on('success', function(data) {
+            console.log(data);
+        });
+        droppad.on('progress', function(data) {
+            console.log(data);
+        });
+    </script>
+
+    <!-- formgenerator example  -->
+    <script>
+        var data = {
+            name: 'Andri',
+            age: 30,
+            lastName: 'Birgisson',
+            img: 'http://tweecode.com/imagecloud/1470502139865_andriProfile.jpg',
+            website: {
+                url: 'foobar.com',
+                display: 'foobar'
+            },
+            tags: ['foo', 'bar', 'baz']
+        };
+
+
+        var schema = {
+            _order: ['name', 'lastName', 'age'],
+            age: {
+                type: 'number',
+                placeholder: 'age'
+            },
+            lastName: {
+                label: 'middlename',
+                placeholder: 'middlename',
+                type: 'text',
+                value: '',
+            },
+            name: {
+                label: 'Name',
+                placeholder: 'your name',
+                type: 'text',
+                helpText: 'foobar',
+                value: '',
+
+            },
+            img: {
+                type: 'image',
+                value: '',
+                width: "auto",
+                height: "auto",
+                quality: 60,
+            },
+            website: {
+                _toggle: true,
+                url: {
+                    type: 'text',
+                    value: ''
+                },
+                display: {
+                    value: '',
+                    type: 'text'
+                }
+            },
+            tags: [{
 
                 "type": "text",
                 "label": "campaign image",
                 "value": "",
                 "helpText": "Mega image upload"
-            }
-        ]
+            }]
 
-    };
+        };
 
-    var formgen = new FormGenerator(schema, document.querySelector('#formWrap'));
-    formgen.onChange = function (e) {
-        console.log(e);
-    };
+        var formgen = new FormGenerator(schema, document.querySelector('#formWrap'));
+        formgen.onChange = function(e) {
+            console.log(e);
+        };
 
-    var setdataBtn = document.getElementById('setData');
-    var getdataBtn = document.getElementById('getData');
-    setdataBtn.onclick = function () {
-        formgen.setData(data);
-    };
-    getdataBtn.onclick = function () {
-        var data = formgen.getData();
-        console.log(data);
-    };
-    //var schema = new SchemaDiscover(data);
-    //var formgen = new FormGenerator({}, document.querySelector('#formWrap'));
-
-
-</script>
+        var setdataBtn = document.getElementById('setData');
+        var getdataBtn = document.getElementById('getData');
+        setdataBtn.onclick = function() {
+            formgen.setData(data);
+        };
+        getdataBtn.onclick = function() {
+            var data = formgen.getData();
+            console.log(data);
+        };
+        //var schema = new SchemaDiscover(data);
+        //var formgen = new FormGenerator({}, document.querySelector('#formWrap'));
+    </script>
 </body>
+
 </html>

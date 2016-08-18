@@ -98,7 +98,7 @@ const Droppadstyles = `
         top: 0;
         height: 6px;
         width: 0%;
-        background: #60bd60;
+        background: #66ce66;
         z-index: 1;
         transition: ease all 0.4s
     }
@@ -236,8 +236,6 @@ class Droppad extends Emitter {
             this.el_loadedImage.style.opacity = 1;
             setTimeout(() => {
                 this.el_fallback.style.backgroundImage = 'url(' + event.target.result + ')';
-                this.el_fallback.style.opacity = 1;
-                this.el_loadedImage.style.opacity = 0;
             }, 500);
         };
         reader.readAsDataURL(file);
@@ -322,6 +320,11 @@ class Droppad extends Emitter {
         this.trigger('success', data);
         this.el_progressbar.style.display = 'none';
         this.el_progressbar.style.width = 0;
+
+
+        this.el_fallback.style.opacity = 1;
+        this.el_loadedImage.style.opacity = 0;
+
         setTimeout(()=> {
             this.el_progressbar.style.display = 'block';
         }, 400);
