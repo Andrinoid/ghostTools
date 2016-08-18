@@ -5,9 +5,9 @@
  */
 
 
-var isArray = (function () {
+var isArray = (function() {
     if (typeof Array.isArray === 'undefined') {
-        return function (value) {
+        return function(value) {
             return toString.call(value) === '[object Array]';
         };
     }
@@ -20,15 +20,15 @@ const Utils = {
         return !!(obj && Array === obj.constructor);
     },
 
-    isElement: function (item) {
+    isElement: function(item) {
         return (item[0] || item).nodeType
     },
 
-    isObject: function (value) {
+    isObject: function(value) {
         return value != null && typeof value === 'object';
     },
 
-    normalizeElement: function (element) {
+    normalizeElement: function(element) {
         if (this.isElement(element)) {
             return element;
         }
@@ -41,7 +41,7 @@ const Utils = {
         }
     },
 
-    setClass: function (el, className) {
+    setClass: function(el, className) {
         //credit: http://youmightnotneedjquery.com/
         if (el.classList)
             el.classList.add(className);
@@ -49,7 +49,7 @@ const Utils = {
             el.className += ' ' + className;
     },
 
-    removeClass: function (el, className) {
+    removeClass: function(el, className) {
         //credit: http://youmightnotneedjquery.com/
         if (el.classList)
             el.classList.remove(className);
@@ -58,7 +58,7 @@ const Utils = {
     },
 
 
-    fadeOutRemove: function (el) {
+    fadeOutRemove: function(el) {
         el.style.transition = 'ease opacity 0.5s';
         el.style.webkitTransition = 'ease opacity 0.5s';
         el.style.opacity = 0;
@@ -67,8 +67,8 @@ const Utils = {
         }, 500);
     },
 
-//extend Object
-    extend: function () {
+    //extend Object
+    extend: function() {
         for (var i = 1; i < arguments.length; i++)
             for (var key in arguments[i])
                 if (arguments[i].hasOwnProperty(key))
@@ -76,7 +76,7 @@ const Utils = {
         return arguments[0];
     },
 
-    foreach: function (arg, func) {
+    foreach: function(arg, func) {
         if (this.isElement(arg)) {
             for (var i = 0; i < arg.length; i++) {
                 if (isElement(arg[i]))
@@ -95,6 +95,14 @@ const Utils = {
             for (var key in arg) {
                 func.call(window, arg[key], key, arg);
             }
+        }
+    },
+
+    attemptJson: function(str) {
+        try {
+            return JSON.parse(str);
+        } catch (err) {
+            return str;
         }
     }
 

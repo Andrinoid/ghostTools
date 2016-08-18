@@ -110,9 +110,11 @@
       console.log('dragenter');
       //console.log(e);
     });
-    droppad.on('dragenter', function(e) {
-      console.log('dragenter2');
-      console.log(e);
+    droppad.on('success', function(data) {
+      console.log(data);
+    });
+    droppad.on('progress', function(data) {
+      console.log(data);
     });
 
 

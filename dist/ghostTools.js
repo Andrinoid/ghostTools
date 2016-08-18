@@ -89,6 +89,14 @@ var Utils = {
                 func.call(window, arg[key], key, arg);
             }
         }
+    },
+
+    attemptJson: function attemptJson(str) {
+        try {
+            return JSON.parse(str);
+        } catch (err) {
+            return str;
+        }
     }
 
 };
@@ -1329,7 +1337,18 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var inline = new Inline();
 
-var Droppadstyles = '\n\n    .imageCloud {\n        position: relative;\n        background-size: cover;\n        background-position: 50% 50%;\n        cursor: pointer;\n        font-family: arial, serif;\n        min-height: 200px;\n    }\n    .imageCloud input {\n        position: absolute;\n        top: 0;\n        right: 0;\n        bottom: 0;\n        left: 0;\n    }\n    .imageCloud .dropSheet {\n        position: absolute;\n        top: 0;\n        bottom: 0;\n        left: 0;\n        right: 0;\n        background: rgba(0, 0, 0, 0.5);\n        text-align: center;\n        padding: 10px;\n        opacity: 0;\n        transition: ease all 0.5s;\n        pointer-events: none;\n    }\n\n    .imageCloud .dropSheet.shown {\n        background: rgba(0, 0, 0, 0);\n        opacity: 1;\n    }\n\n    .imageCloud:hover .dropSheet {\n        background: rgba(0, 0, 0, 0.5);\n        opacity: 1;\n    }\n\n    .imageCloud .dropSheet > div {\n        padding: 10px;\n        color: white;\n        border: dashed 2px #fff;\n        position: absolute;\n        top: 10px;\n        bottom: 10px;\n        left: 10px;\n        right: 10px;\n    }\n\n    .imageCloud .dropSheet > div .dropLabel {\n        position: absolute;\n        top: 50%;\n        left: 50%;\n        transform: translate(-50%, -50%);\n        white-space: nowrap;\n    }\n\n    .imageCloud .dropSheet > div p {\n        font-size: 18px;\n    }\n\n    .imageCloud .fallBack {\n        position: absolute;\n        top: 0;\n        bottom: 0;\n        left: 0;\n        right: 0;\n        pointer-events: none;\n        background-color: gray;\n        background-size: cover;\n        background-position: center;\n    }\n\n    .imageCloud .loadedImage {\n        position: absolute;\n        top: 0;\n        bottom: 0;\n        left: 0;\n        right: 0;\n        pointer-events: none;\n        opacity: 0;\n        transition: ease opacity 0.5s;\n        background-size: cover;\n        background-position: center;\n    }\n    .droppad-input {\n        position: absolute;\n        top: 0;\n        left: 0;\n        height: 0;\n        width: 0;\n        visibility: hidden;\n    }\n';
+var Droppadstyles = '\n    .imageCloud {\n        position: relative;\n        background-size: cover;\n        background-position: 50% 50%;\n        cursor: pointer;\n        font-family: arial, serif;\n        min-height: 200px;\n    }\n    .imageCloud input {\n        position: absolute;\n        top: 0;\n        right: 0;\n        bottom: 0;\n        left: 0;\n    }\n    .imageCloud .dropSheet {\n        position: absolute;\n        top: 0;\n        bottom: 0;\n        left: 0;\n        right: 0;\n        background: rgba(0, 0, 0, 0.5);\n        text-align: center;\n        padding: 10px;\n        opacity: 0;\n        transition: ease all 0.5s;\n        pointer-events: none;\n    }\n\n    .imageCloud .dropSheet.shown {\n        background: rgba(0, 0, 0, 0);\n        opacity: 1;\n    }\n\n    .imageCloud:hover .dropSheet {\n        background: rgba(0, 0, 0, 0.5);\n        opacity: 1;\n    }\n\n    .imageCloud .dropSheet > div {\n        padding: 10px;\n        color: white;\n        border: dashed 2px #fff;\n        position: absolute;\n        top: 10px;\n        bottom: 10px;\n        left: 10px;\n        right: 10px;\n    }\n\n    .imageCloud .dropSheet > div .dropLabel {\n        position: absolute;\n        top: 50%;\n        left: 50%;\n        transform: translate(-50%, -50%);\n        white-space: nowrap;\n    }\n\n    .imageCloud .dropSheet > div p {\n        font-size: 18px;\n    }\n\n    .imageCloud .fallBack {\n        position: absolute;\n        top: 0;\n        bottom: 0;\n        left: 0;\n        right: 0;\n        pointer-events: none;\n        background-color: gray;\n        background-size: cover;\n        background-position: center;\n    }\n\n    .imageCloud .loadedImage {\n        position: absolute;\n        top: 0;\n        bottom: 0;\n        left: 0;\n        right: 0;\n        pointer-events: none;\n        opacity: 0;\n        transition: ease opacity 0.5s;\n        background-size: cover;\n        background-position: center;\n        -webkit-filter: grayscale(100%); /* Chrome, Safari, Opera */\n        filter: grayscale(100%);\n    }\n    .imageCloud .progressbar {\n        position: absolute;\n        top: 0;\n        height: 6px;\n        width: 0%;\n        background: #60bd60;\n        z-index: 1;\n        transition: ease all 0.4s\n    }\n    .droppad-input {\n        position: absolute;\n        top: 0;\n        left: 0;\n        height: 0;\n        width: 0;\n        visibility: hidden;\n    }\n';
+
+/**
+ * Events
+ * dragenter
+ * dragover
+ * ondragleave
+ * drop
+ * progress
+ * success
+ * error
+ */
 
 var Droppad = function (_Emitter) {
     _inherits(Droppad, _Emitter);
@@ -1341,9 +1360,8 @@ var Droppad = function (_Emitter) {
 
         _this.droppad = elm;
         _this.defaults = {
-            url: 'http://kotturinn.com/icloud/upload/body/test',
+            url: 'http://kotturinn.com/icloud/upload/test',
             backgroundImage: null,
-            //method: "post",
             maxFilesize: 256, //in MB TODO
             paramName: "file",
             includeStyles: true,
@@ -1363,7 +1381,7 @@ var Droppad = function (_Emitter) {
 
             Utils.setClass(this.droppad, 'imageCloud');
             Utils.setClass(this.droppad, 'droppad-clickable');
-            var baseElements = '\n        <div class="fallBack" style="opacity: 1; background-image: url(\'\';);"></div>\n        <div class="loadedImage"></div>\n        <div class="dropSheet shown">\n            <div>\n                <div class="dropLabel"><p>Drop Image here.</p>\n                    <p>\n                        <small>or click here</small>\n                    </p>\n                </div>\n            </div>\n        </div>\n        ';
+            var baseElements = '\n        <div class="progressbar"></div>\n        <div class="fallBack" style="opacity: 1; background-image: url();"></div>\n        <div class="loadedImage"></div>\n        <div class="dropSheet shown">\n            <div>\n                <div class="dropLabel"><p>Drop Image here.</p>\n                    <p>\n                        <small>or click here</small>\n                    </p>\n                </div>\n            </div>\n        </div>\n        ';
             this.droppad.innerHTML = baseElements;
             this.el_clickableInput = new Elm('input.droppad-input', {
                 type: 'file',
@@ -1381,6 +1399,7 @@ var Droppad = function (_Emitter) {
         value: function droppadElements() {
             this.el_fallback = this.droppad.querySelector('.fallBack');
             this.el_loadedImage = this.droppad.querySelector('.loadedImage');
+            this.el_progressbar = this.droppad.querySelector('.progressbar');
         }
     }, {
         key: 'injectStyles',
@@ -1439,6 +1458,10 @@ var Droppad = function (_Emitter) {
         value: function showAsBackground(file) {
             var _this4 = this;
 
+            /**
+             * let the image fade in 500ms
+             * then add it to the layer behind so we can repeat the effect on next drop
+             */
             var reader = new FileReader();
             reader.onload = function (event) {
                 _this4.el_loadedImage.style.backgroundImage = 'url(' + event.target.result + ')';
@@ -1456,7 +1479,7 @@ var Droppad = function (_Emitter) {
         value: function isFileValid(file) {
             var mimeType = file.type;
             var baseMimeType = file.type.split('/')[0];
-            // check against defaults.acceptedFiles
+            // check against defaults.acceptedFiles TODO
             return !file.type.match('image.*');
         }
     }, {
@@ -1475,35 +1498,24 @@ var Droppad = function (_Emitter) {
         key: 'dragleave',
         value: function dragleave(e) {
             Utils.removeClass(this.droppad, 'dragover');
-            this.trigger('dragenter', e);
+            this.trigger('dragleave', e);
         }
     }, {
         key: 'drop',
         value: function drop(e) {
             Utils.removeClass(this.droppad, 'dragover');
-            this.trigger('dragenter', e);
+            this.trigger('drop', e);
             var files = e.target.files || e.dataTransfer.files;
             var file = files[0];
-            console.log(file);
-            this.showAsBackground(file);
-            this.sendFile(file);
-            //this.upload(files);
-        }
-    }, {
-        key: 'sendFile',
-        value: function sendFile(file) {
-            function progress(value) {
-                console.log(value);
-            }
 
-            function callback(data) {
-                console.log(data);
-            }
-            inline.upload(this.defaults.url, file, null, progress).run(callback);
+            this.showAsBackground(file);
+            this.upload(files);
         }
     }, {
         key: 'upload',
         value: function upload(files) {
+            var _this5 = this;
+
             var headers = {
                 'X-Requested-With': 'XMLHttpRequest',
                 'Accept': '*/*'
@@ -1522,14 +1534,45 @@ var Droppad = function (_Emitter) {
             for (var key in headers) {
                 xhr.setRequestHeader(key, headers[key]);
             }
-            xhr.onload = function () {
+            /////
+            xhr.onreadystatechange = function (e) {
+                if (xhr.readyState !== 4) return;
+                var data = Utils.attemptJson(xhr.responseText);
                 if (xhr.status === 200) {
-                    console.log('file uploaded');
+                    _this5.uploadSuccess(data);
                 } else {
-                    console.log('ohh crap');
+                    _this5.uploadError(data);
                 }
             };
+            xhr.upload.addEventListener('progress', function (e) {
+                var loadedPercent = (e.loaded / e.total * 100).toFixed();
+                _this5.uploadProgress(loadedPercent);
+            }, false);
+
             xhr.send(formData);
+        }
+    }, {
+        key: 'uploadProgress',
+        value: function uploadProgress(percentage) {
+            this.trigger('progress', percentage);
+            this.el_progressbar.style.width = percentage + '%';
+        }
+    }, {
+        key: 'uploadSuccess',
+        value: function uploadSuccess(data) {
+            var _this6 = this;
+
+            this.trigger('success', data);
+            this.el_progressbar.style.display = 'none';
+            this.el_progressbar.style.width = 0;
+            setTimeout(function () {
+                _this6.el_progressbar.style.display = 'block';
+            }, 400);
+        }
+    }, {
+        key: 'uploadError',
+        value: function uploadError(data) {
+            this.trigger('error', data);
         }
     }]);
 
@@ -1537,13 +1580,11 @@ var Droppad = function (_Emitter) {
 }(Emitter);
 
 //TODO
+//add emits all over
 //change imagecloud to droppad or somthing unique
 // add baseclass to given element
-//add regular input for clickable area
-//show progress on upload
 //check filesize
 //Image service should return full path as webkit-overflow-scrolling
 //Check browser support
-//do built in xhr requests
-// change fallBack to more appropriate name
-// deal with multiple files
+//change fallBack to more appropriate name
+//deal with multiple files

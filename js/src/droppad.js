@@ -5,7 +5,6 @@ import Emitter from './emitter';
 var inline = new Inline();
 
 const Droppadstyles = `
-
     .imageCloud {
         position: relative;
         background-size: cover;
@@ -91,6 +90,17 @@ const Droppadstyles = `
         transition: ease opacity 0.5s;
         background-size: cover;
         background-position: center;
+        -webkit-filter: grayscale(100%); /* Chrome, Safari, Opera */
+        filter: grayscale(100%);
+    }
+    .imageCloud .progressbar {
+        position: absolute;
+        top: 0;
+        height: 6px;
+        width: 0%;
+        background: #60bd60;
+        z-index: 1;
+        transition: ease all 0.4s
     }
     .droppad-input {
         position: absolute;
@@ -101,15 +111,25 @@ const Droppadstyles = `
         visibility: hidden;
     }
 `;
+
+/**
+ * Events
+ * dragenter
+ * dragover
+ * ondragleave
+ * drop
+ * progress
+ * success
+ * error
+ */
 class Droppad extends Emitter {
 
     constructor(elm, options) {
         super();
         this.droppad = elm;
         this.defaults = {
-            url: 'http://kotturinn.com/icloud/upload/body/test',
+            url: 'http://kotturinn.com/icloud/upload/test',
             backgroundImage: null,
-            //method: "post",
             maxFilesize: 256, //in MB TODO
             paramName: "file",
             includeStyles: true,
@@ -125,7 +145,8 @@ class Droppad extends Emitter {
         Utils.setClass(this.droppad, 'imageCloud');
         Utils.setClass(this.droppad, 'droppad-clickable');
         const baseElements = `
-        <div class="fallBack" style="opacity: 1; background-image: url('';);"></div>
+        <div class="progressbar"></div>
+        <div class="fallBack" style="opacity: 1; background-image: url();"></div>
         <div class="loadedImage"></div>
         <div class="dropSheet shown">
             <div>
@@ -153,7 +174,7 @@ class Droppad extends Emitter {
     droppadElements() {
         this.el_fallback = this.droppad.querySelector('.fallBack');
         this.el_loadedImage = this.droppad.querySelector('.loadedImage');
-
+        this.el_progressbar = this.droppad.querySelector('.progressbar');
     }
 
     injectStyles() {
@@ -205,6 +226,10 @@ class Droppad extends Emitter {
     }
 
     showAsBackground(file) {
+        /**
+         * let the image fade in 500ms
+         * then add it to the layer behind so we can repeat the effect on next drop
+         */
         var reader = new FileReader();
         reader.onload = (event) => {
             this.el_loadedImage.style.backgroundImage = 'url(' + event.target.result + ')';
@@ -221,7 +246,7 @@ class Droppad extends Emitter {
     isFileValid(file) {
         let mimeType = file.type;
         let baseMimeType = file.type.split('/')[0];
-        // check against defaults.acceptedFiles
+        // check against defaults.acceptedFiles TODO
         return !file.type.match('image.*')
     }
 
@@ -237,29 +262,17 @@ class Droppad extends Emitter {
 
     dragleave(e) {
         Utils.removeClass(this.droppad, 'dragover');
-        this.trigger('dragenter', e);
+        this.trigger('dragleave', e);
     }
 
     drop(e) {
         Utils.removeClass(this.droppad, 'dragover');
-        this.trigger('dragenter', e);
+        this.trigger('drop', e);
         var files = e.target.files || e.dataTransfer.files;
         var file = files[0];
-        console.log(file);
+
         this.showAsBackground(file);
-        this.sendFile(file);
-        //this.upload(files);
-    }
-
-    sendFile(file) {
-        function progress(value) {
-            console.log(value);
-        }
-
-        function callback(data) {
-            console.log(data);
-        }
-        inline.upload(this.defaults.url, file, null, progress).run(callback);
+        this.upload(files);
     }
 
     upload(files) {
@@ -281,26 +294,52 @@ class Droppad extends Emitter {
         for (var key in headers) {
             xhr.setRequestHeader(key, headers[key]);
         }
-        xhr.onload = () => {
+        /////
+        xhr.onreadystatechange = (e) => {
+            if (xhr.readyState !== 4)
+                return;
+            var data = Utils.attemptJson(xhr.responseText);
             if (xhr.status === 200) {
-                console.log('file uploaded')
+                this.uploadSuccess(data);
             } else {
-                console.log('ohh crap');
+                this.uploadError(data);
             }
-        };
+        }
+        xhr.upload.addEventListener('progress', (e) => {
+            let loadedPercent = (e.loaded / e.total * 100).toFixed();
+            this.uploadProgress(loadedPercent);
+        }, false);
+
         xhr.send(formData);
+    }
+
+    uploadProgress(percentage) {
+        this.trigger('progress', percentage);
+        this.el_progressbar.style.width = percentage + '%';
+    }
+
+    uploadSuccess(data) {
+        this.trigger('success', data);
+        this.el_progressbar.style.display = 'none';
+        this.el_progressbar.style.width = 0;
+        setTimeout(()=> {
+            this.el_progressbar.style.display = 'block';
+        }, 400);
+
+    }
+
+    uploadError(data) {
+        this.trigger('error', data);
     }
 }
 
 //TODO
+//add emits all over
 //change imagecloud to droppad or somthing unique
 // add baseclass to given element
-//add regular input for clickable area
-//show progress on upload
 //check filesize
 //Image service should return full path as webkit-overflow-scrolling
 //Check browser support
-//do built in xhr requests
-// change fallBack to more appropriate name
-// deal with multiple files
+//change fallBack to more appropriate name
+//deal with multiple files
 export default Droppad;

@@ -98,6 +98,14 @@ var Utils = {
                 func.call(window, arg[key], key, arg);
             }
         }
+    },
+
+    attemptJson: function attemptJson(str) {
+        try {
+            return JSON.parse(str);
+        } catch (err) {
+            return str;
+        }
     }
 
 };
