@@ -657,6 +657,13 @@ var typeModels = {
         value: '',
         placeholder: ''
     },
+    color: {
+        element: 'input',
+        type: 'color',
+        cls: 'form-control',
+        value: '',
+        placeholder: ''
+    },
     date: {
         element: 'input',
         type: 'date',
