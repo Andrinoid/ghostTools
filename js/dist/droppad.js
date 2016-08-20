@@ -190,13 +190,25 @@ var Droppad = function () {
                 this.upload(files);
             }
         }, {
-            key: 'isFileValid',
-            value: function isFileValid(file) {
+            key: 'validate',
+            value: function validate(file) {
                 var rtn = {};
                 var errors = [];
                 var mimeType = file.type;
                 var baseMimeType = file.type.split('/')[0];
                 var maxFilesize = this.defaults.maxFilesize * 1024 * 1024;
+                console.log(file);
+                var tests = [function size(file) {
+                    if (file.size > maxFilesize) {
+                        errors.push({ isValid: false, reason: 'file is too big.' });
+                    }
+                }];
+
+                Utils.foreach(tests, function (fn) {
+                    fn(file);
+                });
+
+                console.log(errors);
 
                 return true;
             }

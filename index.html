@@ -140,6 +140,7 @@
     <script>
         var droppad = new Droppad(document.querySelector('.dropper'), {
             url: 'http://kotturinn.com/icloud/upload/test',
+            maxFilesize: 1,
             backgroundImage: 'http://ghostlamp.com/icloud/images/test/71l1471623700.jpeg'
         });
         droppad.on('dragenter', function() {
