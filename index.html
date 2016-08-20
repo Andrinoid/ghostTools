@@ -14,7 +14,6 @@
         body {
             background: #f9f9f9;
         }
-
         .wrapper {
             padding: 40px 0;
         }
@@ -133,16 +132,16 @@
                 </div>
             </div>
 
-
-
-
         </div>
     </div>
 
     <script src="./dist/ghostTools.js"></script>
     <!-- droppad example -->
     <script>
-        var droppad = new Droppad(document.querySelector('.dropper'));
+        var droppad = new Droppad(document.querySelector('.dropper'), {
+            url: 'http://kotturinn.com/icloud/upload/test',
+            backgroundImage: 'http://ghostlamp.com/icloud/images/test/71l1471623700.jpeg'
+        });
         droppad.on('dragenter', function() {
             console.log('dragenter');
             //console.log(e);

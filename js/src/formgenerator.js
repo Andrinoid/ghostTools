@@ -1,4 +1,5 @@
 import Utils from './utils';
+import Droppad from './droppad';
 import Elm from './elm';
 
 
@@ -609,4 +610,3 @@ class SchemaDiscover {
 
 
 export default {FormGenerator, SchemaDiscover};
-
