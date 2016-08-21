@@ -1,7 +1,7 @@
 import Utils from './utils';
 import Elm from './elm';
 import Emitter from './emitter';
-
+import Alert from './alert';
 
 
 /**
@@ -132,10 +132,11 @@ const Droppad = (() => {
     const Default = {
         url: '',
         backgroundImage: '',
-        maxFilesize: 8, //in MB TODO
-        paramName: "file",
+        maxFilesize: 8, //in MB
+        paramName: "file", //TODO
         includeStyles: true,
         acceptedFiles: 'jpeg, jpg, png, gif',
+        showErrors: true,
     };
 
     const Template = `
@@ -296,27 +297,32 @@ const Droppad = (() => {
         }
 
         validate(file) {
-            let rtn = {};
+            let self = this;
             let errors = [];
-            let mimeType = file.type;
-            let baseMimeType = file.type.split('/')[0];
-            let maxFilesize = this.defaults.maxFilesize * 1024 * 1024;
-            console.log(file);
+
             let tests = [
                 function size(file) {
-                    if(file.size > maxFilesize) {
-                        errors.push({isValid: false, reason: 'file is too big.'})
+                    const maxFilesize = self.defaults.maxFilesize * 1024 * 1024;
+                    if (file.size > maxFilesize) {
+                        errors.push(`File is ${self.formatBytes(file.size).human}. Thats larger than the maximum file size ${self.formatBytes(maxFilesize).human}`)
                     }
                 },
+                function type(file) {
+                    const baseMimeType = file.type.split('/')[0];
+                    const mimeType = file.type.split('/')[1];
+                    let acceptedFiles = self.defaults.acceptedFiles.replace(/ /g, '').split(',');
+                    // Check if mimeType is allowed
+                    if (acceptedFiles.indexOf(mimeType) < 0) {
+                        errors.push(`File type ${mimeType} is not allowed`)
+                    }
+                }
             ];
 
-            Utils.foreach(tests, (fn)=> {
+            Utils.foreach(tests, (fn) => {
                 fn(file);
             });
 
-            console.log(errors);
-
-            return true;
+            return errors;
         }
 
         upload(files) {
@@ -329,10 +335,15 @@ const Droppad = (() => {
             for (var i = 0; i < files.length; i++) {
                 let file = files[i];
 
-                let validation = this.validate(file);
-                if (validation.isValid) {
-                    console.log('not valid', file);
-
+                let errors = this.validate(file);
+                if (errors.length) {
+                    Utils.foreach(errors, (err)=> {
+                        this.trigger('error', err);
+                        if(this.defaults.showErrors) {
+                            new Alert('danger', {message: err, timer: 6000});
+                        }
+                    });
+                    return;
                 }
                 formData.append('file', file, file.name); //file.name is not required Check server side implementation of this
             }
@@ -387,11 +398,12 @@ const Droppad = (() => {
         formatBytes(bytes) {
             var kb = 1024;
             var ndx = Math.floor(Math.log(bytes) / Math.log(kb));
-            var fileSizeTypes = ["bytes", "kb", "mb", "gb", "tb", "pb", "eb", "zb", "yb"];
+            var fileSizeTypes = ["bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
 
             return {
                 size: +(bytes / kb / kb).toFixed(2),
-                type: fileSizeTypes[ndx]
+                type: fileSizeTypes[ndx],
+                human: +(bytes / kb / kb).toFixed(2) + fileSizeTypes[ndx]
             };
         }
     }
@@ -402,7 +414,6 @@ const Droppad = (() => {
 //TODO
 
 //change imagecloud to droppad or somthing unique
-//check filesize
 //Image service should return full path as webkit-overflow-scrolling
 //Check browser support
 //change fallBack to more appropriate name

@@ -39,10 +39,11 @@ var Droppad = function () {
     var Default = {
         url: '',
         backgroundImage: '',
-        maxFilesize: 8, //in MB TODO
-        paramName: "file",
+        maxFilesize: 8, //in MB
+        paramName: "file", //TODO
         includeStyles: true,
-        acceptedFiles: 'jpeg, jpg, png, gif'
+        acceptedFiles: 'jpeg, jpg, png, gif',
+        showErrors: true
     };
 
     var Template = '\n        <div class="progressbar"></div>\n        <div class="fallBack" style="opacity: 1;"></div>\n        <div class="loadedImage"></div>\n        <div class="dropSheet shown">\n            <div>\n                <div class="dropLabel"><p>Drop Image here.</p>\n                    <p>\n                        <small>or click here</small>\n                    </p>\n                </div>\n            </div>\n        </div>\n    ';
@@ -201,15 +202,21 @@ var Droppad = function () {
         }, {
             key: 'validate',
             value: function validate(file) {
-                var rtn = {};
+                var self = this;
                 var errors = [];
-                var mimeType = file.type;
-                var baseMimeType = file.type.split('/')[0];
-                var maxFilesize = this.defaults.maxFilesize * 1024 * 1024;
-                console.log(file);
+
                 var tests = [function size(file) {
-                    if (file.size > mazFilesize) {
-                        errors.push({ isValid: false, reason: 'file is too big.' });
+                    var maxFilesize = self.defaults.maxFilesize * 1024 * 1024;
+                    if (file.size > maxFilesize) {
+                        errors.push('File is ' + self.formatBytes(file.size).human + '. Thats larger than the maximum file size ' + self.formatBytes(maxFilesize).human);
+                    }
+                }, function type(file) {
+                    var baseMimeType = file.type.split('/')[0];
+                    var mimeType = file.type.split('/')[1];
+                    var acceptedFiles = self.defaults.acceptedFiles.replace(/ /g, '').split(',');
+                    // Check if mimeType is allowed
+                    if (acceptedFiles.indexOf(mimeType) < 0) {
+                        errors.push('File type ' + mimeType + ' is not allowed');
                     }
                 }];
 
@@ -217,9 +224,7 @@ var Droppad = function () {
                     fn(file);
                 });
 
-                console.log(errors);
-
-                return true;
+                return errors;
             }
         }, {
             key: 'upload',
@@ -235,9 +240,15 @@ var Droppad = function () {
                 for (var i = 0; i < files.length; i++) {
                     var file = files[i];
 
-                    var validation = this.validate(file);
-                    if (validation.isValid) {
-                        console.log('not valid', file);
+                    var errors = this.validate(file);
+                    if (errors.length) {
+                        Utils.foreach(errors, function (err) {
+                            _this5.trigger('error', err);
+                            if (_this5.defaults.showErrors) {
+                                new Alert('danger', { message: err, timer: 6000 });
+                            }
+                        });
+                        return;
                     }
                     formData.append('file', file, file.name); //file.name is not required Check server side implementation of this
                 }
@@ -298,11 +309,12 @@ var Droppad = function () {
             value: function formatBytes(bytes) {
                 var kb = 1024;
                 var ndx = Math.floor(Math.log(bytes) / Math.log(kb));
-                var fileSizeTypes = ["bytes", "kb", "mb", "gb", "tb", "pb", "eb", "zb", "yb"];
+                var fileSizeTypes = ["bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
 
                 return {
                     size: +(bytes / kb / kb).toFixed(2),
-                    type: fileSizeTypes[ndx]
+                    type: fileSizeTypes[ndx],
+                    human: +(bytes / kb / kb).toFixed(2) + fileSizeTypes[ndx]
                 };
             }
         }, {
@@ -331,7 +343,6 @@ var Droppad = function () {
 //TODO
 
 //change imagecloud to droppad or somthing unique
-//check filesize
 //Image service should return full path as webkit-overflow-scrolling
 //Check browser support
 //change fallBack to more appropriate name
