@@ -332,7 +332,6 @@ var Droppad = function () {
 }();
 
 //TODO
-
 //change imagecloud to droppad or somthing unique
 //Image service should return full path as webkit-overflow-scrolling
 //Check browser support
