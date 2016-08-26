@@ -97,6 +97,12 @@ var Utils = {
         } catch (err) {
             return str;
         }
+    },
+
+    findAncestor: function findAncestor(el, cls) {
+        if (el.classList.contains(cls)) return el;
+        while ((el = el.parentElement) && !el.classList.contains(cls)) {}
+        return el;
     }
 
 };
@@ -702,11 +708,11 @@ var typeModels = {
         element: 'div',
         label: 'imagefield',
         description: '',
-        width: 'auto',
-        height: 'auto',
-        quality: 60,
         value: '',
-        currentImage: ''
+        url: 'http://kotturinn.com/icloud/upload/test',
+        backgroundImage: '',
+        maxFilesize: 8, //in MB
+        acceptedFiles: 'jpeg, jpg, png, gif'
     }
 };
 
@@ -1064,12 +1070,18 @@ var FormGenerator = function () {
                     model['data-keychain'] = this.getKeychain(wrapper);
                     element = new Elm(model.element, model, wrapper);
                     model.currentImage = model.value;
-                    var imagePortal = new ImageCloud(element, model);
-                    imagePortal.on('success', function (rsp) {
-                        element.setAttribute('rv-checked', _this4.getKeychain(wrapper));
-                        element.setAttribute('elm-value', rsp.url);
-                        _this4.onChange(rsp);
+
+                    var droppad = new Droppad(element, model);
+                    droppad.on('success', function (data) {
+                        console.log(data);
                     });
+
+                    // var imagePortal = new ImageCloud(element, model);
+                    // imagePortal.on('success', (rsp)=> {
+                    //     element.setAttribute('rv-checked', this.getKeychain(wrapper));
+                    //     element.setAttribute('elm-value', rsp.url);
+                    //     this.onChange(rsp);
+                    // });
                 }
                 /**
                  * No special treatment needed
@@ -1390,7 +1402,6 @@ var Droppad = function () {
             _this.setBackground();
             return _this;
         }
-
         // getters
 
         _createClass(Droppad, [{
@@ -1419,13 +1430,13 @@ var Droppad = function () {
                 this.droppad.innerHTML = Template;
                 this.el_clickableInput = new Elm('input.droppad-input', {
                     type: 'file',
+                    id: 'id-' + Math.floor(Math.random() * 100), //TODO remove
                     change: function change(e) {
                         var file = e.target.files[0];
                         _this2.showAsBackground(file);
-                        //this.sendFile(file);
                         _this2.upload(e.target.files);
                     }
-                }, document.body);
+                }, this.droppad);
             }
         }, {
             key: 'setEvents',
@@ -1456,13 +1467,19 @@ var Droppad = function () {
                     noPropagation(e);
                     _this3.drop(e);
                 };
+                var self = this;
                 // add event to document and listen for droppad-clickable elements
-                document.addEventListener('click', function (e) {
-                    var clsList = Array.prototype.slice.call(e.target.classList);
-                    if (clsList.indexOf('droppad-clickable') > -1) {
-                        _this3.el_clickableInput.click();
-                    }
-                });
+                if (!this.__proto__.isClickable) {
+                    document.addEventListener('click', function (e) {
+                        var clsList = Array.prototype.slice.call(e.target.classList);
+                        if (clsList.indexOf('droppad-clickable') > -1) {
+                            var droppad = Utils.findAncestor(e.target, 'imageCloud');
+                            var input = droppad.querySelector('.droppad-input');
+                            input.click();
+                        }
+                    });
+                }
+                this.__proto__.isClickable = true;
             }
         }, {
             key: 'droppadElements',
@@ -1627,7 +1644,7 @@ var Droppad = function () {
                 this.trigger('error', data);
             }
 
-            //currently not used add to Utils?
+            //add to Utils?
 
         }, {
             key: 'formatBytes',
@@ -1662,6 +1679,7 @@ var Droppad = function () {
         return Droppad;
     }(Emitter);
 
+    Droppad.prototype.isClickable = false;
     return Droppad;
 }();
 

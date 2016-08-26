@@ -65,7 +65,6 @@ var Droppad = function () {
             _this.setBackground();
             return _this;
         }
-
         // getters
 
         _createClass(Droppad, [{
@@ -94,13 +93,13 @@ var Droppad = function () {
                 this.droppad.innerHTML = Template;
                 this.el_clickableInput = new Elm('input.droppad-input', {
                     type: 'file',
+                    id: 'id-' + Math.floor(Math.random() * 100), //TODO remove
                     change: function change(e) {
                         var file = e.target.files[0];
                         _this2.showAsBackground(file);
-                        //this.sendFile(file);
                         _this2.upload(e.target.files);
                     }
-                }, document.body);
+                }, this.droppad);
             }
         }, {
             key: 'setEvents',
@@ -131,13 +130,22 @@ var Droppad = function () {
                     noPropagation(e);
                     _this3.drop(e);
                 };
+                var self = this;
                 // add event to document and listen for droppad-clickable elements
-                document.addEventListener('click', function (e) {
-                    var clsList = Array.prototype.slice.call(e.target.classList);
-                    if (clsList.indexOf('droppad-clickable') > -1) {
-                        _this3.el_clickableInput.click();
-                    }
-                });
+                if (!this.__proto__.isClickable) {
+                    document.addEventListener('click', function (e) {
+                        var clsList = Array.prototype.slice.call(e.target.classList);
+                        if (clsList.indexOf('droppad-clickable') > -1) {
+                            console.log(e.target);
+                            var droppad = Utils.findAncestor(e.target, 'imageCloud');
+                            console.log(droppad);
+                            var input = droppad.querySelector('.droppad-input');
+                            console.log(input);
+                            input.click();
+                        }
+                    });
+                }
+                this.__proto__.isClickable = true;
             }
         }, {
             key: 'droppadElements',
@@ -302,7 +310,7 @@ var Droppad = function () {
                 this.trigger('error', data);
             }
 
-            //currently not used add to Utils?
+            //add to Utils?
 
         }, {
             key: 'formatBytes',
@@ -337,6 +345,7 @@ var Droppad = function () {
         return Droppad;
     }(Emitter);
 
+    Droppad.prototype.isClickable = false;
     return Droppad;
 }();
 

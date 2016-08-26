@@ -143,11 +143,11 @@ var typeModels = {
         element: 'div',
         label: 'imagefield',
         description: '',
-        width: 'auto',
-        height: 'auto',
-        quality: 60,
         value: '',
-        currentImage: ''
+        url: 'http://kotturinn.com/icloud/upload/test',
+        backgroundImage: '',
+        maxFilesize: 8, //in MB
+        acceptedFiles: 'jpeg, jpg, png, gif'
     }
 };
 
@@ -505,12 +505,18 @@ var FormGenerator = function () {
                     model['data-keychain'] = this.getKeychain(wrapper);
                     element = new Elm(model.element, model, wrapper);
                     model.currentImage = model.value;
-                    var imagePortal = new ImageCloud(element, model);
-                    imagePortal.on('success', function (rsp) {
-                        element.setAttribute('rv-checked', _this4.getKeychain(wrapper));
-                        element.setAttribute('elm-value', rsp.url);
-                        _this4.onChange(rsp);
+
+                    var droppad = new Droppad(element, model);
+                    droppad.on('success', function (data) {
+                        console.log(data);
                     });
+
+                    // var imagePortal = new ImageCloud(element, model);
+                    // imagePortal.on('success', (rsp)=> {
+                    //     element.setAttribute('rv-checked', this.getKeychain(wrapper));
+                    //     element.setAttribute('elm-value', rsp.url);
+                    //     this.onChange(rsp);
+                    // });
                 }
                 /**
                  * No special treatment needed

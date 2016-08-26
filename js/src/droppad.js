@@ -166,7 +166,6 @@ const Droppad = (() => {
             this.droppadElements();
             this.setBackground();
         }
-
         // getters
 
         static get Default() {
@@ -202,13 +201,13 @@ const Droppad = (() => {
             this.droppad.innerHTML = Template;
             this.el_clickableInput = new Elm('input.droppad-input', {
                 type: 'file',
+                id: 'id-' + Math.floor(Math.random() * 100 ),//TODO remove
                 change: (e) => {
                     let file = e.target.files[0];
                     this.showAsBackground(file);
-                    //this.sendFile(file);
                     this.upload(e.target.files);
                 }
-            }, document.body);
+            }, this.droppad);
         }
 
         setEvents() {
@@ -236,13 +235,19 @@ const Droppad = (() => {
                 noPropagation(e);
                 this.drop(e);
             };
+            let self = this;
             // add event to document and listen for droppad-clickable elements
-            document.addEventListener('click', (e) => {
-                var clsList = Array.prototype.slice.call(e.target.classList);
-                if (clsList.indexOf('droppad-clickable') > -1) {
-                    this.el_clickableInput.click();
-                }
-            });
+            if(!this.__proto__.isClickable) {
+                document.addEventListener('click', (e) => {
+                    var clsList = Array.prototype.slice.call(e.target.classList);
+                    if (clsList.indexOf('droppad-clickable') > -1) {
+                        let droppad = Utils.findAncestor(e.target, 'imageCloud');
+                        let input = droppad.querySelector('.droppad-input')
+                        input.click();
+                    }
+                });
+            }
+            this.__proto__.isClickable = true;
         }
 
         droppadElements() {
@@ -394,7 +399,7 @@ const Droppad = (() => {
             this.trigger('error', data);
         }
 
-        //currently not used add to Utils?
+        //add to Utils?
         formatBytes(bytes) {
             var kb = 1024;
             var ndx = Math.floor(Math.log(bytes) / Math.log(kb));
@@ -407,7 +412,7 @@ const Droppad = (() => {
             };
         }
     }
-
+    Droppad.prototype.isClickable = false;
     return Droppad;
 })();
 

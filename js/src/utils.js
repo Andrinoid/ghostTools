@@ -104,6 +104,13 @@ const Utils = {
         } catch (err) {
             return str;
         }
+    },
+
+    findAncestor: function (el, cls) {
+        if(el.classList.contains(cls))
+            return el;
+        while ((el = el.parentElement) && !el.classList.contains(cls));
+        return el;
     }
 
 };
