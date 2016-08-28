@@ -349,6 +349,7 @@ class Alert {
             withBackdrop: false,
             size: 'large',//large small
             closeOthers: 6,
+            blockOthers: false,
             timer: 3000,
             title: '',
             onClose: function () {
@@ -359,7 +360,11 @@ class Alert {
 
         this.defaults = Utils.extend(this.defaults, options);
         this.parent = document.body;
+        if(this.__proto__.instances.length && this.defaults.blockOthers) {
+            return;
+        }
         this.__proto__.instances.push(this);
+
         this.buildTemplate();
         this._injectTemplate();
         if (this.defaults.timer) this.autoClose();

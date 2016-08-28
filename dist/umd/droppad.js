@@ -136,11 +136,8 @@ var Droppad = function () {
                     document.addEventListener('click', function (e) {
                         var clsList = Array.prototype.slice.call(e.target.classList);
                         if (clsList.indexOf('droppad-clickable') > -1) {
-                            console.log(e.target);
                             var droppad = Utils.findAncestor(e.target, 'imageCloud');
-                            console.log(droppad);
                             var input = droppad.querySelector('.droppad-input');
-                            console.log(input);
                             input.click();
                         }
                     });
