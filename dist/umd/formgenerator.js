@@ -297,11 +297,20 @@ var FormGenerator = function () {
         key: 'defaultWrapper',
         value: function defaultWrapper(model, parent, key) {
             key = this.getCycleKey(key);
-            var wrapper = new Elm('div.form-group', { 'data-key': key, cls: 'keypoint' }, parent);
-            var label = model.label && new Elm('label', { text: model.label }, wrapper);
-            var description = model.description && new Elm('p', { html: model.description }, wrapper);
+            var wrapper = new Elm('div.form-group', {
+                'data-key': key,
+                cls: 'keypoint'
+            }, parent);
+            var label = model.label && new Elm('label', {
+                text: model.label
+            }, wrapper);
+            var description = model.description && new Elm('p', {
+                html: model.description
+            }, wrapper);
             var inputContainer = new Elm('div', wrapper);
-            var helptext = model.helpText && new Elm('span.help-block', { text: model.helpText }, wrapper);
+            var helptext = model.helpText && new Elm('span.help-block', {
+                text: model.helpText
+            }, wrapper);
             return inputContainer;
         }
 
@@ -313,11 +322,18 @@ var FormGenerator = function () {
         key: 'checkboxWrapper',
         value: function checkboxWrapper(model, parent, key) {
             key = this.getCycleKey(key);
-            var wrapper = new Elm('div.checkbox', { 'data-key': key, cls: 'keypoint' }, parent);
+            var wrapper = new Elm('div.checkbox', {
+                'data-key': key,
+                cls: 'keypoint'
+            }, parent);
             var label = new Elm('label', wrapper);
             model['checked'] = model.value; // We only use checkbox as bool so if value is true its checked
-            new Elm('span', { text: model.label }, label);
-            var helptext = model.helpText && new Elm('span.help-block', { text: model.helpText }, wrapper);
+            new Elm('span', {
+                text: model.label
+            }, label);
+            var helptext = model.helpText && new Elm('span.help-block', {
+                text: model.helpText
+            }, wrapper);
             return label;
         }
 
@@ -332,16 +348,26 @@ var FormGenerator = function () {
 
             var key = this.getCycleKey(this.currentKey);
             var label = void 0;
-            if (key) label = new Elm('h4', { html: key, style: 'text-transform: capitalize' }, parent);
+            if (key) label = new Elm('h4', {
+                html: key,
+                style: 'text-transform: capitalize'
+            }, parent);
             var cls = this.firstLoop ? '' : 'panel panel-default keypoint';
-            var panel = new Elm('div', { cls: cls, 'data-key': key }, parent);
+            var panel = new Elm('div', {
+                cls: cls,
+                'data-key': key
+            }, parent);
             var body = new Elm('div.panel-body', panel);
             if (toggle) {
                 (function () {
 
                     var plus = new Elm('span', {
                         cls: 'glyphicon glyphicon-plus',
-                        css: { 'margin-left': '10px', 'cursor': 'pointer', 'font-size': '16px' }
+                        css: {
+                            'margin-left': '10px',
+                            'cursor': 'pointer',
+                            'font-size': '16px'
+                        }
                     }, label);
                     label.addEventListener('click', function (e) {
                         panel.style.display = 'block';
@@ -364,7 +390,10 @@ var FormGenerator = function () {
             var self = this;
             var key = this.getCycleKey(this.currentKey);
             //new Elm('h4', {html: key, style: 'text-transform: capitalize'}, parent);
-            var panel = new Elm('div', { cls: 'panel panel-default keypoint', 'data-key': key }, parent);
+            var panel = new Elm('div', {
+                cls: 'panel panel-default keypoint',
+                'data-key': key
+            }, parent);
             var body = new Elm('div.panel-body', panel);
 
             var keychain = this.getKeychain(panel, true);
@@ -382,7 +411,10 @@ var FormGenerator = function () {
             var remove = new Elm('div.delSubForm', {
                 cls: 'pull-right',
                 html: '<i class="glyphicon glyphicon-remove"></i>',
-                css: { color: 'gray', cursor: 'pointer' },
+                css: {
+                    color: 'gray',
+                    cursor: 'pointer'
+                },
                 'data-key': keychain,
                 click: function click(e) {
                     var list = eval('self.form.' + _this2.jsKeychain(keychain));
@@ -445,7 +477,10 @@ var FormGenerator = function () {
              */
             if (Utils.isArrey(item)) {
                 //new Elm('hr', parent);
-                new Elm('h4', { html: key, style: 'text-transform: capitalize' }, parent);
+                new Elm('h4', {
+                    html: key,
+                    style: 'text-transform: capitalize'
+                }, parent);
                 parent = this.subFormWrapperPlus(parent, key);
                 Utils.foreach(item, function (subitem, i) {
                     _this4.arrayIndex = i;
@@ -508,15 +543,9 @@ var FormGenerator = function () {
 
                     var droppad = new Droppad(element, model);
                     droppad.on('success', function (data) {
-                        console.log(data);
+                        element.setAttribute('elm-value', data.image);
+                        _this4.onChange(data);
                     });
-
-                    // var imagePortal = new ImageCloud(element, model);
-                    // imagePortal.on('success', (rsp)=> {
-                    //     element.setAttribute('rv-checked', this.getKeychain(wrapper));
-                    //     element.setAttribute('elm-value', rsp.url);
-                    //     this.onChange(rsp);
-                    // });
                 }
                 /**
                  * No special treatment needed
@@ -545,7 +574,10 @@ var FormGenerator = function () {
                     var label = wrapper.previousElementSibling;
                     var plus = new Elm('span', {
                         cls: 'glyphicon glyphicon-plus',
-                        css: { 'margin-left': '10px', 'cursor': 'pointer' }
+                        css: {
+                            'margin-left': '10px',
+                            'cursor': 'pointer'
+                        }
                     }, label);
                     label.addEventListener('click', function (e) {
                         wrapper.style.display = 'block';
@@ -600,6 +632,7 @@ var FormGenerator = function () {
         value: function getData() {
             var _this6 = this;
 
+            // cleanup list of keys from object
             function deepRemoveKeys(obj, key) {
                 var keys = typeof key === 'string' ? [key] : key;
                 _.forEach(keys, function (key) {

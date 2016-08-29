@@ -162,8 +162,7 @@ class FormGenerator {
     /**
      * Events to overide
      */
-    onChange(e) {
-    }
+    onChange(e) {}
 
     /**
      * Climbs the dom tree and gathers the keychain for given element
@@ -189,7 +188,7 @@ class FormGenerator {
         suffix = suffix ? '.' + suffix : '';
         let formElms = this.parent.querySelectorAll('[data-key]');
         let keychains = [];
-        _.forEach(formElms, (item)=> {
+        _.forEach(formElms, (item) => {
             let root = this.getKeychain(item);
             let keychain = `${prefix}${root}${suffix}`;
             keychains.push(keychain);
@@ -232,7 +231,7 @@ class FormGenerator {
         let item = schemaList[0];
         let isSubform = !item.hasOwnProperty('type');
         schemaList.pop();
-        _.forEach(list, (val)=> {
+        _.forEach(list, (val) => {
             let clone = _.clone(item);
             clone.value = val;
             schemaList.push(clone);
@@ -254,11 +253,20 @@ class FormGenerator {
      */
     defaultWrapper(model, parent, key) {
         key = this.getCycleKey(key);
-        let wrapper = new Elm('div.form-group', {'data-key': key, cls: 'keypoint'}, parent);
-        let label = model.label && new Elm('label', {text: model.label}, wrapper);
-        let description = model.description && new Elm('p', {html: model.description}, wrapper);
+        let wrapper = new Elm('div.form-group', {
+            'data-key': key,
+            cls: 'keypoint'
+        }, parent);
+        let label = model.label && new Elm('label', {
+            text: model.label
+        }, wrapper);
+        let description = model.description && new Elm('p', {
+            html: model.description
+        }, wrapper);
         let inputContainer = new Elm('div', wrapper);
-        let helptext = model.helpText && new Elm('span.help-block', {text: model.helpText}, wrapper);
+        let helptext = model.helpText && new Elm('span.help-block', {
+            text: model.helpText
+        }, wrapper);
         return inputContainer;
     }
 
@@ -267,11 +275,18 @@ class FormGenerator {
      */
     checkboxWrapper(model, parent, key) {
         key = this.getCycleKey(key);
-        let wrapper = new Elm('div.checkbox', {'data-key': key, cls: 'keypoint'}, parent);
+        let wrapper = new Elm('div.checkbox', {
+            'data-key': key,
+            cls: 'keypoint'
+        }, parent);
         let label = new Elm('label', wrapper);
         model['checked'] = model.value; // We only use checkbox as bool so if value is true its checked
-        new Elm('span', {text: model.label}, label);
-        let helptext = model.helpText && new Elm('span.help-block', {text: model.helpText}, wrapper);
+        new Elm('span', {
+            text: model.label
+        }, label);
+        let helptext = model.helpText && new Elm('span.help-block', {
+            text: model.helpText
+        }, wrapper);
         return label;
     }
 
@@ -281,17 +296,27 @@ class FormGenerator {
     subFormWrapper(parent, toggle = false) {
         let key = this.getCycleKey(this.currentKey);
         let label;
-        if (key) label = new Elm('h4', {html: key, style: 'text-transform: capitalize'}, parent);
+        if (key) label = new Elm('h4', {
+            html: key,
+            style: 'text-transform: capitalize'
+        }, parent);
         let cls = this.firstLoop ? '' : 'panel panel-default keypoint';
-        let panel = new Elm('div', {cls: cls, 'data-key': key}, parent);
+        let panel = new Elm('div', {
+            cls: cls,
+            'data-key': key
+        }, parent);
         let body = new Elm('div.panel-body', panel);
         if (toggle) {
 
             let plus = new Elm('span', {
                 cls: 'glyphicon glyphicon-plus',
-                css: {'margin-left': '10px', 'cursor': 'pointer', 'font-size': '16px'}
+                css: {
+                    'margin-left': '10px',
+                    'cursor': 'pointer',
+                    'font-size': '16px'
+                }
             }, label);
-            label.addEventListener('click', (e)=> {
+            label.addEventListener('click', (e) => {
                 panel.style.display = 'block';
                 Utils.fadeOutRemove(plus);
             });
@@ -308,7 +333,10 @@ class FormGenerator {
         var self = this;
         let key = this.getCycleKey(this.currentKey);
         //new Elm('h4', {html: key, style: 'text-transform: capitalize'}, parent);
-        let panel = new Elm('div', {cls: 'panel panel-default keypoint', 'data-key': key}, parent);
+        let panel = new Elm('div', {
+            cls: 'panel panel-default keypoint',
+            'data-key': key
+        }, parent);
         let body = new Elm('div.panel-body', panel);
 
         let keychain = this.getKeychain(panel, true);
@@ -324,9 +352,12 @@ class FormGenerator {
         let remove = new Elm('div.delSubForm', {
             cls: 'pull-right',
             html: '<i class="glyphicon glyphicon-remove"></i>',
-            css: {color: 'gray', cursor: 'pointer'},
+            css: {
+                color: 'gray',
+                cursor: 'pointer'
+            },
             'data-key': keychain,
-            click: (e)=> {
+            click: (e) => {
                 let list = eval('self.form.' + this.jsKeychain(keychain));
                 let index = this.arrayIndex || 0;
                 let removed = list.splice(index, 1);
@@ -342,7 +373,7 @@ class FormGenerator {
             cls: 'btn btn-default',
             html: '<i class="glyphicon glyphicon-plus"></i> Add',
             style: 'margin:0 15px 15px',
-            click: ()=> {
+            click: () => {
                 let elmWrapper = new Elm('div', body);
                 let list = eval('self.form.' + keychain);
                 let clone = list[0];
@@ -381,9 +412,12 @@ class FormGenerator {
          */
         if (Utils.isArrey(item)) {
             //new Elm('hr', parent);
-            new Elm('h4', {html: key, style: 'text-transform: capitalize'}, parent);
+            new Elm('h4', {
+                html: key,
+                style: 'text-transform: capitalize'
+            }, parent);
             parent = this.subFormWrapperPlus(parent, key);
-            Utils.foreach(item, (subitem, i)=> {
+            Utils.foreach(item, (subitem, i) => {
                 this.arrayIndex = i;
                 let isSubform = !subitem.hasOwnProperty('type');
                 if (isSubform) {
@@ -431,7 +465,7 @@ class FormGenerator {
             model['data-keychain'] = this.getKeychain(wrapper);
             element = new Elm(model.element, model, wrapper, 'top'); //top because label comes after input
             //set value as attribute on change
-            element.addEventListener('change', function (e) {
+            element.addEventListener('change', function(e) {
                 this.setAttribute('elm-value', this.checked);
                 self.onChange(e);
             });
@@ -444,19 +478,13 @@ class FormGenerator {
             wrapper = this.defaultWrapper(model, parent, key);
             model['data-keychain'] = this.getKeychain(wrapper);
             element = new Elm(model.element, model, wrapper);
-            model.currentImage = model.value;
+            model.backgroundImage = model.value;
 
             var droppad = new Droppad(element, model);
             droppad.on('success', (data) => {
-                console.log(data);
+                element.setAttribute('elm-value', data.image);
+                this.onChange(data);
             });
-
-            // var imagePortal = new ImageCloud(element, model);
-            // imagePortal.on('success', (rsp)=> {
-            //     element.setAttribute('rv-checked', this.getKeychain(wrapper));
-            //     element.setAttribute('elm-value', rsp.url);
-            //     this.onChange(rsp);
-            // });
 
         }
         /**
@@ -468,7 +496,7 @@ class FormGenerator {
             model['data-keychain'] = this.getKeychain(wrapper);
             element = new Elm(model.element, model, wrapper);
             //set value as attribute on change
-            element.addEventListener('change', function (e) {
+            element.addEventListener('change', function(e) {
                 this.setAttribute('elm-value', this.value);
                 self.onChange(e);
             });
@@ -485,9 +513,12 @@ class FormGenerator {
             let label = wrapper.previousElementSibling;
             let plus = new Elm('span', {
                 cls: 'glyphicon glyphicon-plus',
-                css: {'margin-left': '10px', 'cursor': 'pointer'}
+                css: {
+                    'margin-left': '10px',
+                    'cursor': 'pointer'
+                }
             }, label);
-            label.addEventListener('click', (e)=> {
+            label.addEventListener('click', (e) => {
                 wrapper.style.display = 'block';
                 Utils.fadeOutRemove(plus);
             });
@@ -496,7 +527,7 @@ class FormGenerator {
         // Some form elements have children. E.g select menus
         try {
             if (model.childnodes.length) {
-                Utils.foreach(model.childnodes, (item)=> {
+                Utils.foreach(model.childnodes, (item) => {
                     let model = this.getModel(item);
                     new Elm(model.element, model, element);
                 });
@@ -516,7 +547,7 @@ class FormGenerator {
         let wrapper = this.subFormWrapper(parent, toggle);
 
         this.firstLoop = false;
-        Utils.foreach(order, (key)=> {
+        Utils.foreach(order, (key) => {
             if (!form.hasOwnProperty(key)) {
                 console.warn('Schema has no key: ' + key + '. Looks like _order list is outdated.');
                 return;
@@ -533,15 +564,16 @@ class FormGenerator {
     }
 
     getData() {
+        // cleanup list of keys from object
         function deepRemoveKeys(obj, key) {
             let keys = typeof(key) === 'string' ? [key] : key;
-            _.forEach(keys, (key)=> {
-                if(obj && obj[key]) delete obj[key];
+            _.forEach(keys, (key) => {
+                if (obj && obj[key]) delete obj[key];
             });
-            _.forEach(obj, function (item) {
+            _.forEach(obj, function(item) {
                 if (typeof(item) === 'object') {
-                    _.forEach(keys, (key)=> {
-                        if(item && item[key]) delete item[key];
+                    _.forEach(keys, (key) => {
+                        if (item && item[key]) delete item[key];
                     });
                     deepRemoveKeys(item, key);
                 }
@@ -615,4 +647,4 @@ class SchemaDiscover {
 }
 
 
-export default {FormGenerator, SchemaDiscover};
+export default {FormGenerator}
