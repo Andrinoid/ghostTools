@@ -113,6 +113,7 @@ const Droppad = (() => {
         .imageCloud .progressbar {
             position: absolute;
             top: 0;
+            left: 0;
             height: 6px;
             width: 0%;
             background: #66ce66;
