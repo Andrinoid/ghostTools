@@ -539,7 +539,7 @@ var FormGenerator = function () {
                     wrapper = this.defaultWrapper(model, parent, key);
                     model['data-keychain'] = this.getKeychain(wrapper);
                     element = new Elm(model.element, model, wrapper);
-                    model.currentImage = model.value;
+                    model.backgroundImage = model.value;
 
                     var droppad = new Droppad(element, model);
                     droppad.on('success', function (data) {

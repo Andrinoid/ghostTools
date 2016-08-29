@@ -481,6 +481,8 @@ class FormGenerator {
             model.backgroundImage = model.value;
 
             var droppad = new Droppad(element, model);
+
+            // onchange for images
             droppad.on('success', (data) => {
                 element.setAttribute('elm-value', data.image);
                 this.onChange(data);
