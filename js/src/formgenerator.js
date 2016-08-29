@@ -133,6 +133,7 @@ let typeModels = {
         label: 'imagefield',
         description: '',
         value: '',
+        backgroundUrlPrefix: '',
         url: 'http://kotturinn.com/icloud/upload/test',
         backgroundImage: '',
         maxFilesize: 8, //in MB

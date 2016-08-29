@@ -131,6 +131,7 @@ const Droppad = (() => {
     `;
 
     const Default = {
+        backgroundUrlPrefix: '',
         url: '',
         backgroundImage: '',
         maxFilesize: 8, //in MB
@@ -258,7 +259,8 @@ const Droppad = (() => {
         }
 
         setBackground() {
-            this.el_fallback.style.backgroundImage = `url(${this.defaults.backgroundImage})`;
+            let url = this.defaults.backgroundUrlPrefix.replace(/\/?$/, '/') + this.defaults.backgroundImage;
+            this.el_fallback.style.backgroundImage = `url(${url})`;
         }
 
         showAsBackground(file) {
@@ -354,7 +356,9 @@ const Droppad = (() => {
                 formData.append('file', file, file.name); //file.name is not required Check server side implementation of this
             }
             let xhr = new XMLHttpRequest();
-            xhr.open('POST', this.defaults.url, true);
+            //add trailing slash if doesn't exists
+            let url = this.defaults.url
+            xhr.open('POST', url, true);
             for (var key in headers) {
                 xhr.setRequestHeader(key, headers[key]);
             }

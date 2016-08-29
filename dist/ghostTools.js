@@ -714,6 +714,7 @@ var typeModels = {
         label: 'imagefield',
         description: '',
         value: '',
+        backgroundUrlPrefix: '',
         url: 'http://kotturinn.com/icloud/upload/test',
         backgroundImage: '',
         maxFilesize: 8, //in MB
@@ -1414,6 +1415,7 @@ var Droppad = function () {
     var STYLES = '\n        .imageCloud {\n            position: relative;\n            background-size: cover;\n            background-position: 50% 50%;\n            cursor: pointer;\n            font-family: arial, serif;\n            min-height: 200px;\n        }\n        .imageCloud input {\n            position: absolute;\n            top: 0;\n            right: 0;\n            bottom: 0;\n            left: 0;\n        }\n        .imageCloud .dropSheet {\n            position: absolute;\n            top: 0;\n            bottom: 0;\n            left: 0;\n            right: 0;\n            background: rgba(0, 0, 0, 0.5);\n            text-align: center;\n            padding: 10px;\n            opacity: 0;\n            transition: ease all 0.5s;\n            pointer-events: none;\n        }\n\n        .imageCloud .dropSheet.shown {\n            background: rgba(0, 0, 0, 0);\n            opacity: 1;\n        }\n\n        .imageCloud:hover .dropSheet {\n            background: rgba(0, 0, 0, 0.5);\n            opacity: 1;\n        }\n\n        .imageCloud .dropSheet > div {\n            padding: 10px;\n            color: white;\n            border: dashed 2px #fff;\n            position: absolute;\n            top: 10px;\n            bottom: 10px;\n            left: 10px;\n            right: 10px;\n        }\n\n        .imageCloud .dropSheet > div .dropLabel {\n            position: absolute;\n            top: 50%;\n            left: 50%;\n            transform: translate(-50%, -50%);\n            white-space: nowrap;\n        }\n\n        .imageCloud .dropSheet > div p {\n            font-size: 18px;\n        }\n\n        .imageCloud .fallBack {\n            position: absolute;\n            top: 0;\n            bottom: 0;\n            left: 0;\n            right: 0;\n            pointer-events: none;\n            background-color: gray;\n            background-size: cover;\n            background-position: center;\n        }\n\n        .imageCloud .loadedImage {\n            position: absolute;\n            top: 0;\n            bottom: 0;\n            left: 0;\n            right: 0;\n            pointer-events: none;\n            opacity: 0;\n            transition: ease opacity 0.5s;\n            background-size: cover;\n            background-position: center;\n            -webkit-filter: grayscale(100%); /* Chrome, Safari, Opera */\n            filter: grayscale(100%);\n        }\n        .imageCloud .progressbar {\n            position: absolute;\n            top: 0;\n            left: 0;\n            height: 6px;\n            width: 0%;\n            background: #66ce66;\n            z-index: 1;\n            transition: ease all 0.4s\n        }\n        .droppad-input {\n            position: absolute;\n            top: 0;\n            left: 0;\n            height: 0;\n            width: 0;\n            visibility: hidden;\n        }\n    ';
 
     var Default = {
+        backgroundUrlPrefix: '',
         url: '',
         backgroundImage: '',
         maxFilesize: 8, //in MB
@@ -1531,7 +1533,8 @@ var Droppad = function () {
         }, {
             key: 'setBackground',
             value: function setBackground() {
-                this.el_fallback.style.backgroundImage = 'url(' + this.defaults.backgroundImage + ')';
+                var url = this.defaults.backgroundUrlPrefix.replace(/\/?$/, '/') + this.defaults.backgroundImage;
+                this.el_fallback.style.backgroundImage = 'url(' + url + ')';
             }
         }, {
             key: 'showAsBackground',
@@ -1635,7 +1638,9 @@ var Droppad = function () {
                     formData.append('file', file, file.name); //file.name is not required Check server side implementation of this
                 }
                 var xhr = new XMLHttpRequest();
-                xhr.open('POST', this.defaults.url, true);
+                //add trailing slash if doesn't exists
+                var url = this.defaults.url;
+                xhr.open('POST', url, true);
                 for (var key in headers) {
                     xhr.setRequestHeader(key, headers[key]);
                 }
