@@ -50,6 +50,7 @@ var Droppad = function () {
 
             _this.defaults = Utils.extend(Default, options);
             _this.droppad = elm;
+            _this.currentImage = null;
             _this.injectStyles();
             _this.createDOM();
             _this.setEvents();
@@ -291,7 +292,7 @@ var Droppad = function () {
 
                 this.el_fallback.style.opacity = 1;
                 this.el_loadedImage.style.opacity = 0;
-
+                this.currentImage = data;
                 setTimeout(function () {
                     _this6.el_progressbar.style.display = 'block';
                 }, 400);

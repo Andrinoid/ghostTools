@@ -162,6 +162,7 @@ const Droppad = (() => {
             super();
             this.defaults = Utils.extend(Default, options);
             this.droppad = elm;
+            this.currentImage = null;
             this.injectStyles();
             this.createDOM();
             this.setEvents();
@@ -393,7 +394,7 @@ const Droppad = (() => {
 
             this.el_fallback.style.opacity = 1;
             this.el_loadedImage.style.opacity = 0;
-
+            this.currentImage = data;
             setTimeout(() => {
                 this.el_progressbar.style.display = 'block';
             }, 400);
