@@ -118,11 +118,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * https://github.com/Andrinoid/ElementGenerator.js
  * ------------------------------------------------------------------------
  */
-
 var Elm = function () {
     //Simple element generator. Mootools style
     //tries to find method for keys in options and run it
-
     function Elm(type, options, parent, injectType) {
         _classCallCheck(this, Elm);
 
@@ -1534,7 +1532,8 @@ var Droppad = function () {
         }, {
             key: 'setBackground',
             value: function setBackground() {
-                var url = this.defaults.backgroundUrlPrefix.replace(/\/?$/, '/') + this.defaults.backgroundImage;
+                var prefix = this.defaults.backgroundUrlPrefix === '' ? '' : this.defaults.backgroundUrlPrefix.replace(/\/?$/, '/');
+                var url = prefix + this.defaults.backgroundImage;
                 this.el_fallback.style.backgroundImage = 'url(' + url + ')';
             }
         }, {

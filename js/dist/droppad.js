@@ -147,7 +147,8 @@ var Droppad = function () {
         }, {
             key: 'setBackground',
             value: function setBackground() {
-                var url = this.defaults.backgroundUrlPrefix.replace(/\/?$/, '/') + this.defaults.backgroundImage;
+                var prefix = this.defaults.backgroundUrlPrefix === '' ? '' : this.defaults.backgroundUrlPrefix.replace(/\/?$/, '/');
+                var url = prefix + this.defaults.backgroundImage;
                 this.el_fallback.style.backgroundImage = 'url(' + url + ')';
             }
         }, {

@@ -172,15 +172,15 @@ const Droppad = (() => {
         // getters
 
         static get Default() {
-            return Default
+            return Default;
         }
 
         get STYLES() {
-            return STYLES
+            return STYLES;
         }
 
         get Template() {
-            return Template
+            return Template;
         }
 
         injectStyles() {
@@ -260,7 +260,8 @@ const Droppad = (() => {
         }
 
         setBackground() {
-            let url = this.defaults.backgroundUrlPrefix.replace(/\/?$/, '/') + this.defaults.backgroundImage;
+            let prefix = (this.defaults.backgroundUrlPrefix === '') ? '' : this.defaults.backgroundUrlPrefix.replace(/\/?$/, '/');
+            let url = prefix + this.defaults.backgroundImage;
             this.el_fallback.style.backgroundImage = `url(${url})`;
         }
 

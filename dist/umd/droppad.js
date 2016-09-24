@@ -59,6 +59,7 @@ var Droppad = function () {
 
             _this.defaults = Utils.extend(Default, options);
             _this.droppad = elm;
+            _this.currentImage = null;
             _this.injectStyles();
             _this.createDOM();
             _this.setEvents();
@@ -155,7 +156,8 @@ var Droppad = function () {
         }, {
             key: 'setBackground',
             value: function setBackground() {
-                var url = this.defaults.backgroundUrlPrefix.replace(/\/?$/, '/') + this.defaults.backgroundImage;
+                var prefix = this.defaults.backgroundUrlPrefix === '' ? '' : this.defaults.backgroundUrlPrefix.replace(/\/?$/, '/');
+                var url = prefix + this.defaults.backgroundImage;
                 this.el_fallback.style.backgroundImage = 'url(' + url + ')';
             }
         }, {
