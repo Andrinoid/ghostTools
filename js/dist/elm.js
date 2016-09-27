@@ -10,9 +10,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * https://github.com/Andrinoid/ElementGenerator.js
  * ------------------------------------------------------------------------
  */
+
 var Elm = function () {
     //Simple element generator. Mootools style
     //tries to find method for keys in options and run it
+
     function Elm(type, options, parent, injectType) {
         _classCallCheck(this, Elm);
 
