@@ -70,7 +70,9 @@ const Loader = (() => {
          }
      `;
 
-    const Default = {};
+    const Default = {
+        removeDelay: 0
+    };
 
     const Template = `
          <div class="sl-container">
@@ -82,6 +84,7 @@ const Loader = (() => {
 
     class Loader {
         constructor(options) {
+            this.defaults = Utils.extend(Default, options);
             this.injectStyles();
             this.createDOM();
         }
@@ -121,10 +124,13 @@ const Loader = (() => {
         }
 
         remove() {
-            var loaders = document.querySelectorAll('.simpleLoader');
-            for (var i = 0; i < loaders.length; i++) {
-                loaders[i].parentNode.removeChild(loaders[i]);
-            }
+            setTimeout(()=> {
+                var loaders = document.querySelectorAll('.simpleLoader');
+                for (var i = 0; i < loaders.length; i++) {
+                    loaders[i].parentNode.removeChild(loaders[i]);
+                }
+            }, this.defaults.removeDelay);
+
         }
     }
     return Loader;

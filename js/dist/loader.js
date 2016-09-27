@@ -18,7 +18,9 @@ var Loader = function () {
      */
     var STYLES = '\n         .simpleLoader {\n             position: fixed;\n             top: 0;\n             left: 0;\n             right: 0;\n             bottom: 0;\n             background: rgba(0, 0, 0, 0.36);\n             z-index: 9999;\n         }\n         .simpleLoader .sl-container {\n             position: absolute;\n             top: 50%;\n             left: 50%;\n             -webkit-transform: translate(-50%, -50%);\n             transform: translate(-50%, -50%);\n         }\n         .simpleLoader .sl-dot {\n             width: 20px;\n             height: 20px;\n             border: 2px solid white;\n             border-radius: 50%;\n             float: left;\n             margin: 0 5px;\n             -webkit-transform: scale(0);\n             transform: scale(0);\n             -webkit-animation: fx 1000ms ease infinite 0ms;\n             animation: fx 1000ms ease infinite 0ms;\n         }\n         .simpleLoader .sl-dot:nth-child(2) {\n             -webkit-animation: fx 1000ms ease infinite 300ms;\n             animation: fx 1000ms ease infinite 300ms;\n         }\n         .simpleLoader .sl-dot:nth-child(3) {\n             -webkit-animation: fx 1000ms ease infinite 600ms;\n             animation: fx 1000ms ease infinite 600ms;\n         }\n         @-webkit-keyframes fx {\n             50% {\n                 -webkit-transform: scale(1);\n                 transform: scale(1);\n                 opacity: 1;\n             }\n             100% {\n                 opacity: 0;\n             }\n         }\n         @keyframes fx {\n             50% {\n                 -webkit-transform: scale(1);\n                 transform: scale(1);\n                 opacity: 1;\n             }\n             100% {\n                 opacity: 0;\n             }\n         }\n     ';
 
-    var Default = {};
+    var Default = {
+        removeDelay: 0
+    };
 
     var Template = '\n         <div class="sl-container">\n             <div class="sl-dot"></div>\n             <div class="sl-dot"></div>\n             <div class="sl-dot"></div>\n         </div>\n     ';
 
@@ -26,6 +28,7 @@ var Loader = function () {
         function Loader(options) {
             _classCallCheck(this, Loader);
 
+            this.defaults = Utils.extend(Default, options);
             this.injectStyles();
             this.createDOM();
         }
@@ -57,10 +60,12 @@ var Loader = function () {
         }, {
             key: 'remove',
             value: function remove() {
-                var loaders = document.querySelectorAll('.simpleLoader');
-                for (var i = 0; i < loaders.length; i++) {
-                    loaders[i].parentNode.removeChild(loaders[i]);
-                }
+                setTimeout(function () {
+                    var loaders = document.querySelectorAll('.simpleLoader');
+                    for (var i = 0; i < loaders.length; i++) {
+                        loaders[i].parentNode.removeChild(loaders[i]);
+                    }
+                }, this.defaults.removeDelay);
             }
         }, {
             key: 'STYLES',
