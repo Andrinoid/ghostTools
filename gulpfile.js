@@ -14,8 +14,8 @@ var files = [
     './js/src/alert.js',
     './js/src/formgenerator.js',
     './js/src/emitter.js',
-    './js/src/droppad.js'
-
+    './js/src/droppad.js',
+    './js/src/loader.js',
 ];
 
 gulp.task('default', ['build', 'watch']);
