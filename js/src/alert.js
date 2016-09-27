@@ -10,14 +10,14 @@ const Alertsyles = `
              text-align: left;
          }
          .js_alerts .js_modal,
-         .js_alerts .modal-backdrop {
+         .modal-backdrop {
              position: fixed;
              top: 0;
              right: 0;
              bottom: 0;
              left: 0
          }
-         .js_alerts .modal-backdrop {
+         .modal-backdrop {
              z-index: 1040;
              background-color: #000;
              opacity: .5
