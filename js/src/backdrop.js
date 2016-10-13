@@ -27,12 +27,21 @@ const Backdrop = (() => {
      `;
 
      const Default = {
-         removeDelay: 0
+         removeDelay: 0,
+         'zIndex': 2001,
+         allowMany: false,
+         closeOnClick: true, //TODO emmitt this event
      };
 
     class Backdrop {
         constructor(options) {
             this.defaults = Utils.extend(Default, options);
+            if(this.__proto__.instances.length && !this.defaults.allowMany) {
+                return;
+            }
+            this.__proto__.instances.push(this);
+
+
             this.injectStyles()
             this.createDOM();
         }
@@ -56,7 +65,11 @@ const Backdrop = (() => {
         }
 
         createDOM() {
-            let elm = new Elm('div.ghost-backdrop', document.body);
+            // remove on click or not
+            let ev = this.defaults.closeOnClick ? {click: this.__proto__.removeAll.bind(this)} : {};
+            let elm = new Elm('div.ghost-backdrop', ev, document.body);
+            elm.style.zIndex = this.defaults.zIndex;
+
             setTimeout(function() {
                 elm.style.opacity = 0.5;
             });
@@ -77,6 +90,13 @@ const Backdrop = (() => {
             }, this.defaults.removeDelay);
 
         }
+    }
+    Backdrop.prototype.instances = [];
+    Backdrop.prototype.removeAll = function() {
+        this.instances.forEach(function (item) {
+            item.remove();
+        });
+        this.instances.length = 0;
     }
     return Backdrop;
 })();

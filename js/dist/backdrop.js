@@ -19,14 +19,23 @@ var Backdrop = function () {
     var STYLES = '\n    .ghost-backdrop {\n        position: fixed;\n        top: 0;\n        right: 0;\n        bottom: 0;\n        left: 0;\n        z-index: 1040;\n        background-color: #000;\n        opacity: 0;\n        transition: ease all 0.5s;\n    }\n     ';
 
     var Default = {
-        removeDelay: 0
-    };
+        removeDelay: 0,
+        'zIndex': 2001,
+        allowMany: false,
+        closeOnClick: true };
+
+    //TODO emmitt this event
 
     var Backdrop = function () {
         function Backdrop(options) {
             _classCallCheck(this, Backdrop);
 
             this.defaults = Utils.extend(Default, options);
+            if (this.__proto__.instances.length && !this.defaults.allowMany) {
+                return;
+            }
+            this.__proto__.instances.push(this);
+
             this.injectStyles();
             this.createDOM();
         }
@@ -51,7 +60,11 @@ var Backdrop = function () {
         }, {
             key: 'createDOM',
             value: function createDOM() {
-                var elm = new Elm('div.ghost-backdrop', document.body);
+                // remove on click or not
+                var ev = this.defaults.closeOnClick ? { click: this.__proto__.removeAll.bind(this) } : {};
+                var elm = new Elm('div.ghost-backdrop', ev, document.body);
+                elm.style.zIndex = this.defaults.zIndex;
+
                 setTimeout(function () {
                     elm.style.opacity = 0.5;
                 });
@@ -87,5 +100,12 @@ var Backdrop = function () {
         return Backdrop;
     }();
 
+    Backdrop.prototype.instances = [];
+    Backdrop.prototype.removeAll = function () {
+        this.instances.forEach(function (item) {
+            item.remove();
+        });
+        this.instances.length = 0;
+    };
     return Backdrop;
 }();
