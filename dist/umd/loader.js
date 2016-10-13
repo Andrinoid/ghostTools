@@ -38,7 +38,6 @@ var Loader = function () {
             _classCallCheck(this, Loader);
 
             this.defaults = Utils.extend(Default, options);
-            console.log(this.defaults);
             this.injectStyles();
             this.createDOM();
         }
