@@ -10,7 +10,7 @@ import Elm from './elm';
 const Modalstyles = `
         /* Modal styles */
          body.modal-mode {
-             overflow: hidden
+             overflow: hidden !important
          }
          .modal-body,
          .modal-title {
@@ -326,7 +326,7 @@ class Modal {
 
         };
         this.defaults = Utils.extend(this.defaults, options);
-        this.parent = this.defaults.parent;
+        this.parent = this.defaults.parent; //TODO resolve jquery, array like objects or proper error message
         this.STYLES = Modalstyles;
 
         if (this.defaults.closeOthers) this.__proto__.closeAll();
