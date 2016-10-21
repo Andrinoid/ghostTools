@@ -17,6 +17,7 @@ var files = [
     './js/src/droppad.js',
     './js/src/loader.js',
     './js/src/backdrop.js',
+    './js/src/imagepreloader.js',
 ];
 
 gulp.task('default', ['build', 'watch']);
