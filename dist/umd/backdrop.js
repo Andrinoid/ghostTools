@@ -29,7 +29,7 @@ var Backdrop = function () {
 
     var Default = {
         removeDelay: 0,
-        'zIndex': 1040,
+        'zIndex': 2001,
         allowMany: false,
         closeOnClick: true };
 

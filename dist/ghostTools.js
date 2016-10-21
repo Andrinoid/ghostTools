@@ -396,7 +396,17 @@ var Modal = function () {
     }, {
         key: 'close',
         value: function close() {
-            this._close(this.defaults.onClose);
+            this._close(this.defaults.onClose); //TODO emmitter
+        }
+
+        // Remove modal without animation
+
+    }, {
+        key: '_remove',
+        value: function _remove() {
+            this.backdrop.remove();
+            this.modal.remove();
+            Utils.removeClass(document.body, 'modal-mode');
         }
     }]);
 
@@ -406,7 +416,7 @@ var Modal = function () {
 Modal.prototype.instances = [];
 Modal.prototype.closeAll = function () {
     this.instances.forEach(function (item) {
-        item._close();
+        item._remove();
     });
     this.instances.length = 0;
 };
