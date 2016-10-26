@@ -140,7 +140,7 @@ const Modalstyles = `
          }
          @media (min-width: 992px) {
              .js_modal-lg {
-                 width: 900px
+                 width: 980px
              }
          }
 
