@@ -139,17 +139,20 @@ const Droppad = (() => {
         includeStyles: true,
         acceptedFiles: 'jpeg, jpg, png, gif',
         showErrors: true,
+        title: 'Drop Image here',
+        subTitle: 'or click here'
     };
 
-    const Template = `
+    let Template = `
         <div class="progressbar"></div>
         <div class="fallBack" style="opacity: 1;"></div>
         <div class="loadedImage"></div>
         <div class="dropSheet shown">
             <div>
-                <div class="dropLabel"><p>Drop Image here.</p>
+                <div class="dropLabel">
+                    <p>*|title|*</p>
                     <p>
-                        <small>or click here</small>
+                        <small>*|subTitle|*</small>
                     </p>
                 </div>
             </div>
@@ -200,8 +203,10 @@ const Droppad = (() => {
         createDOM() {
             Utils.setClass(this.droppad, 'imageCloud');
             Utils.setClass(this.droppad, 'droppad-clickable');
+            let template  = (' ' + Template).slice(1); //Force string copy for. Bug in some  chrome versions
+            template = template.replace('*|title|*', this.defaults.title).replace('*|subTitle|*', this.defaults.subTitle);
 
-            this.droppad.innerHTML = Template;
+            this.droppad.innerHTML = template;
             this.el_clickableInput = new Elm('input.droppad-input', {
                 type: 'file',
                 id: 'id-' + Math.floor(Math.random() * 100 ),//TODO remove

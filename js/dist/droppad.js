@@ -35,10 +35,12 @@ var Droppad = function () {
         paramName: "file", //TODO
         includeStyles: true,
         acceptedFiles: 'jpeg, jpg, png, gif',
-        showErrors: true
+        showErrors: true,
+        title: 'Drop Image here',
+        subTitle: 'or click here'
     };
 
-    var Template = '\n        <div class="progressbar"></div>\n        <div class="fallBack" style="opacity: 1;"></div>\n        <div class="loadedImage"></div>\n        <div class="dropSheet shown">\n            <div>\n                <div class="dropLabel"><p>Drop Image here.</p>\n                    <p>\n                        <small>or click here</small>\n                    </p>\n                </div>\n            </div>\n        </div>\n    ';
+    var Template = '\n        <div class="progressbar"></div>\n        <div class="fallBack" style="opacity: 1;"></div>\n        <div class="loadedImage"></div>\n        <div class="dropSheet shown">\n            <div>\n                <div class="dropLabel">\n                    <p>*|title|*</p>\n                    <p>\n                        <small>*|subTitle|*</small>\n                    </p>\n                </div>\n            </div>\n        </div>\n    ';
 
     var Droppad = function (_Emitter) {
         _inherits(Droppad, _Emitter);
@@ -82,8 +84,10 @@ var Droppad = function () {
 
                 Utils.setClass(this.droppad, 'imageCloud');
                 Utils.setClass(this.droppad, 'droppad-clickable');
+                var template = (' ' + Template).slice(1); //Force string copy for. Bug in some  chrome versions
+                template = template.replace('*|title|*', this.defaults.title).replace('*|subTitle|*', this.defaults.subTitle);
 
-                this.droppad.innerHTML = Template;
+                this.droppad.innerHTML = template;
                 this.el_clickableInput = new Elm('input.droppad-input', {
                     type: 'file',
                     id: 'id-' + Math.floor(Math.random() * 100), //TODO remove
