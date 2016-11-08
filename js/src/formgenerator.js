@@ -78,7 +78,8 @@ let typeModels = {
         cls: 'form-control',
         value: '',
         placeholder: '',
-        helpText: ''
+        helpText: '',
+        validation: []
     },
     number: {
         element: 'input',
@@ -145,6 +146,7 @@ let typeModels = {
 /**
  * add validation for types
  * remove instance
+ *
  */
 class FormGenerator {
 
@@ -158,8 +160,14 @@ class FormGenerator {
         this.typeModels = typeModels;
         this.arrayIndex = null;
         this.buildAllItems(this.form, this.parent);
+        this.validators = {
+            email: (email)=> {
+                const emailReg = new RegExp('[a-zA-Z0-9]+(?:(\\.|_)[A-Za-z0-9!#$%&\'*+\\/=?^`{|}~-]+)*@(?!([a-zA-Z0-9]*\\.[a-zA-Z0-9]*\\.[a-zA-Z0-9]*\\.))(?:[A-Za-z0-9](?:[a-zA-Z0-9-]*[A-Za-z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?');
+                return emailReg.test(email);
+            },
+            //TODO add validatiors
+        }
     }
-
     /**
      * Events to overide
      */
@@ -259,7 +267,8 @@ class FormGenerator {
             cls: 'keypoint'
         }, parent);
         let label = model.label && new Elm('label', {
-            text: model.label
+            text: model.label,
+            cls: 'control-label'
         }, wrapper);
         let description = model.description && new Elm('p', {
             html: model.description
@@ -498,10 +507,29 @@ class FormGenerator {
             wrapper = this.defaultWrapper(model, parent, key);
             model['data-keychain'] = this.getKeychain(wrapper);
             element = new Elm(model.element, model, wrapper);
+
             //set value as attribute on change
             element.addEventListener('change', function(e) {
                 this.setAttribute('elm-value', this.value);
                 self.onChange(e);
+            });
+            element.addEventListener('blur', function() {
+                /**
+                * Onchange validation TODO add validation for all types
+                * return if no value. otherwise, loop through given validation on this model
+                * and collect those who return false and set error class on wrapper parent
+                */
+                if(!this.value) return false;
+                let errors = [];
+                model.validation.forEach((item)=> {
+                    !self.validators[item](this.value) && errors.push(item);
+                });
+                if(errors.length) {
+                    Utils.setClass(wrapper.parentNode, 'has-error');
+                }
+            });
+            element.addEventListener('focus', function(e) {
+                Utils.removeClass(wrapper.parentNode, 'has-error');
             });
         }
 
@@ -600,6 +628,7 @@ class FormGenerator {
         });
 
         deepRemoveKeys(this.output, ['_order', '_name', '_toggle']);
+
         return this.output;
 
     }

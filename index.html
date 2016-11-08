@@ -185,7 +185,7 @@
                 type: 'text',
                 helpText: 'foobar',
                 value: '',
-
+                validation: ['email']
             },
             img: {
                 type: 'image',
@@ -216,7 +216,7 @@
 
         var formgen = new FormGenerator(schema, document.querySelector('#formWrap'));
         formgen.onChange = function(e) {
-            console.log(e);
+            //console.log(e);
         };
 
         var setdataBtn = document.getElementById('setData');

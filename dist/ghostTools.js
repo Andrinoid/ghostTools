@@ -669,7 +669,8 @@ var typeModels = {
         cls: 'form-control',
         value: '',
         placeholder: '',
-        helpText: ''
+        helpText: '',
+        validation: []
     },
     number: {
         element: 'input',
@@ -736,6 +737,7 @@ var typeModels = {
 /**
  * add validation for types
  * remove instance
+ *
  */
 
 var FormGenerator = function () {
@@ -751,8 +753,13 @@ var FormGenerator = function () {
         this.typeModels = typeModels;
         this.arrayIndex = null;
         this.buildAllItems(this.form, this.parent);
+        this.validators = {
+            email: function email(_email) {
+                var emailReg = new RegExp('[a-zA-Z0-9]+(?:(\\.|_)[A-Za-z0-9!#$%&\'*+\\/=?^`{|}~-]+)*@(?!([a-zA-Z0-9]*\\.[a-zA-Z0-9]*\\.[a-zA-Z0-9]*\\.))(?:[A-Za-z0-9](?:[a-zA-Z0-9-]*[A-Za-z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?');
+                return emailReg.test(_email);
+            }
+        };
     }
-
     /**
      * Events to overide
      */
@@ -760,6 +767,7 @@ var FormGenerator = function () {
 
     _createClass(FormGenerator, [{
         key: 'onChange',
+        //TODO add validatiors
         value: function onChange(e) {}
 
         /**
@@ -883,7 +891,8 @@ var FormGenerator = function () {
                 cls: 'keypoint'
             }, parent);
             var label = model.label && new Elm('label', {
-                text: model.label
+                text: model.label,
+                cls: 'control-label'
             }, wrapper);
             var description = model.description && new Elm('p', {
                 html: model.description
@@ -1138,10 +1147,31 @@ var FormGenerator = function () {
                         wrapper = this.defaultWrapper(model, parent, key);
                         model['data-keychain'] = this.getKeychain(wrapper);
                         element = new Elm(model.element, model, wrapper);
+
                         //set value as attribute on change
                         element.addEventListener('change', function (e) {
                             this.setAttribute('elm-value', this.value);
                             self.onChange(e);
+                        });
+                        element.addEventListener('blur', function () {
+                            var _this5 = this;
+
+                            /**
+                            * Onchange validation TODO add validation for all types
+                            * return if no value. otherwise, loop through given validation on this model
+                            * and collect those who return false and set error class on wrapper parent
+                            */
+                            if (!this.value) return false;
+                            var errors = [];
+                            model.validation.forEach(function (item) {
+                                !self.validators[item](_this5.value) && errors.push(item);
+                            });
+                            if (errors.length) {
+                                Utils.setClass(wrapper.parentNode, 'has-error');
+                            }
+                        });
+                        element.addEventListener('focus', function (e) {
+                            Utils.removeClass(wrapper.parentNode, 'has-error');
                         });
                     }
 
@@ -1184,7 +1214,7 @@ var FormGenerator = function () {
     }, {
         key: 'buildAllItems',
         value: function buildAllItems(form, parent) {
-            var _this5 = this;
+            var _this6 = this;
 
             var orderKeys = form._order || [];
             var AllKeys = Object.keys(form);
@@ -1200,12 +1230,12 @@ var FormGenerator = function () {
                     console.warn('Schema has no key: ' + key + '. Looks like _order list is outdated.');
                     return;
                 }
-                _this5.currentKey = key;
+                _this6.currentKey = key;
                 var item = form[key];
                 if (typeof item !== 'string') {
                     // Don't populate private keys
                     if (key.substring(0, 1) !== '_') {
-                        _this5.buildOneItem(item, wrapper, key);
+                        _this6.buildOneItem(item, wrapper, key);
                     }
                 }
             });
@@ -1213,7 +1243,7 @@ var FormGenerator = function () {
     }, {
         key: 'getData',
         value: function getData() {
-            var _this6 = this;
+            var _this7 = this;
 
             // cleanup list of keys from object
             function deepRemoveKeys(obj, key) {
@@ -1239,15 +1269,16 @@ var FormGenerator = function () {
                 var keyList = item.getAttribute('data-keychain').split('.');
                 var lastKey = keyList.pop();
                 var keyChain = keyList.join('.');
-                var jsKeychain = _this6.jsKeychain(keyChain);
+                var jsKeychain = _this7.jsKeychain(keyChain);
 
                 var val = item.getAttribute('elm-value');
                 var parentObj = void 0;
-                jsKeychain ? parentObj = eval('self.output.' + jsKeychain) : parentObj = _this6.output;
+                jsKeychain ? parentObj = eval('self.output.' + jsKeychain) : parentObj = _this7.output;
                 parentObj[lastKey] = val;
             });
 
             deepRemoveKeys(this.output, ['_order', '_name', '_toggle']);
+
             return this.output;
         }
     }, {
