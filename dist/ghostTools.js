@@ -677,37 +677,43 @@ var typeModels = {
         type: 'number',
         cls: 'form-control',
         value: '',
-        placeholder: ''
+        placeholder: '',
+        validation: []
     },
     color: {
         element: 'input',
         type: 'color',
         cls: 'form-control',
         value: '',
-        placeholder: ''
+        placeholder: '',
+        validation: []
     },
     date: {
         element: 'input',
         type: 'date',
         cls: 'form-control',
         value: '',
-        placeholer: ''
+        placeholer: '',
+        validation: []
     },
     textarea: {
         element: 'textarea',
         cls: 'form-control',
-        rows: 5
+        rows: 5,
+        validation: []
     },
     submit: {
         element: 'input',
         type: 'submit',
-        cls: 'btn btn-info'
+        cls: 'btn btn-info',
+        validation: []
     },
     select: {
         element: 'select',
         label: '',
         cls: 'form-control',
-        childnodes: []
+        childnodes: [],
+        validation: []
     },
     option: {
         element: 'option',
@@ -753,6 +759,7 @@ var FormGenerator = function () {
         this.typeModels = typeModels;
         this.arrayIndex = null;
         this.buildAllItems(this.form, this.parent);
+
         this.validators = {
             email: function email(_email) {
                 var emailReg = new RegExp('[a-zA-Z0-9]+(?:(\\.|_)[A-Za-z0-9!#$%&\'*+\\/=?^`{|}~-]+)*@(?!([a-zA-Z0-9]*\\.[a-zA-Z0-9]*\\.[a-zA-Z0-9]*\\.))(?:[A-Za-z0-9](?:[a-zA-Z0-9-]*[A-Za-z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?');
@@ -876,6 +883,9 @@ var FormGenerator = function () {
             var clone = _.clone(model);
             return Utils.extend(clone, item);
         }
+    }, {
+        key: 'getElementModel',
+        value: function getElementModel(elm) {}
 
         /**
          * Returns wrapper element for the given form item
@@ -1010,7 +1020,7 @@ var FormGenerator = function () {
                     var list = eval('self.form.' + _this2.jsKeychain(keychain));
                     var index = _this2.arrayIndex || 0;
                     var removed = list.splice(index, 1);
-                    console.log(removed); //// removes only one item if removed is triggered in a row this.arrayIndex is fixed here
+                    // removes only one item if removed is triggered in a row this.arrayIndex is fixed here
                     Utils.fadeOutRemove(parent);
                 }
             }, parent);
@@ -1157,17 +1167,29 @@ var FormGenerator = function () {
                             var _this5 = this;
 
                             /**
-                            * Onchange validation TODO add validation for all types
+                            * Onchange validation
+                            * TODO add validation for all types
+                            * TODO merge with getData validation
                             * return if no value. otherwise, loop through given validation on this model
                             * and collect those who return false and set error class on wrapper parent
                             */
-                            if (!this.value) return false;
                             var errors = [];
-                            model.validation.forEach(function (item) {
-                                !self.validators[item](_this5.value) && errors.push(item);
-                            });
+                            // honor the required attrib
+                            if (model.required && !this.value) {
+                                errors.push('required');
+                            } else if (!this.value) {
+                                return false;
+                            }
+                            if (model.validation) {
+                                //dont fail if no validation id defined
+                                model.validation.forEach(function (item) {
+                                    !self.validators[item](_this5.value) && errors.push(item);
+                                });
+                            }
+
                             if (errors.length) {
-                                Utils.setClass(wrapper.parentNode, 'has-error');
+                                var formGroup = Utils.findAncestor(this, 'form-group');
+                                Utils.setClass(formGroup, 'has-error');
                             }
                         });
                         element.addEventListener('focus', function (e) {
@@ -1264,21 +1286,53 @@ var FormGenerator = function () {
             var self = this;
             var elms = this.parent.querySelectorAll('[data-keychain]');
             this.output = _.cloneDeep(this.form);
-
-            _.forEach(elms, function (item) {
-                var keyList = item.getAttribute('data-keychain').split('.');
+            var isValid = true;
+            _.forEach(elms, function (elm) {
+                var errors = [];
+                var keyList = elm.getAttribute('data-keychain').split('.');
                 var lastKey = keyList.pop();
                 var keyChain = keyList.join('.');
                 var jsKeychain = _this7.jsKeychain(keyChain);
 
-                var val = item.getAttribute('elm-value');
+                var model = void 0;
+                jsKeychain ? model = eval('self.form.' + jsKeychain) : model = _this7.form;
+                model = model[lastKey];
+
+                /**
+                * Onchange validation
+                * TODO add validation for all types
+                * TODO merge with onchange validation
+                * return if no value. otherwise, loop through given validation on this model
+                * and collect those who return false and set error class on wrapper parent
+                */
+                if (model.required && !elm.value) {
+                    errors.push('required');
+                } else if (!elm.value) {
+                    return false;
+                }
+                if (model.validation) {
+                    model.validation.forEach(function (item) {
+                        !self.validators[item](elm.value) && errors.push(item);
+                    });
+                }
+                if (errors.length) {
+                    var formGroup = Utils.findAncestor(elm, 'form-group');
+                    Utils.setClass(formGroup, 'has-error');
+                    isValid = false;
+                }
+                // Locate the right object in the output and add the value to it
+                // if no jsKeychain we are on the first level of the object so we just return the whole output object
+                var val = elm.getAttribute('elm-value');
                 var parentObj = void 0;
                 jsKeychain ? parentObj = eval('self.output.' + jsKeychain) : parentObj = _this7.output;
                 parentObj[lastKey] = val;
             });
 
             deepRemoveKeys(this.output, ['_order', '_name', '_toggle']);
-
+            if (!isValid) {
+                //TODO this does not work because errors list is cleaned on each element and if last element is ok the error object is empty
+                return false;
+            }
             return this.output;
         }
     }, {

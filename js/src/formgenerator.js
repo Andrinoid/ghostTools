@@ -86,48 +86,54 @@ let typeModels = {
         type: 'number',
         cls: 'form-control',
         value: '',
-        placeholder: ''
+        placeholder: '',
+        validation: []
     },
     color: {
         element: 'input',
         type: 'color',
         cls: 'form-control',
         value: '',
-        placeholder: ''
+        placeholder: '',
+        validation: []
     },
     date: {
         element: 'input',
         type: 'date',
         cls: 'form-control',
         value: '',
-        placeholer: ''
+        placeholer: '',
+        validation: []
     },
     textarea: {
         element: 'textarea',
         cls: 'form-control',
-        rows: 5
+        rows: 5,
+        validation: []
     },
     submit: {
         element: 'input',
         type: 'submit',
-        cls: 'btn btn-info'
+        cls: 'btn btn-info',
+        validation: []
     },
     select: {
         element: 'select',
         label: '',
         cls: 'form-control',
-        childnodes: []
+        childnodes: [],
+        validation: []
     },
     option: {
         element: 'option',
         label: '',
-        value: ''
+        value: '',
     },
     checkbox: {
         element: 'input',
         type: 'checkbox',
         label: '',
-        value: ''
+        value: '',
     },
     image: {
         element: 'div',
@@ -160,6 +166,7 @@ class FormGenerator {
         this.typeModels = typeModels;
         this.arrayIndex = null;
         this.buildAllItems(this.form, this.parent);
+
         this.validators = {
             email: (email)=> {
                 const emailReg = new RegExp('[a-zA-Z0-9]+(?:(\\.|_)[A-Za-z0-9!#$%&\'*+\\/=?^`{|}~-]+)*@(?!([a-zA-Z0-9]*\\.[a-zA-Z0-9]*\\.[a-zA-Z0-9]*\\.))(?:[A-Za-z0-9](?:[a-zA-Z0-9-]*[A-Za-z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?');
@@ -254,6 +261,10 @@ class FormGenerator {
         let model = this.typeModels[item.type];
         let clone = _.clone(model);
         return Utils.extend(clone, item);
+    }
+
+    getElementModel(elm) {
+
     }
 
     /**
@@ -371,7 +382,7 @@ class FormGenerator {
                 let list = eval('self.form.' + this.jsKeychain(keychain));
                 let index = this.arrayIndex || 0;
                 let removed = list.splice(index, 1);
-                console.log(removed); //// removes only one item if removed is triggered in a row this.arrayIndex is fixed here
+                // removes only one item if removed is triggered in a row this.arrayIndex is fixed here
                 Utils.fadeOutRemove(parent);
             }
         }, parent);
@@ -515,17 +526,28 @@ class FormGenerator {
             });
             element.addEventListener('blur', function() {
                 /**
-                * Onchange validation TODO add validation for all types
+                * Onchange validation
+                * TODO add validation for all types
+                * TODO merge with getData validation
                 * return if no value. otherwise, loop through given validation on this model
                 * and collect those who return false and set error class on wrapper parent
                 */
-                if(!this.value) return false;
                 let errors = [];
-                model.validation.forEach((item)=> {
-                    !self.validators[item](this.value) && errors.push(item);
-                });
+                // honor the required attrib
+                if(model.required && !this.value) {
+                    errors.push('required');
+                } else if(!this.value) {
+                    return false;
+                }
+                if(model.validation) { //dont fail if no validation id defined
+                    model.validation.forEach((item)=> {
+                        !self.validators[item](this.value) && errors.push(item);
+                    });
+                }
+
                 if(errors.length) {
-                    Utils.setClass(wrapper.parentNode, 'has-error');
+                    let formGroup = Utils.findAncestor(this, 'form-group');
+                    Utils.setClass(formGroup, 'has-error');
                 }
             });
             element.addEventListener('focus', function(e) {
@@ -614,23 +636,54 @@ class FormGenerator {
         let self = this;
         let elms = this.parent.querySelectorAll('[data-keychain]');
         this.output = _.cloneDeep(this.form);
-
-        _.forEach(elms, (item) => {
-            let keyList = item.getAttribute('data-keychain').split('.');
+        let isValid = true;
+        _.forEach(elms, (elm) => {
+            let errors = [];
+            let keyList = elm.getAttribute('data-keychain').split('.');
             let lastKey = keyList.pop();
             let keyChain = keyList.join('.');
             let jsKeychain = this.jsKeychain(keyChain);
 
-            let val = item.getAttribute('elm-value');
+            let model;
+            jsKeychain ? model = eval('self.form.' + jsKeychain) : model = this.form;
+            model = model[lastKey];
+
+            /**
+            * Onchange validation
+            * TODO add validation for all types
+            * TODO merge with onchange validation
+            * return if no value. otherwise, loop through given validation on this model
+            * and collect those who return false and set error class on wrapper parent
+            */
+            if(model.required && !elm.value) {
+                errors.push('required');
+            } else if(!elm.value) {
+                return false;
+            }
+            if(model.validation) {
+                model.validation.forEach((item)=> {
+                    !self.validators[item](elm.value) && errors.push(item);
+                });
+            }
+            if(errors.length) {
+                let formGroup = Utils.findAncestor(elm, 'form-group');
+                Utils.setClass(formGroup, 'has-error');
+                isValid = false
+            }
+            // Locate the right object in the output and add the value to it
+            // if no jsKeychain we are on the first level of the object so we just return the whole output object
+            let val = elm.getAttribute('elm-value');
             let parentObj;
             jsKeychain ? parentObj = eval('self.output.' + jsKeychain) : parentObj = this.output;
             parentObj[lastKey] = val;
         });
 
         deepRemoveKeys(this.output, ['_order', '_name', '_toggle']);
-
+        if(!isValid) {
+            //TODO this does not work because errors list is cleaned on each element and if last element is ok the error object is empty
+            return false;
+        }
         return this.output;
-
     }
 
     setData(obj) {
