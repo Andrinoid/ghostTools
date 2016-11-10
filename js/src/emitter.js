@@ -1,5 +1,51 @@
-const emitter = new WeakMap();
+// Original - @Gozola. This is a reimplemented version (with a few bug fixes).
+// edited https://gist.github.com/Raynos/1638059
+const emitter = window.WeakMap ? new WeakMap() : (function () {
+    var privates = Name()
 
+    return {
+        get: function (key, fallback) {
+            var store = privates(key)
+            return store.hasOwnProperty("value") ?
+                store.value : fallback
+        },
+        set: function (key, value) {
+            privates(key).value = value
+        },
+        has: function(key) {
+            return "value" in privates(key)
+        },
+        "delete": function (key) {
+            return delete privates(key).value
+        }
+    }
+
+    function namespace(obj, key) {
+        var store = { identity: key },
+            valueOf = obj.valueOf
+
+        Object.defineProperty(obj, "valueOf", {
+            value: function (value) {
+                return value !== key ?
+                    valueOf.apply(this, arguments) : store
+            },
+            writable: true
+        })
+
+        return store
+    }
+
+    function Name() {
+        var key = {}
+        return function (obj) {
+            var store = obj.valueOf(key)
+            return store && store.identity === key ?
+                store : namespace(obj, key)
+        }
+    }
+}());
+
+// https://github.com/JFusco/es6-event-emitter/blob/master/src/emitter.js
 class Emitter {
     constructor() {
         emitter.set(this, {

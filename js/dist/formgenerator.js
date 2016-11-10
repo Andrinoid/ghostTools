@@ -741,7 +741,6 @@ var FormGenerator = function () {
 
             deepRemoveKeys(this.output, ['_order', '_name', '_toggle']);
             if (!isValid) {
-                //TODO this does not work because errors list is cleaned on each element and if last element is ok the error object is empty
                 return false;
             }
             return this.output;

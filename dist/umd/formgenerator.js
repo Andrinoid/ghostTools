@@ -706,9 +706,9 @@ var FormGenerator = function () {
             var self = this;
             var elms = this.parent.querySelectorAll('[data-keychain]');
             this.output = _.cloneDeep(this.form);
-            var errors = [];
+            var isValid = true;
             _.forEach(elms, function (elm) {
-                errors = [];
+                var errors = [];
                 var keyList = elm.getAttribute('data-keychain').split('.');
                 var lastKey = keyList.pop();
                 var keyChain = keyList.join('.');
@@ -738,6 +738,7 @@ var FormGenerator = function () {
                 if (errors.length) {
                     var formGroup = Utils.findAncestor(elm, 'form-group');
                     Utils.setClass(formGroup, 'has-error');
+                    isValid = false;
                 }
                 // Locate the right object in the output and add the value to it
                 // if no jsKeychain we are on the first level of the object so we just return the whole output object
@@ -748,8 +749,7 @@ var FormGenerator = function () {
             });
 
             deepRemoveKeys(this.output, ['_order', '_name', '_toggle']);
-            if (errors.length) {
-                //TODO this does not work because errors list is cleaned on each element and if last element is ok the error object is empty
+            if (!isValid) {
                 return false;
             }
             return this.output;
