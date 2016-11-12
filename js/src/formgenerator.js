@@ -533,10 +533,7 @@ class FormGenerator {
                 * and collect those who return false and set error class on wrapper parent
                 */
                 let errors = [];
-                // honor the required attrib
-                if(model.required && !this.value) {
-                    errors.push('required');
-                } else if(!this.value) {
+                if(!this.value) {
                     return false;
                 }
                 if(model.validation) { //dont fail if no validation id defined

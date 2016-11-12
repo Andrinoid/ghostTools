@@ -1174,10 +1174,7 @@ var FormGenerator = function () {
                             * and collect those who return false and set error class on wrapper parent
                             */
                             var errors = [];
-                            // honor the required attrib
-                            if (model.required && !this.value) {
-                                errors.push('required');
-                            } else if (!this.value) {
+                            if (!this.value) {
                                 return false;
                             }
                             if (model.validation) {

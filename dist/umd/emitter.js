@@ -57,6 +57,8 @@ var emitter = window.WeakMap ? new WeakMap() : function () {
     }
 }();
 
+// https://github.com/JFusco/es6-event-emitter/blob/master/src/emitter.js
+
 var Emitter = function () {
     function Emitter() {
         _classCallCheck(this, Emitter);
