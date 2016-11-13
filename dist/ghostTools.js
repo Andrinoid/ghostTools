@@ -1547,7 +1547,7 @@ var Droppad = function () {
      * Constants
      * ------------------------------------------------------------------------
      */
-    var STYLES = '\n        .imageCloud {\n            position: relative;\n            background-size: cover;\n            background-position: 50% 50%;\n            cursor: pointer;\n            font-family: arial, serif;\n            min-height: 200px;\n        }\n        .imageCloud input {\n            position: absolute;\n            top: 0;\n            right: 0;\n            bottom: 0;\n            left: 0;\n        }\n        .imageCloud .dropSheet {\n            position: absolute;\n            top: 0;\n            bottom: 0;\n            left: 0;\n            right: 0;\n            background: rgba(0, 0, 0, 0.5);\n            text-align: center;\n            padding: 10px;\n            opacity: 0;\n            transition: ease all 0.5s;\n            pointer-events: none;\n        }\n\n        .imageCloud .dropSheet.shown {\n            background: rgba(0, 0, 0, 0);\n            opacity: 1;\n        }\n\n        .imageCloud:hover .dropSheet {\n            background: rgba(0, 0, 0, 0.5);\n            opacity: 1;\n        }\n\n        .imageCloud .dropSheet > div {\n            padding: 10px;\n            color: white;\n            border: dashed 2px #fff;\n            position: absolute;\n            top: 10px;\n            bottom: 10px;\n            left: 10px;\n            right: 10px;\n        }\n\n        .imageCloud .dropSheet > div .dropLabel {\n            position: absolute;\n            top: 50%;\n            left: 50%;\n            transform: translate(-50%, -50%);\n            white-space: nowrap;\n        }\n\n        .imageCloud .dropSheet > div p {\n            font-size: 18px;\n        }\n\n        .imageCloud .fallBack {\n            position: absolute;\n            top: 0;\n            bottom: 0;\n            left: 0;\n            right: 0;\n            pointer-events: none;\n            background-color: gray;\n            background-size: cover;\n            background-position: center;\n        }\n\n        .imageCloud .loadedImage {\n            position: absolute;\n            top: 0;\n            bottom: 0;\n            left: 0;\n            right: 0;\n            pointer-events: none;\n            opacity: 0;\n            transition: ease opacity 0.5s;\n            background-size: cover;\n            background-position: center;\n            -webkit-filter: grayscale(100%); /* Chrome, Safari, Opera */\n            filter: grayscale(100%);\n        }\n        .imageCloud .progressbar {\n            position: absolute;\n            top: 0;\n            left: 0;\n            height: 6px;\n            width: 0%;\n            background: #66ce66;\n            z-index: 1;\n            transition: ease all 0.4s\n        }\n        .droppad-input {\n            position: absolute;\n            top: 0;\n            left: 0;\n            height: 0;\n            width: 0;\n            visibility: hidden;\n        }\n    ';
+    var STYLES = '\n        .imageCloud {\n            position: relative;\n            background-size: cover;\n            background-position: 50% 50%;\n            cursor: pointer;\n            font-family: arial, serif;\n            min-height: 200px;\n            display: flex;\n        }\n        .imageCloud input {\n            position: absolute;\n            top: 0;\n            right: 0;\n            bottom: 0;\n            left: 0;\n        }\n        .imageCloud .dropSheet {\n            position: absolute;\n            top: 0;\n            bottom: 0;\n            left: 0;\n            right: 0;\n            background: rgba(0, 0, 0, 0.5);\n            text-align: center;\n            padding: 10px;\n            opacity: 0;\n            transition: ease all 0.5s;\n            pointer-events: none;\n        }\n\n        .imageCloud .dropSheet.shown {\n            background: rgba(0, 0, 0, 0);\n            opacity: 1;\n        }\n\n        .imageCloud:hover .dropSheet {\n            background: rgba(0, 0, 0, 0.5);\n            opacity: 1;\n        }\n        .imageCloud:hover .dropSheet > div .dropLabel {\n            text-shadow: none;\n        }\n        .imageCloud.active {\n            background: rgba(0, 0, 0, 0.5);\n        }\n\n        .imageCloud .dropSheet > div {\n            padding: 10px;\n            color: white;\n            border: dashed 2px #fff;\n            position: absolute;\n            top: 10px;\n            bottom: 10px;\n            left: 10px;\n            right: 10px;\n        }\n\n        .imageCloud .dropSheet > div .dropLabel {\n            position: absolute;\n            top: 50%;\n            left: 50%;\n            transform: translate(-50%, -50%);\n            white-space: nowrap;\n            transition: ease all 0.5s;\n            text-shadow: rgb(122, 122, 122) 1.5px 1.5px 0px, 0px 0px 9px rgba(0, 0, 0, 0.45);\n        }\n\n        .imageCloud .dropSheet > div p {\n            font-size: 18px;\n        }\n\n        .imageCloud .fallBack {\n            flex-grow: 1;\n            pointer-events: none;\n            background-color: gray;\n            background-size: cover;\n            background-position: center;\n        }\n\n        .imageCloud .loadedImage {\n            flex-grow: 1;\n            pointer-events: none;\n            opacity: 0;\n            transition: ease opacity 0.5s;\n            background-size: cover;\n            background-position: center;\n            -webkit-filter: grayscale(100%); /* Chrome, Safari, Opera */\n            filter: grayscale(100%);\n        }\n        .imageCloud .progressbar {\n            position: absolute;\n            top: 0;\n            left: 0;\n            height: 6px;\n            width: 0%;\n            background: #66ce66;\n            z-index: 1;\n            transition: ease all 0.4s\n        }\n        .droppad-input {\n            position: absolute;\n            top: 0;\n            left: 0;\n            height: 0;\n            width: 0;\n            visibility: hidden;\n        }\n        .fillSpace {\n            position: absolute;\n            top: 0;\n            left: 0;\n            right: 0;\n            bottom: 0;\n            display: flex;\n            pointer-events: none;\n        }\n    ';
 
     var Default = {
         backgroundUrlPrefix: '',
@@ -1562,7 +1562,7 @@ var Droppad = function () {
         subTitle: 'or click here'
     };
 
-    var Template = '\n        <div class="progressbar"></div>\n        <div class="fallBack" style="opacity: 1;"></div>\n        <div class="loadedImage"></div>\n        <div class="dropSheet shown">\n            <div>\n                <div class="dropLabel">\n                    <p>*|title|*</p>\n                    <p>\n                        <small>*|subTitle|*</small>\n                    </p>\n                </div>\n            </div>\n        </div>\n    ';
+    var Template = '\n        <div class="progressbar"></div>\n        <div class="fillSpace afterLoad">\n\n        </div>\n        <div class="fillSpace beforeLoad">\n\n        </div>\n        <div class="dropSheet shown">\n            <div>\n                <div class="dropLabel">\n                    <p>*|title|*</p>\n                    <p>\n                        <small>*|subTitle|*</small>\n                    </p>\n                </div>\n            </div>\n        </div>\n    ';
 
     var Droppad = function (_Emitter) {
         _inherits(Droppad, _Emitter);
@@ -1575,11 +1575,14 @@ var Droppad = function () {
             _this.defaults = Utils.extend(Default, options);
             _this.droppad = elm;
             _this.currentImage = null;
+            _this.beforeElmQue = [];
+            _this.afterElmQue = [];
             _this.injectStyles();
             _this.createDOM();
             _this.setEvents();
             _this.droppadElements();
-            _this.setBackground();
+
+            //this.setBackground();//TODO
             return _this;
         }
         // getters
@@ -1605,6 +1608,7 @@ var Droppad = function () {
                 var _this2 = this;
 
                 Utils.setClass(this.droppad, 'imageCloud');
+                Utils.setClass(this.droppad, 'active');
                 Utils.setClass(this.droppad, 'droppad-clickable');
                 var template = (' ' + Template).slice(1); //Force string copy for. Bug in some  chrome versions
                 template = template.replace('*|title|*', this.defaults.title).replace('*|subTitle|*', this.defaults.subTitle);
@@ -1614,10 +1618,11 @@ var Droppad = function () {
                     type: 'file',
                     id: 'id-' + Math.floor(Math.random() * 100), //TODO remove
                     change: function change(e) {
-                        var file = e.target.files[0];
-                        _this2.showAsBackground(file);
+                        //let file = e.target.files[0];
+                        _this2.showAsBackground(e.target.files);
                         _this2.upload(e.target.files);
-                    }
+                    },
+                    multiple: true
                 }, this.droppad);
             }
         }, {
@@ -1679,22 +1684,37 @@ var Droppad = function () {
             }
         }, {
             key: 'showAsBackground',
-            value: function showAsBackground(file) {
+            value: function showAsBackground(files) {
                 var _this4 = this;
 
                 /**
-                 * let the image fade in 500ms
-                 * then add it to the layer behind so we can repeat the effect on next drop
+                 * let the images fade in 500ms
                  */
-                var reader = new FileReader();
-                reader.onload = function (event) {
-                    _this4.el_loadedImage.style.backgroundImage = 'url(' + event.target.result + ')';
-                    _this4.el_loadedImage.style.opacity = 1;
-                    setTimeout(function () {
-                        _this4.el_fallback.style.backgroundImage = 'url(' + event.target.result + ')';
-                    }, 500);
+                Utils.removeClass(this.droppad, 'active');
+
+                var _loop = function _loop(i) {
+                    var elBefore = new Elm('div.loadedImage', { css: { 'opacity': 1 } }, _this4.droppad.querySelector('.beforeLoad'));
+                    var elAfter = new Elm('div.fallBack', _this4.droppad.querySelector('.afterLoad'));
+                    _this4.beforeElmQue.push(elBefore);
+                    _this4.afterElmQue.push(elAfter);
+                    var file = files[i];
+                    reader = new FileReader();
+
+                    reader.onload = function (event) {
+                        elBefore.style.backgroundImage = 'url(' + event.target.result + ')';
+                        elBefore.style.opacity = 1;
+                        setTimeout(function () {
+                            elAfter.style.backgroundImage = 'url(' + event.target.result + ')';
+                        }, 500);
+                    };
+                    reader.readAsDataURL(file);
                 };
-                reader.readAsDataURL(file);
+
+                for (var i = 0; i < files.length; i++) {
+                    var reader;
+
+                    _loop(i);
+                }
             }
         }, {
             key: 'dragenter',
@@ -1720,17 +1740,16 @@ var Droppad = function () {
                 Utils.removeClass(this.droppad, 'dragover');
                 this.trigger('drop', e);
                 var files = e.target.files || e.dataTransfer.files;
-                var file = files[0];
+                //var file = files[0];
 
-                this.showAsBackground(file);
+                this.showAsBackground(files);
                 this.upload(files);
             }
         }, {
             key: 'validate',
-            value: function validate(file) {
+            value: function validate(_file) {
                 var self = this;
                 var errors = [];
-
                 var tests = [function size(file) {
                     var maxFilesize = self.defaults.maxFilesize * 1024 * 1024;
                     if (file.size > maxFilesize) {
@@ -1747,14 +1766,14 @@ var Droppad = function () {
                 }];
 
                 Utils.foreach(tests, function (fn) {
-                    fn(file);
+                    fn(_file);
                 });
 
                 return errors;
             }
         }, {
-            key: 'upload',
-            value: function upload(files) {
+            key: 'uploadSingle',
+            value: function uploadSingle(file) {
                 var _this5 = this;
 
                 var headers = {
@@ -1763,21 +1782,22 @@ var Droppad = function () {
                 };
 
                 var formData = new FormData();
-                for (var i = 0; i < files.length; i++) {
-                    var file = files[i];
 
-                    var errors = this.validate(file);
-                    if (errors.length) {
-                        Utils.foreach(errors, function (err) {
-                            _this5.trigger('error', err);
-                            if (_this5.defaults.showErrors) {
-                                new Alert('danger', { message: err, timer: 6000 });
-                            }
-                        });
-                        return;
-                    }
-                    formData.append('file', file, file.name); //file.name is not required Check server side implementation of this
+                var errors = this.validate(file);
+                if (errors.length) {
+                    Utils.foreach(errors, function (err) {
+                        _this5.trigger('error', err);
+                        if (_this5.defaults.showErrors) {
+                            new Alert('danger', {
+                                message: err,
+                                timer: 6000
+                            });
+                        }
+                    });
+                    return;
                 }
+                formData.append('file', file, file.name); //file.name is not required Check server side implementation of this
+
                 var xhr = new XMLHttpRequest();
                 //add trailing slash if doesn't exists
                 var url = this.defaults.url;
@@ -1793,6 +1813,7 @@ var Droppad = function () {
                         _this5.uploadSuccess(data);
                     } else {
                         _this5.uploadError(data);
+                        //TODO show this to the user
                     }
                 };
                 xhr.upload.addEventListener('progress', function (e) {
@@ -1801,6 +1822,14 @@ var Droppad = function () {
                 }, false);
 
                 xhr.send(formData);
+            }
+        }, {
+            key: 'upload',
+            value: function upload(files) {
+                for (var i = 0; i < files.length; i++) {
+                    var file = files[i];
+                    this.uploadSingle(file);
+                }
             }
         }, {
             key: 'uploadProgress',
@@ -1814,11 +1843,14 @@ var Droppad = function () {
                 var _this6 = this;
 
                 this.trigger('success', data);
+
                 this.el_progressbar.style.display = 'none';
                 this.el_progressbar.style.width = 0;
 
-                this.el_fallback.style.opacity = 1;
-                this.el_loadedImage.style.opacity = 0;
+                var elBefore = this.beforeElmQue.shift();
+                var elAfter = this.afterElmQue.shift();
+                elAfter.style.opacity = 1;
+                elBefore.style.opacity = 0;
                 this.currentImage = data;
                 setTimeout(function () {
                     _this6.el_progressbar.style.display = 'block';
@@ -1828,6 +1860,7 @@ var Droppad = function () {
             key: 'uploadError',
             value: function uploadError(data) {
                 this.trigger('error', data);
+                alert('danger', 'not successfull');
             }
 
             //add to Utils?
@@ -1874,7 +1907,7 @@ var Droppad = function () {
 //Image service should return full path as webkit-overflow-scrolling
 //Check browser support
 //change fallBack to more appropriate name
-//deal with multiple files q
+//make progress bar global for multiple
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();

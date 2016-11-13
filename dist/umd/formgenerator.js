@@ -594,10 +594,7 @@ var FormGenerator = function () {
                             * and collect those who return false and set error class on wrapper parent
                             */
                             var errors = [];
-                            // honor the required attrib
-                            if (model.required && !this.value) {
-                                errors.push('required');
-                            } else if (!this.value) {
+                            if (!this.value) {
                                 return false;
                             }
                             if (model.validation) {
@@ -725,9 +722,10 @@ var FormGenerator = function () {
                 * return if no value. otherwise, loop through given validation on this model
                 * and collect those who return false and set error class on wrapper parent
                 */
-
-                if (!elm.value) {
-                    return null;
+                if (model.required && !elm.value) {
+                    errors.push('required');
+                } else if (!elm.value) {
+                    return false;
                 }
                 if (model.validation) {
                     model.validation.forEach(function (item) {

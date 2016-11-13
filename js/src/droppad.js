@@ -29,6 +29,7 @@ const Droppad = (() => {
             cursor: pointer;
             font-family: arial, serif;
             min-height: 200px;
+            display: flex;
         }
         .imageCloud input {
             position: absolute;
@@ -60,6 +61,12 @@ const Droppad = (() => {
             background: rgba(0, 0, 0, 0.5);
             opacity: 1;
         }
+        .imageCloud:hover .dropSheet > div .dropLabel {
+            text-shadow: none;
+        }
+        .imageCloud.active {
+            background: rgba(0, 0, 0, 0.5);
+        }
 
         .imageCloud .dropSheet > div {
             padding: 10px;
@@ -78,6 +85,8 @@ const Droppad = (() => {
             left: 50%;
             transform: translate(-50%, -50%);
             white-space: nowrap;
+            transition: ease all 0.5s;
+            text-shadow: rgb(122, 122, 122) 1.5px 1.5px 0px, 0px 0px 9px rgba(0, 0, 0, 0.45);
         }
 
         .imageCloud .dropSheet > div p {
@@ -85,11 +94,7 @@ const Droppad = (() => {
         }
 
         .imageCloud .fallBack {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
+            flex-grow: 1;
             pointer-events: none;
             background-color: gray;
             background-size: cover;
@@ -97,11 +102,7 @@ const Droppad = (() => {
         }
 
         .imageCloud .loadedImage {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
+            flex-grow: 1;
             pointer-events: none;
             opacity: 0;
             transition: ease opacity 0.5s;
@@ -128,6 +129,15 @@ const Droppad = (() => {
             width: 0;
             visibility: hidden;
         }
+        .fillSpace {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            pointer-events: none;
+        }
     `;
 
     const Default = {
@@ -145,8 +155,12 @@ const Droppad = (() => {
 
     let Template = `
         <div class="progressbar"></div>
-        <div class="fallBack" style="opacity: 1;"></div>
-        <div class="loadedImage"></div>
+        <div class="fillSpace afterLoad">
+
+        </div>
+        <div class="fillSpace beforeLoad">
+
+        </div>
         <div class="dropSheet shown">
             <div>
                 <div class="dropLabel">
@@ -162,17 +176,20 @@ const Droppad = (() => {
     class Droppad extends Emitter {
 
         constructor(elm, options) {
-            super();
-            this.defaults = Utils.extend(Default, options);
-            this.droppad = elm;
-            this.currentImage = null;
-            this.injectStyles();
-            this.createDOM();
-            this.setEvents();
-            this.droppadElements();
-            this.setBackground();
-        }
-        // getters
+                super();
+                this.defaults = Utils.extend(Default, options);
+                this.droppad = elm;
+                this.currentImage = null;
+                this.beforeElmQue = [];
+                this.afterElmQue = [];
+                this.injectStyles();
+                this.createDOM();
+                this.setEvents();
+                this.droppadElements();
+
+                //this.setBackground();//TODO
+            }
+            // getters
 
         static get Default() {
             return Default;
@@ -202,19 +219,21 @@ const Droppad = (() => {
 
         createDOM() {
             Utils.setClass(this.droppad, 'imageCloud');
+            Utils.setClass(this.droppad, 'active');
             Utils.setClass(this.droppad, 'droppad-clickable');
-            let template  = (' ' + Template).slice(1); //Force string copy for. Bug in some  chrome versions
+            let template = (' ' + Template).slice(1); //Force string copy for. Bug in some  chrome versions
             template = template.replace('*|title|*', this.defaults.title).replace('*|subTitle|*', this.defaults.subTitle);
 
             this.droppad.innerHTML = template;
             this.el_clickableInput = new Elm('input.droppad-input', {
                 type: 'file',
-                id: 'id-' + Math.floor(Math.random() * 100 ),//TODO remove
+                id: 'id-' + Math.floor(Math.random() * 100), //TODO remove
                 change: (e) => {
-                    let file = e.target.files[0];
-                    this.showAsBackground(file);
+                    //let file = e.target.files[0];
+                    this.showAsBackground(e.target.files);
                     this.upload(e.target.files);
-                }
+                },
+                multiple: true
             }, this.droppad);
         }
 
@@ -245,7 +264,7 @@ const Droppad = (() => {
             };
             let self = this;
             // add event to document and listen for droppad-clickable elements
-            if(!this.__proto__.isClickable) {
+            if (!this.__proto__.isClickable) {
                 document.addEventListener('click', (e) => {
                     var clsList = Array.prototype.slice.call(e.target.classList);
                     if (clsList.indexOf('droppad-clickable') > -1) {
@@ -270,20 +289,28 @@ const Droppad = (() => {
             this.el_fallback.style.backgroundImage = `url(${url})`;
         }
 
-        showAsBackground(file) {
+        showAsBackground(files) {
             /**
-             * let the image fade in 500ms
-             * then add it to the layer behind so we can repeat the effect on next drop
+             * let the images fade in 500ms
              */
-            var reader = new FileReader();
-            reader.onload = (event) => {
-                this.el_loadedImage.style.backgroundImage = 'url(' + event.target.result + ')';
-                this.el_loadedImage.style.opacity = 1;
-                setTimeout(() => {
-                    this.el_fallback.style.backgroundImage = 'url(' + event.target.result + ')';
-                }, 500);
-            };
-            reader.readAsDataURL(file);
+            Utils.removeClass(this.droppad, 'active');
+            for(let i = 0; i < files.length; i++) {
+                let elBefore = new Elm('div.loadedImage', {css: {'opacity': 1}}, this.droppad.querySelector('.beforeLoad'));
+                let elAfter = new Elm('div.fallBack', this.droppad.querySelector('.afterLoad'));
+                this.beforeElmQue.push(elBefore);
+                this.afterElmQue.push(elAfter);
+                let file = files[i];
+                var reader = new FileReader();
+                reader.onload = (event) => {
+                    elBefore.style.backgroundImage = 'url(' + event.target.result + ')';
+                    elBefore.style.opacity = 1;
+                    setTimeout(() => {
+                        elAfter.style.backgroundImage = 'url(' + event.target.result + ')';
+                    }, 500);
+                };
+                reader.readAsDataURL(file);
+            }
+
         }
 
         dragenter(e) {
@@ -305,16 +332,15 @@ const Droppad = (() => {
             Utils.removeClass(this.droppad, 'dragover');
             this.trigger('drop', e);
             var files = e.target.files || e.dataTransfer.files;
-            var file = files[0];
+            //var file = files[0];
 
-            this.showAsBackground(file);
+            this.showAsBackground(files);
             this.upload(files);
         }
 
-        validate(file) {
+        validate(_file) {
             let self = this;
             let errors = [];
-
             let tests = [
                 function size(file) {
                     const maxFilesize = self.defaults.maxFilesize * 1024 * 1024;
@@ -334,34 +360,37 @@ const Droppad = (() => {
             ];
 
             Utils.foreach(tests, (fn) => {
-                fn(file);
+                fn(_file);
             });
 
             return errors;
         }
 
-        upload(files) {
+        uploadSingle(file) {
+
             let headers = {
                 'X-Requested-With': 'XMLHttpRequest',
                 'Accept': '*/*',
             };
 
             let formData = new FormData();
-            for (var i = 0; i < files.length; i++) {
-                let file = files[i];
 
-                let errors = this.validate(file);
-                if (errors.length) {
-                    Utils.foreach(errors, (err)=> {
-                        this.trigger('error', err);
-                        if(this.defaults.showErrors) {
-                            new Alert('danger', {message: err, timer: 6000});
-                        }
-                    });
-                    return;
-                }
-                formData.append('file', file, file.name); //file.name is not required Check server side implementation of this
+            let errors = this.validate(file);
+            if (errors.length) {
+                Utils.foreach(errors, (err) => {
+                    this.trigger('error', err);
+                    if (this.defaults.showErrors) {
+                        new Alert('danger', {
+                            message: err,
+                            timer: 6000
+                        });
+                    }
+                });
+                return;
             }
+            formData.append('file', file, file.name); //file.name is not required Check server side implementation of this
+
+
             let xhr = new XMLHttpRequest();
             //add trailing slash if doesn't exists
             let url = this.defaults.url
@@ -378,6 +407,7 @@ const Droppad = (() => {
                     this.uploadSuccess(data);
                 } else {
                     this.uploadError(data);
+                    //TODO show this to the user
                 }
             }
             xhr.upload.addEventListener('progress', (e) => {
@@ -388,6 +418,14 @@ const Droppad = (() => {
             xhr.send(formData);
         }
 
+        upload(files) {
+            for(let i = 0; i < files.length; i++) {
+                let file = files[i];
+                this.uploadSingle(file);
+            }
+
+        }
+
         uploadProgress(percentage) {
             this.trigger('progress', percentage);
             this.el_progressbar.style.width = percentage + '%';
@@ -395,11 +433,14 @@ const Droppad = (() => {
 
         uploadSuccess(data) {
             this.trigger('success', data);
+
             this.el_progressbar.style.display = 'none';
             this.el_progressbar.style.width = 0;
 
-            this.el_fallback.style.opacity = 1;
-            this.el_loadedImage.style.opacity = 0;
+            let elBefore = this.beforeElmQue.shift();
+            let elAfter = this.afterElmQue.shift();
+            elAfter.style.opacity = 1;
+            elBefore.style.opacity = 0;
             this.currentImage = data;
             setTimeout(() => {
                 this.el_progressbar.style.display = 'block';
@@ -409,6 +450,7 @@ const Droppad = (() => {
 
         uploadError(data) {
             this.trigger('error', data);
+            alert('danger', 'not successfull');
         }
 
         //add to Utils?
@@ -433,6 +475,6 @@ const Droppad = (() => {
 //Image service should return full path as webkit-overflow-scrolling
 //Check browser support
 //change fallBack to more appropriate name
-//deal with multiple files q
+//make progress bar global for multiple
 
 export default Droppad;

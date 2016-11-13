@@ -17,10 +17,23 @@
         .mb20 {
             margin-bottom: 20px;
         }
+        .parent {
+            display: flex;
+        }
+        .parent > div {
+            flex-grow: 1;
+        }
     </style>
 </head>
 
 <body>
+    <section class="flex">
+        <div class="parent">
+            <div>df</div>
+            <div>df</div>
+            <div>df</div>
+        </div>
+    </section>
     <div class="wrapper">
         <header>
             <div class="container">
@@ -139,17 +152,17 @@
             url: 'http://ghostlamp.com/icloud/upload/ghostlamp',
             backgroundImage: 'http://ghostlamp.com/icloud/images/test/71l1471623700.jpeg'
         });
-        droppad.on('dragenter', function() {
-            console.log('dragenter');
-            //console.log(e);
-        });
-
-        droppad.on('success', function(data) {
-            console.log(data);
-        });
-        droppad.on('progress', function(data) {
-            console.log(data);
-        });
+        // droppad.on('dragenter', function() {
+        //     console.log('dragenter');
+        //     //console.log(e);
+        // });
+        //
+        // droppad.on('success', function(data) {
+        //     console.log(data);
+        // });
+        // droppad.on('progress', function(data) {
+        //     console.log(data);
+        // });
     </script>
 
     <!-- formgenerator example  -->
