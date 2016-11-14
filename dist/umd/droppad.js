@@ -180,7 +180,11 @@ var Droppad = function () {
                 Utils.removeClass(this.droppad, 'active');
 
                 var _loop = function _loop(i) {
-                    var elBefore = new Elm('div.loadedImage', { css: { 'opacity': 1 } }, _this4.droppad.querySelector('.beforeLoad'));
+                    var elBefore = new Elm('div.loadedImage', {
+                        css: {
+                            'opacity': 1
+                        }
+                    }, _this4.droppad.querySelector('.beforeLoad'));
                     var elAfter = new Elm('div.fallBack', _this4.droppad.querySelector('.afterLoad'));
                     _this4.beforeElmQue.push(elBefore);
                     _this4.afterElmQue.push(elAfter);
@@ -260,7 +264,7 @@ var Droppad = function () {
             }
         }, {
             key: 'uploadSingle',
-            value: function uploadSingle(file) {
+            value: function uploadSingle(file, id) {
                 var _this5 = this;
 
                 var headers = {
@@ -304,8 +308,11 @@ var Droppad = function () {
                     }
                 };
                 xhr.upload.addEventListener('progress', function (e) {
-                    var loadedPercent = (e.loaded / e.total * 100).toFixed();
-                    _this5.uploadProgress(loadedPercent);
+                    _this5.chunkTotal.totals[id] = e.total;
+                    _this5.chunkTotal.loads[id] = e.loaded;
+
+                    //let loadedPercent = (e.loaded / e.total * 100).toFixed();
+                    _this5.uploadProgress();
                 }, false);
 
                 xhr.send(formData);
@@ -313,14 +320,26 @@ var Droppad = function () {
         }, {
             key: 'upload',
             value: function upload(files) {
+                this.chunkTotal = {
+                    totals: Utils.range(files.length, 0, 0),
+                    loads: Utils.range(files.length, 0, 0) // returns e.q [0,0,0] for three files
+                };
+
                 for (var i = 0; i < files.length; i++) {
                     var file = files[i];
-                    this.uploadSingle(file);
+                    this.uploadSingle(file, i);
                 }
             }
         }, {
             key: 'uploadProgress',
-            value: function uploadProgress(percentage) {
+            value: function uploadProgress() {
+                var loaded = this.chunkTotal.loads.reduce(function (a, b) {
+                    return a + b;
+                }, 0); // returns sum of array values
+                var total = this.chunkTotal.totals.reduce(function (a, b) {
+                    return a + b;
+                }, 0);
+                var percentage = (loaded / total * 100).toFixed();
                 this.trigger('progress', percentage);
                 this.el_progressbar.style.width = percentage + '%';
             }
@@ -394,6 +413,6 @@ var Droppad = function () {
 //Image service should return full path as webkit-overflow-scrolling
 //Check browser support
 //change fallBack to more appropriate name
-//deal with multiple files q
+//make progress bar global for multiple
 return Droppad;
 }));

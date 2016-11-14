@@ -112,8 +112,21 @@ var Utils = {
         if (el.classList.contains(cls)) return el;
         while ((el = el.parentElement) && !el.classList.contains(cls)) {}
         return el;
-    }
+    },
 
+    range: function range(n, offset, fill) {
+        var a = [];
+        offset = offset || 0;
+        while (n) {
+            if (fill > -1) {
+                a.push(fill);
+                --n;
+            } else {
+                a.push(--n + offset);
+            }
+        }
+        return a.reverse();
+    }
 };
 return Utils;
 }));

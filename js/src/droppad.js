@@ -294,8 +294,12 @@ const Droppad = (() => {
              * let the images fade in 500ms
              */
             Utils.removeClass(this.droppad, 'active');
-            for(let i = 0; i < files.length; i++) {
-                let elBefore = new Elm('div.loadedImage', {css: {'opacity': 1}}, this.droppad.querySelector('.beforeLoad'));
+            for (let i = 0; i < files.length; i++) {
+                let elBefore = new Elm('div.loadedImage', {
+                    css: {
+                        'opacity': 1
+                    }
+                }, this.droppad.querySelector('.beforeLoad'));
                 let elAfter = new Elm('div.fallBack', this.droppad.querySelector('.afterLoad'));
                 this.beforeElmQue.push(elBefore);
                 this.afterElmQue.push(elAfter);
@@ -366,7 +370,7 @@ const Droppad = (() => {
             return errors;
         }
 
-        uploadSingle(file) {
+        uploadSingle(file, id) {
 
             let headers = {
                 'X-Requested-With': 'XMLHttpRequest',
@@ -411,22 +415,30 @@ const Droppad = (() => {
                 }
             }
             xhr.upload.addEventListener('progress', (e) => {
-                let loadedPercent = (e.loaded / e.total * 100).toFixed();
-                this.uploadProgress(loadedPercent);
+                this.chunkTotal.totals[id] = e.total;
+                this.chunkTotal.loads[id] = e.loaded;
+                this.uploadProgress();
             }, false);
 
             xhr.send(formData);
         }
 
         upload(files) {
-            for(let i = 0; i < files.length; i++) {
-                let file = files[i];
-                this.uploadSingle(file);
-            }
+            this.chunkTotal = {
+                totals: Utils.range(files.length, 0, 0),
+                loads: Utils.range(files.length, 0, 0) // returns e.q [0,0,0] for three files
+            };
 
+            for (let i = 0; i < files.length; i++) {
+                let file = files[i];
+                this.uploadSingle(file, i);
+            }
         }
 
-        uploadProgress(percentage) {
+        uploadProgress() {
+            let loaded = this.chunkTotal.loads.reduce((a, b) => a + b, 0); // returns sum of array values
+            let total = this.chunkTotal.totals.reduce((a, b) => a + b, 0);
+            let percentage = (loaded / total * 100).toFixed();
             this.trigger('progress', percentage);
             this.el_progressbar.style.width = percentage + '%';
         }

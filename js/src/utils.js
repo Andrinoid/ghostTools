@@ -4,7 +4,6 @@
  * ------------------------------------------------------------------------
  */
 
-
 var isArray = (function() {
     if (typeof Array.isArray === 'undefined') {
         return function(value) {
@@ -111,8 +110,21 @@ const Utils = {
             return el;
         while ((el = el.parentElement) && !el.classList.contains(cls));
         return el;
-    }
+    },
 
+    range: function(n, offset, fill) {
+      var a = [];
+      offset = offset || 0
+      while(n) {
+          if(fill > -1) {
+              a.push(fill);
+              --n;
+          } else {
+              a.push(--n + offset);
+          }
+      }
+      return a.reverse();
+    }
 };
 
 
