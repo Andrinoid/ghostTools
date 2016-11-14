@@ -407,9 +407,9 @@ var Droppad = function () {
 
 //TODO
 //change imagecloud to droppad or somthing unique
-//Image service should return full path as webkit-overflow-scrolling
 //Check browser support
 //change fallBack to more appropriate name
-//make progress bar global for multiple
+//add option for single multiple
+//option to hide labels when active image
 return Droppad;
 }));

@@ -488,6 +488,6 @@ const Droppad = (() => {
 //Check browser support
 //change fallBack to more appropriate name
 //add option for single multiple
-
+//option to hide labels when active image
 
 export default Droppad;

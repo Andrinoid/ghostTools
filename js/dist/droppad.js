@@ -401,3 +401,4 @@ var Droppad = function () {
 //Check browser support
 //change fallBack to more appropriate name
 //add option for single multiple
+//option to hide labels when active image
