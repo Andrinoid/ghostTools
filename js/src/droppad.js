@@ -66,6 +66,8 @@ const Droppad = (() => {
         }
         .imageCloud.active {
             background: rgba(0, 0, 0, 0.5);
+            background-size: cover;
+            background-position: center;
         }
 
         .imageCloud .dropSheet > div {
@@ -149,7 +151,7 @@ const Droppad = (() => {
         includeStyles: true,
         acceptedFiles: 'jpeg, jpg, png, gif',
         showErrors: true,
-        title: 'Drop Image here',
+        title: 'Drop Image',
         subTitle: 'or click here'
     };
 
@@ -186,8 +188,7 @@ const Droppad = (() => {
                 this.createDOM();
                 this.setEvents();
                 this.droppadElements();
-
-                //this.setBackground();//TODO
+                this.setBackground();//TODO
             }
             // getters
 
@@ -286,7 +287,7 @@ const Droppad = (() => {
         setBackground() {
             let prefix = (this.defaults.backgroundUrlPrefix === '') ? '' : this.defaults.backgroundUrlPrefix.replace(/\/?$/, '/');
             let url = prefix + this.defaults.backgroundImage;
-            this.el_fallback.style.backgroundImage = `url(${url})`;
+            this.droppad.style.backgroundImage = `url(${url})`;
         }
 
         showAsBackground(files) {
@@ -484,9 +485,9 @@ const Droppad = (() => {
 
 //TODO
 //change imagecloud to droppad or somthing unique
-//Image service should return full path as webkit-overflow-scrolling
 //Check browser support
 //change fallBack to more appropriate name
-//make progress bar global for multiple
+//add option for single multiple
+
 
 export default Droppad;
