@@ -117,9 +117,9 @@ const Droppad = (() => {
             left: 0;
             height: 6px;
             width: 0%;
-            background: #66ce66;
+            background: #4caf50;
             z-index: 1;
-            transition: ease all 0.4s
+            transition: ease all 1s
         }
         .droppad-input {
             position: absolute;
@@ -426,7 +426,7 @@ const Droppad = (() => {
         upload(files) {
             this.chunkTotal = {
                 totals: Utils.range(files.length, 0, 0),
-                loads: Utils.range(files.length, 0, 0) // returns e.q [0,0,0] for three files
+                loads: Utils.range(files.length, 0, 0), // returns e.q [0,0,0] for three files
             };
 
             for (let i = 0; i < files.length; i++) {
