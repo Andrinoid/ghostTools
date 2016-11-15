@@ -180,53 +180,28 @@
         };
 
 
-        var schema = {
-            _order: ['name', 'lastName', 'age'],
-            age: {
-                type: 'number',
-                placeholder: 'age'
+        let schema = {
+            "name" : {
+                "type" : "text",
+                "label" : "Brand name",
+                "placeholder" : "The name of the brand",
+                "value" : "",
+                "required": true
             },
-            lastName: {
-                label: 'middlename',
-                placeholder: 'middlename',
-                type: 'text',
-                value: '',
-                required: true
+            
+            "website" : {
+                "type" : "text",
+                "label" : "Website",
+                "placeholder" : "Website",
+                "value" : "",
             },
-            name: {
-                label: 'Name',
-                placeholder: 'your name',
-                type: 'text',
-                helpText: 'foobar',
-                value: '',
-                validation: ['email'],
-                required: true
-            },
-            img: {
-                type: 'image',
-            },
-            img2: {
-                type: 'image',
-            },
-            website: {
-                _toggle: true,
-                url: {
-                    type: 'text',
-                    value: ''
-                },
-                display: {
-                    value: '',
-                    type: 'text'
-                }
-            },
-            tags: [{
-
-                "type": "text",
-                "label": "campaign image",
-                "value": "",
-                "helpText": "Mega image upload"
-            }]
-
+            "description" : {
+                "value" : "",
+                "placeholder" : "Describe your brand in a short an concise way",
+                "rows" : 5,
+                "type" : "textarea",
+                "label" : "Short description"
+            }
         };
 
         var formgen = new FormGenerator(schema, document.querySelector('#formWrap'));

@@ -610,6 +610,8 @@ var FormGenerator = function () {
              */
             if (model.value) {
                 element.setAttribute('elm-value', model.value);
+            } else {
+                element.setAttribute('elm-value', '');
             }
 
             if (model.toggle) {
@@ -693,7 +695,7 @@ var FormGenerator = function () {
 
             var self = this;
             var elms = this.parent.querySelectorAll('[data-keychain]');
-            this.output = _.cloneDeep(this.form);
+            this.output = {};
             var isValid = true;
             _.forEach(elms, function (elm) {
                 var errors = [];
@@ -707,7 +709,7 @@ var FormGenerator = function () {
                 model = model[lastKey];
 
                 /**
-                * Onchange validation
+                * Validation
                 * TODO add validation for all types
                 * TODO merge with onchange validation
                 * return if no value. otherwise, loop through given validation on this model
@@ -715,9 +717,8 @@ var FormGenerator = function () {
                 */
                 if (model.required && !elm.value) {
                     errors.push('required');
-                } else if (!elm.value) {
-                    return false;
                 }
+
                 if (model.validation) {
                     model.validation.forEach(function (item) {
                         !self.validators[item](elm.value) && errors.push(item);

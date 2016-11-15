@@ -557,6 +557,8 @@ class FormGenerator {
          */
         if (model.value) {
             element.setAttribute('elm-value', model.value);
+        } else {
+            element.setAttribute('elm-value', '');
         }
 
         if (model.toggle) {
@@ -632,7 +634,7 @@ class FormGenerator {
 
         let self = this;
         let elms = this.parent.querySelectorAll('[data-keychain]');
-        this.output = _.cloneDeep(this.form);
+        this.output = {};
         let isValid = true;
         _.forEach(elms, (elm) => {
             let errors = [];
@@ -646,7 +648,7 @@ class FormGenerator {
             model = model[lastKey];
 
             /**
-            * Onchange validation
+            * Validation
             * TODO add validation for all types
             * TODO merge with onchange validation
             * return if no value. otherwise, loop through given validation on this model
@@ -654,9 +656,8 @@ class FormGenerator {
             */
             if(model.required && !elm.value) {
                 errors.push('required');
-            } else if(!elm.value) {
-                return false;
             }
+            
             if(model.validation) {
                 model.validation.forEach((item)=> {
                     !self.validators[item](elm.value) && errors.push(item);
