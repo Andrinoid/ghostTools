@@ -463,7 +463,7 @@ const Droppad = (() => {
 
         uploadError(data) {
             this.trigger('error', data);
-            alert('danger', 'not successfull');
+            new Alert('danger', 'not successfull');
         }
 
         //add to Utils?
