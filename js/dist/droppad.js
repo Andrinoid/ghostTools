@@ -386,6 +386,8 @@ var Droppad = function () {
                 this.successCounter = this.successCounter ? this.successCounter + 1 : 1;
                 if (this.filesLenght === this.successCounter) {
                     this.trigger('complete');
+                    this.successCounter = 0;
+                    this.filesLenght = 0;
                 }
             }
         }, {
