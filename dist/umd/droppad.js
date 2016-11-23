@@ -41,12 +41,26 @@ var Droppad = function () {
         url: '',
         backgroundImage: '',
         maxFilesize: 8, //in MB
+        maxFiles: 20,
         paramName: "file", //TODO
         includeStyles: true,
         acceptedFiles: 'jpeg, jpg, png, gif',
         showErrors: true,
         title: 'Drop Image',
-        subTitle: 'or click here'
+        subTitle: 'or click here',
+        customHandler: false
+
+        //Event triggers
+
+        // success - Fires for success on each uploaded file
+        // error
+        // complete - Fires when all files have been uploaded
+
+        // dragover
+        // dragenter
+        // dragleave
+        // drop
+        // progress
     };
 
     var Template = '\n        <div class="progressbar"></div>\n        <div class="fillSpace afterLoad">\n\n        </div>\n        <div class="fillSpace beforeLoad">\n\n        </div>\n        <div class="dropSheet shown">\n            <div>\n                <div class="dropLabel">\n                    <p>*|title|*</p>\n                    <p>\n                        <small>*|subTitle|*</small>\n                    </p>\n                </div>\n            </div>\n        </div>\n    ';
@@ -57,7 +71,7 @@ var Droppad = function () {
         function Droppad(elm, options) {
             _classCallCheck(this, Droppad);
 
-            var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Droppad).call(this));
+            var _this = _possibleConstructorReturn(this, (Droppad.__proto__ || Object.getPrototypeOf(Droppad)).call(this));
 
             _this.defaults = Utils.extend(Default, options);
             _this.droppad = elm;
@@ -288,6 +302,7 @@ var Droppad = function () {
                 }
                 formData.append('file', file, file.name); //file.name is not required Check server side implementation of this
 
+
                 var xhr = new XMLHttpRequest();
                 //add trailing slash if doesn't exists
                 var url = this.defaults.url;
@@ -321,7 +336,25 @@ var Droppad = function () {
                     totals: Utils.range(files.length, 0, 0),
                     loads: Utils.range(files.length, 0, 0) };
 
-                // returns e.q [0,0,0] for three files
+                this.filesLenght = files.length;
+
+                if (this.defaults.customHandler) {
+                    this.defaults.customHandler(files);
+                    return;
+                }
+
+                if (files.length > this.defaults.maxFiles) {
+                    var err = 'The maximum amount of files you can upload is ' + this.defaults.maxFiles;
+                    this.trigger('error', err);
+                    if (this.defaults.showErrors) {
+                        new Alert('danger', {
+                            message: err,
+                            timer: 6000
+                        });
+                    }
+                    return;
+                }
+
                 for (var i = 0; i < files.length; i++) {
                     var file = files[i];
                     this.uploadSingle(file, i);
@@ -358,12 +391,17 @@ var Droppad = function () {
                 setTimeout(function () {
                     _this6.el_progressbar.style.display = 'block';
                 }, 400);
+
+                this.successCounter = this.successCounter ? this.successCounter + 1 : 1;
+                if (this.filesLenght === this.successCounter) {
+                    this.trigger('complete');
+                }
             }
         }, {
             key: 'uploadError',
             value: function uploadError(data) {
                 this.trigger('error', data);
-                alert('danger', 'not successfull');
+                new Alert('danger', 'not successfull');
             }
 
             //add to Utils?

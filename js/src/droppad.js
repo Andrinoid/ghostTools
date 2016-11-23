@@ -147,12 +147,26 @@ const Droppad = (() => {
         url: '',
         backgroundImage: '',
         maxFilesize: 8, //in MB
+        maxFiles: 20,
         paramName: "file", //TODO
         includeStyles: true,
         acceptedFiles: 'jpeg, jpg, png, gif',
         showErrors: true,
         title: 'Drop Image',
-        subTitle: 'or click here'
+        subTitle: 'or click here',
+        customHandler: false
+
+        //Event triggers
+
+        // success - Fires for success on each uploaded file
+        // error
+        // complete - Fires when all files have been uploaded
+        
+        // dragover
+        // dragenter
+        // dragleave
+        // drop
+        // progress
     };
 
     let Template = `
@@ -430,6 +444,25 @@ const Droppad = (() => {
                 loads: Utils.range(files.length, 0, 0), // returns e.q [0,0,0] for three files
             };
 
+            this.filesLenght = files.length;
+
+            if(this.defaults.customHandler){
+                this.defaults.customHandler(files);
+                return;
+            }
+
+            if (files.length > this.defaults.maxFiles) {
+                const err = 'The maximum amount of files you can upload is ' + this.defaults.maxFiles
+                this.trigger('error', err);
+                if (this.defaults.showErrors) {
+                    new Alert('danger', {
+                        message: err,
+                        timer: 6000
+                    });
+                }
+                return;
+            }
+
             for (let i = 0; i < files.length; i++) {
                 let file = files[i];
                 this.uploadSingle(file, i);
@@ -458,6 +491,11 @@ const Droppad = (() => {
             setTimeout(() => {
                 this.el_progressbar.style.display = 'block';
             }, 400);
+
+            this.successCounter = this.successCounter ? (this.successCounter + 1) : 1;
+            if(this.filesLenght === this.successCounter){
+                this.trigger('complete');
+            }
 
         }
 

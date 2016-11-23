@@ -1,6 +1,35 @@
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+/**
+ * ------------------------------------------------------------------------
+ * Polyfills
+ * ------------------------------------------------------------------------
+ */
+
+//http://stackoverflow.com/questions/8830839/javascript-dom-remove-element
+(function () {
+    var typesToPatch = ['DocumentType', 'Element', 'CharacterData'],
+        remove = function remove() {
+        // The check here seems pointless, since we're not adding this
+        // method to the prototypes of any any elements that CAN be the
+        // root of the DOM. However, it's required by spec (see point 1 of
+        // https://dom.spec.whatwg.org/#dom-childnode-remove) and would
+        // theoretically make a difference if somebody .apply()ed this
+        // method to the DOM's root node, so let's roll with it.
+        if (this.parentNode != null) {
+            this.parentNode.removeChild(this);
+        }
+    };
+
+    for (var i = 0; i < typesToPatch.length; i++) {
+        var type = typesToPatch[i];
+        if (window[type] && !window[type].prototype.remove) {
+            window[type].prototype.remove = remove;
+        }
+    }
+})();
 
 /**
  * ------------------------------------------------------------------------
@@ -131,11 +160,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * https://github.com/Andrinoid/ElementGenerator.js
  * ------------------------------------------------------------------------
  */
-
 var Elm = function () {
     //Simple element generator. Mootools style
     //tries to find method for keys in options and run it
-
     function Elm(type, options, parent, injectType) {
         _classCallCheck(this, Elm);
 
@@ -352,7 +379,7 @@ var Modal = function () {
                 this.backdrop = new Elm('div.modal-backdrop', document.body);
             }
 
-            var header = this.defaults.title ? '<div class="modal-header">\n                    <button type="button" class="close"><span>×</span></button>\n                    <h4 class="modal-title" id="myModalLabel">' + this.defaults.title + '</h4>\n                </div>' : '<button type="button" class="close standalone"><span>×</span></button>';
+            var header = this.defaults.title ? '<div class="modal-header">\n                    <button type="button" class="close"><span>\xD7</span></button>\n                    <h4 class="modal-title" id="myModalLabel">' + this.defaults.title + '</h4>\n                </div>' : '<button type="button" class="close standalone"><span>×</span></button>';
 
             var main = '\n                <div class="js_modal fadeInDown">\n                    <div class="js_dialog ' + sizeClass + '">\n                        <div class="modal-content">\n                            ' + header + '\n                            <div class="modal-body">\n                                <div>' + this.defaults.message + '</div>\n                            </div>\n                        </div>\n                    </div>\n                </div>';
 
@@ -394,7 +421,7 @@ var Modal = function () {
         value: function _close() {
             var _this3 = this;
 
-            var cb = arguments.length <= 0 || arguments[0] === undefined ? function () {} : arguments[0];
+            var cb = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function () {};
 
             if (this.defaults.withBackdrop) {
                 Utils.fadeOutRemove(this.backdrop);
@@ -519,7 +546,7 @@ var Alert = function () {
                 this.backdrop = new Elm('div.modal-backdrop', document.body);
             }
 
-            var header = this.defaults.title ? '<div class="modal-header">\n                    <button type="button" class="close"><span>×</span></button>\n                    <h4 class="modal-title" id="myModalLabel">' + this.defaults.title + '</h4>\n                </div>' : '<button type="button" class="close standalone"><span>×</span></button>';
+            var header = this.defaults.title ? '<div class="modal-header">\n                    <button type="button" class="close"><span>\xD7</span></button>\n                    <h4 class="modal-title" id="myModalLabel">' + this.defaults.title + '</h4>\n                </div>' : '<button type="button" class="close standalone"><span>×</span></button>';
 
             var main = '\n                <div class="js_modal fadeInDown">\n                    <div class="js_dialog ' + sizeClass + '">\n                        <div class="modal-content">\n                            ' + header + '\n                            <div class="modal-body">\n                                <div>' + this.defaults.message + '</div>\n                            </div>\n                        </div>\n                    </div>\n                </div>';
 
@@ -570,7 +597,7 @@ var Alert = function () {
         value: function _close() {
             var _this3 = this;
 
-            var cb = arguments.length <= 0 || arguments[0] === undefined ? function () {} : arguments[0];
+            var cb = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function () {};
 
             if (this.defaults.withBackdrop) {
                 Utils.fadeOutRemove(this.backdrop);
@@ -602,7 +629,7 @@ Alert.prototype.closeAll = function () {
 };
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -787,7 +814,6 @@ var FormGenerator = function () {
 
     _createClass(FormGenerator, [{
         key: 'onChange',
-        //TODO add validatiors
         value: function onChange(e) {}
 
         /**
@@ -798,7 +824,7 @@ var FormGenerator = function () {
     }, {
         key: 'getKeychain',
         value: function getKeychain(el) {
-            var raw = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+            var raw = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
             //var keyList = ['value']; //list is reversed so this is the end key // reference for adding value to the end
             var keyList = []; //list is reversed so this is the end key
@@ -817,8 +843,8 @@ var FormGenerator = function () {
         value: function getAllKeychains() {
             var _this = this;
 
-            var prefix = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
-            var suffix = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+            var prefix = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+            var suffix = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
             prefix = prefix ? prefix += '.' : '';
             suffix = suffix ? '.' + suffix : '';
@@ -855,7 +881,7 @@ var FormGenerator = function () {
     }, {
         key: 'getCycleKey',
         value: function getCycleKey(key) {
-            var reverse = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+            var reverse = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
             if (this.arrayIndex || this.arrayIndex === 0) {
                 if (reverse) {
@@ -957,7 +983,7 @@ var FormGenerator = function () {
     }, {
         key: 'subFormWrapper',
         value: function subFormWrapper(parent) {
-            var toggle = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+            var toggle = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
             var key = this.getCycleKey(this.currentKey);
             var label = void 0;
@@ -1568,12 +1594,26 @@ var Droppad = function () {
         url: '',
         backgroundImage: '',
         maxFilesize: 8, //in MB
+        maxFiles: 20,
         paramName: "file", //TODO
         includeStyles: true,
         acceptedFiles: 'jpeg, jpg, png, gif',
         showErrors: true,
         title: 'Drop Image',
-        subTitle: 'or click here'
+        subTitle: 'or click here',
+        customHandler: false
+
+        //Event triggers
+
+        // success - Fires for success on each uploaded file
+        // error
+        // complete - Fires when all files have been uploaded
+
+        // dragover
+        // dragenter
+        // dragleave
+        // drop
+        // progress
     };
 
     var Template = '\n        <div class="progressbar"></div>\n        <div class="fillSpace afterLoad">\n\n        </div>\n        <div class="fillSpace beforeLoad">\n\n        </div>\n        <div class="dropSheet shown">\n            <div>\n                <div class="dropLabel">\n                    <p>*|title|*</p>\n                    <p>\n                        <small>*|subTitle|*</small>\n                    </p>\n                </div>\n            </div>\n        </div>\n    ';
@@ -1584,7 +1624,7 @@ var Droppad = function () {
         function Droppad(elm, options) {
             _classCallCheck(this, Droppad);
 
-            var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Droppad).call(this));
+            var _this = _possibleConstructorReturn(this, (Droppad.__proto__ || Object.getPrototypeOf(Droppad)).call(this));
 
             _this.defaults = Utils.extend(Default, options);
             _this.droppad = elm;
@@ -1815,6 +1855,7 @@ var Droppad = function () {
                 }
                 formData.append('file', file, file.name); //file.name is not required Check server side implementation of this
 
+
                 var xhr = new XMLHttpRequest();
                 //add trailing slash if doesn't exists
                 var url = this.defaults.url;
@@ -1848,7 +1889,25 @@ var Droppad = function () {
                     totals: Utils.range(files.length, 0, 0),
                     loads: Utils.range(files.length, 0, 0) };
 
-                // returns e.q [0,0,0] for three files
+                this.filesLenght = files.length;
+
+                if (this.defaults.customHandler) {
+                    this.defaults.customHandler(files);
+                    return;
+                }
+
+                if (files.length > this.defaults.maxFiles) {
+                    var err = 'The maximum amount of files you can upload is ' + this.defaults.maxFiles;
+                    this.trigger('error', err);
+                    if (this.defaults.showErrors) {
+                        new Alert('danger', {
+                            message: err,
+                            timer: 6000
+                        });
+                    }
+                    return;
+                }
+
                 for (var i = 0; i < files.length; i++) {
                     var file = files[i];
                     this.uploadSingle(file, i);
@@ -1885,12 +1944,17 @@ var Droppad = function () {
                 setTimeout(function () {
                     _this6.el_progressbar.style.display = 'block';
                 }, 400);
+
+                this.successCounter = this.successCounter ? this.successCounter + 1 : 1;
+                if (this.filesLenght === this.successCounter) {
+                    this.trigger('complete');
+                }
             }
         }, {
             key: 'uploadError',
             value: function uploadError(data) {
                 this.trigger('error', data);
-                alert('danger', 'not successfull');
+                new Alert('danger', 'not successfull');
             }
 
             //add to Utils?
@@ -2035,8 +2099,6 @@ var Backdrop = function () {
         allowMany: false,
         closeOnClick: true };
 
-    //TODO emmitt this event
-
     var Backdrop = function () {
         function Backdrop(options) {
             _classCallCheck(this, Backdrop);
@@ -2153,7 +2215,7 @@ var Preloader = function () {
         function Preloader(pathList, options) {
             _classCallCheck(this, Preloader);
 
-            var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Preloader).call(this));
+            var _this = _possibleConstructorReturn(this, (Preloader.__proto__ || Object.getPrototypeOf(Preloader)).call(this));
 
             _this.defaults = {
                 prefix: null
