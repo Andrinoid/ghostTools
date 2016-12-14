@@ -25,7 +25,7 @@ var Droppad = function () {
      * Constants
      * ------------------------------------------------------------------------
      */
-    var STYLES = '\n        .imageCloud {\n            position: relative;\n            background-size: cover;\n            background-position: 50% 50%;\n            cursor: pointer;\n            font-family: arial, serif;\n            min-height: 200px;\n            display: flex;\n        }\n        .imageCloud input {\n            position: absolute;\n            top: 0;\n            right: 0;\n            bottom: 0;\n            left: 0;\n        }\n        .imageCloud .dropSheet {\n            position: absolute;\n            top: 0;\n            bottom: 0;\n            left: 0;\n            right: 0;\n            background: rgba(0, 0, 0, 0.5);\n            text-align: center;\n            padding: 10px;\n            opacity: 0;\n            transition: ease all 0.5s;\n            pointer-events: none;\n        }\n\n        .imageCloud .dropSheet.shown {\n            background: rgba(0, 0, 0, 0);\n            opacity: 1;\n        }\n\n        .imageCloud:hover .dropSheet {\n            background: rgba(0, 0, 0, 0.5);\n            opacity: 1;\n        }\n        .imageCloud:hover .dropSheet > div .dropLabel {\n            text-shadow: none;\n        }\n        .imageCloud.active {\n            background: rgba(0, 0, 0, 0.5);\n            background-size: cover;\n            background-position: center;\n        }\n\n        .imageCloud .dropSheet > div {\n            padding: 10px;\n            color: white;\n            border: dashed 2px #fff;\n            position: absolute;\n            top: 10px;\n            bottom: 10px;\n            left: 10px;\n            right: 10px;\n        }\n\n        .imageCloud .dropSheet > div .dropLabel {\n            position: absolute;\n            top: 50%;\n            left: 50%;\n            transform: translate(-50%, -50%);\n            white-space: nowrap;\n            transition: ease all 0.5s;\n            text-shadow: rgb(122, 122, 122) 1.5px 1.5px 0px, 0px 0px 9px rgba(0, 0, 0, 0.45);\n        }\n\n        .imageCloud .dropSheet > div p {\n            font-size: 18px;\n        }\n\n        .imageCloud .fallBack {\n            flex-grow: 1;\n            pointer-events: none;\n            background-color: gray;\n            background-size: cover;\n            background-position: center;\n        }\n\n        .imageCloud .loadedImage {\n            flex-grow: 1;\n            pointer-events: none;\n            opacity: 0;\n            transition: ease opacity 0.5s;\n            background-size: cover;\n            background-position: center;\n            -webkit-filter: grayscale(100%); /* Chrome, Safari, Opera */\n            filter: grayscale(100%);\n        }\n        .imageCloud .progressbar {\n            position: absolute;\n            top: 0;\n            left: 0;\n            height: 6px;\n            width: 0%;\n            background: #4caf50;\n            z-index: 1;\n            transition: ease all 1s\n        }\n        .droppad-input {\n            position: absolute;\n            top: 0;\n            left: 0;\n            height: 0;\n            width: 0;\n            visibility: hidden;\n        }\n        .fillSpace {\n            position: absolute;\n            top: 0;\n            left: 0;\n            right: 0;\n            bottom: 0;\n            display: flex;\n            pointer-events: none;\n        }\n    ';
+    var STYLES = '\n        .imageCloud {\n            position: relative;\n            background-size: cover;\n            background-position: 50% 50%;\n            cursor: pointer;\n            font-family: arial, serif;\n            min-height: 200px;\n            display: flex;\n        }\n        .imageCloud input {\n            position: absolute;\n            top: 0;\n            right: 0;\n            bottom: 0;\n            left: 0;\n        }\n        .imageCloud .dropSheet {\n            position: absolute;\n            top: 0;\n            bottom: 0;\n            left: 0;\n            right: 0;\n            background: rgba(0, 0, 0, 0.5);\n            text-align: center;\n            padding: 10px;\n            opacity: 0;\n            transition: ease all 0.5s;\n            pointer-events: none;\n        }\n\n        .imageCloud .dropSheet.shown {\n            background: rgba(0, 0, 0, 0);\n            opacity: 1;\n        }\n\n        .imageCloud:hover .dropSheet {\n            background: rgba(0, 0, 0, 0.5);\n            opacity: 1;\n        }\n        .imageCloud:hover .dropSheet > div .dropLabel {\n            text-shadow: none;\n        }\n        .imageCloud.active {\n            background: rgba(0, 0, 0, 0.5);\n            background-size: cover;\n            background-position: center;\n        }\n\n        .imageCloud .dropSheet > div {\n            padding: 10px;\n            color: white;\n            border: dashed 2px #fff;\n            position: absolute;\n            top: 10px;\n            bottom: 10px;\n            left: 10px;\n            right: 10px;\n        }\n\n        .imageCloud .dropSheet > div .dropLabel {\n            position: absolute;\n            top: 50%;\n            left: 50%;\n            transform: translate(-50%, -50%);\n            transition: ease all 0.5s;\n            text-shadow: rgb(122, 122, 122) 1.5px 1.5px 0px, 0px 0px 9px rgba(0, 0, 0, 0.45);\n            width: 100%;\n        }\n\n        .imageCloud .dropSheet > div p {\n            font-size: 18px;\n        }\n\n        .imageCloud .fallBack {\n            flex-grow: 1;\n            pointer-events: none;\n            background-color: gray;\n            background-size: cover;\n            background-position: center;\n        }\n\n        .imageCloud .loadedImage {\n            flex-grow: 1;\n            pointer-events: none;\n            opacity: 0;\n            transition: ease opacity 0.5s;\n            background-size: cover;\n            background-position: center;\n            -webkit-filter: grayscale(100%); /* Chrome, Safari, Opera */\n            filter: grayscale(100%);\n        }\n        .imageCloud .progressbar {\n            position: absolute;\n            top: 0;\n            left: 0;\n            height: 6px;\n            width: 0%;\n            background: #4caf50;\n            z-index: 1;\n            transition: ease all 1s\n        }\n        .droppad-input {\n            position: absolute;\n            top: 0;\n            left: 0;\n            height: 0;\n            width: 0;\n            visibility: hidden;\n        }\n        .fillSpace {\n            position: absolute;\n            top: 0;\n            left: 0;\n            right: 0;\n            bottom: 0;\n            display: flex;\n            pointer-events: none;\n        }\n    ';
 
     var Default = {
         backgroundUrlPrefix: '',
@@ -43,6 +43,7 @@ var Droppad = function () {
 
         //Event triggers
 
+        // start - Fires when an upload starts
         // success - Fires for success on each uploaded file
         // error
         // complete - Fires when all files have been uploaded
@@ -64,7 +65,8 @@ var Droppad = function () {
 
             var _this = _possibleConstructorReturn(this, (Droppad.__proto__ || Object.getPrototypeOf(Droppad)).call(this));
 
-            _this.defaults = Utils.extend(Default, options);
+            var defaultOpt = JSON.parse(JSON.stringify(Default));
+            _this.defaults = Utils.extend(defaultOpt, options);
             _this.droppad = elm;
             _this.currentImage = null;
             _this.beforeElmQue = [];
@@ -306,7 +308,7 @@ var Droppad = function () {
                     if (xhr.readyState !== 4) return;
                     var data = Utils.attemptJson(xhr.responseText);
                     if (xhr.status === 200) {
-                        _this5.uploadSuccess(data);
+                        _this5.uploadSuccess(data, file);
                     } else {
                         _this5.uploadError(data);
                         //TODO show this to the user
@@ -323,6 +325,7 @@ var Droppad = function () {
         }, {
             key: 'upload',
             value: function upload(files) {
+                this.trigger('start');
                 this.chunkTotal = {
                     totals: Utils.range(files.length, 0, 0),
                     loads: Utils.range(files.length, 0, 0) };
@@ -366,9 +369,10 @@ var Droppad = function () {
             }
         }, {
             key: 'uploadSuccess',
-            value: function uploadSuccess(data) {
+            value: function uploadSuccess(data, file) {
                 var _this6 = this;
 
+                data['file'] = file;
                 this.trigger('success', data);
 
                 this.el_progressbar.style.display = 'none';

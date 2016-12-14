@@ -52,6 +52,7 @@ var Droppad = function () {
 
         //Event triggers
 
+        // start - Fires when an upload starts
         // success - Fires for success on each uploaded file
         // error
         // complete - Fires when all files have been uploaded
@@ -73,7 +74,8 @@ var Droppad = function () {
 
             var _this = _possibleConstructorReturn(this, (Droppad.__proto__ || Object.getPrototypeOf(Droppad)).call(this));
 
-            _this.defaults = Utils.extend(Default, options);
+            var defaultOpt = JSON.parse(JSON.stringify(Default));
+            _this.defaults = Utils.extend(defaultOpt, options);
             _this.droppad = elm;
             _this.currentImage = null;
             _this.beforeElmQue = [];
@@ -315,7 +317,7 @@ var Droppad = function () {
                     if (xhr.readyState !== 4) return;
                     var data = Utils.attemptJson(xhr.responseText);
                     if (xhr.status === 200) {
-                        _this5.uploadSuccess(data);
+                        _this5.uploadSuccess(data, file);
                     } else {
                         _this5.uploadError(data);
                         //TODO show this to the user
@@ -332,6 +334,7 @@ var Droppad = function () {
         }, {
             key: 'upload',
             value: function upload(files) {
+                this.trigger('start');
                 this.chunkTotal = {
                     totals: Utils.range(files.length, 0, 0),
                     loads: Utils.range(files.length, 0, 0) };
@@ -375,9 +378,10 @@ var Droppad = function () {
             }
         }, {
             key: 'uploadSuccess',
-            value: function uploadSuccess(data) {
+            value: function uploadSuccess(data, file) {
                 var _this6 = this;
 
+                data['file'] = file;
                 this.trigger('success', data);
 
                 this.el_progressbar.style.display = 'none';
@@ -395,6 +399,8 @@ var Droppad = function () {
                 this.successCounter = this.successCounter ? this.successCounter + 1 : 1;
                 if (this.filesLenght === this.successCounter) {
                     this.trigger('complete');
+                    this.successCounter = 0;
+                    this.filesLenght = 0;
                 }
             }
         }, {

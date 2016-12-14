@@ -86,9 +86,9 @@ const Droppad = (() => {
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            white-space: nowrap;
             transition: ease all 0.5s;
             text-shadow: rgb(122, 122, 122) 1.5px 1.5px 0px, 0px 0px 9px rgba(0, 0, 0, 0.45);
+            width: 100%;
         }
 
         .imageCloud .dropSheet > div p {
@@ -158,6 +158,7 @@ const Droppad = (() => {
 
         //Event triggers
 
+        // start - Fires when an upload starts
         // success - Fires for success on each uploaded file
         // error
         // complete - Fires when all files have been uploaded
@@ -193,7 +194,8 @@ const Droppad = (() => {
 
         constructor(elm, options) {
                 super();
-                this.defaults = Utils.extend(Default, options);
+                let defaultOpt = JSON.parse(JSON.stringify(Default))
+                this.defaults = Utils.extend(defaultOpt, options);
                 this.droppad = elm;
                 this.currentImage = null;
                 this.beforeElmQue = [];
@@ -423,7 +425,7 @@ const Droppad = (() => {
                     return;
                 var data = Utils.attemptJson(xhr.responseText);
                 if (xhr.status === 200) {
-                    this.uploadSuccess(data);
+                    this.uploadSuccess(data, file);
                 } else {
                     this.uploadError(data);
                     //TODO show this to the user
@@ -439,6 +441,7 @@ const Droppad = (() => {
         }
 
         upload(files) {
+            this.trigger('start');
             this.chunkTotal = {
                 totals: Utils.range(files.length, 0, 0),
                 loads: Utils.range(files.length, 0, 0), // returns e.q [0,0,0] for three files
@@ -452,7 +455,7 @@ const Droppad = (() => {
             }
 
             if (files.length > this.defaults.maxFiles) {
-                const err = 'The maximum amount of files you can upload is ' + this.defaults.maxFiles
+                const err = 'The maximum amount of files you can upload is ' + this.defaults.maxFiles;
                 this.trigger('error', err);
                 if (this.defaults.showErrors) {
                     new Alert('danger', {
@@ -477,7 +480,8 @@ const Droppad = (() => {
             this.el_progressbar.style.width = percentage + '%';
         }
 
-        uploadSuccess(data) {
+        uploadSuccess(data, file) {
+            data['file'] = file;
             this.trigger('success', data);
 
             this.el_progressbar.style.display = 'none';
