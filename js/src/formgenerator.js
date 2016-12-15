@@ -497,6 +497,7 @@ class FormGenerator {
          */
         else if (model.type === 'image') {
             wrapper = this.defaultWrapper(model, parent, key);
+            console.log(wrapper);
             model['data-keychain'] = this.getKeychain(wrapper);
             element = new Elm(model.element, model, wrapper);
             model.backgroundImage = model.value;
@@ -505,6 +506,7 @@ class FormGenerator {
 
             // onchange for images
             droppad.on('success', (data) => {
+                Utils.removeClass(wrapper.parentNode, 'has-error');
                 element.setAttribute('elm-value', data.image);
                 this.onChange(data);
             });
@@ -654,23 +656,24 @@ class FormGenerator {
             * return if no value. otherwise, loop through given validation on this model
             * and collect those who return false and set error class on wrapper parent
             */
-            if(model.required && !elm.value) {
+            let val = elm.getAttribute('elm-value');
+
+            if(model.required && !val) {
                 errors.push('required');
             }
-            
+
             if(model.validation) {
                 model.validation.forEach((item)=> {
-                    !self.validators[item](elm.value) && errors.push(item);
+                    !self.validators[item](val) && errors.push(item);
                 });
             }
             if(errors.length) {
                 let formGroup = Utils.findAncestor(elm, 'form-group');
                 Utils.setClass(formGroup, 'has-error');
-                isValid = false
+                isValid = false;
             }
             // Locate the right object in the output and add the value to it
             // if no jsKeychain we are on the first level of the object so we just return the whole output object
-            let val = elm.getAttribute('elm-value');
             let parentObj;
             jsKeychain ? parentObj = eval('self.output.' + jsKeychain) : parentObj = this.output;
             parentObj[lastKey] = val;

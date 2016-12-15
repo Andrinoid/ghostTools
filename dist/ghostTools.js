@@ -1176,6 +1176,7 @@ var FormGenerator = function () {
              */
             else if (model.type === 'image') {
                     wrapper = this.defaultWrapper(model, parent, key);
+                    console.log(wrapper);
                     model['data-keychain'] = this.getKeychain(wrapper);
                     element = new Elm(model.element, model, wrapper);
                     model.backgroundImage = model.value;
@@ -1184,6 +1185,7 @@ var FormGenerator = function () {
 
                     // onchange for images
                     droppad.on('success', function (data) {
+                        Utils.removeClass(wrapper.parentNode, 'has-error');
                         element.setAttribute('elm-value', data.image);
                         _this4.onChange(data);
                     });
@@ -1343,13 +1345,15 @@ var FormGenerator = function () {
                 * return if no value. otherwise, loop through given validation on this model
                 * and collect those who return false and set error class on wrapper parent
                 */
-                if (model.required && !elm.value) {
+                var val = elm.getAttribute('elm-value');
+
+                if (model.required && !val) {
                     errors.push('required');
                 }
 
                 if (model.validation) {
                     model.validation.forEach(function (item) {
-                        !self.validators[item](elm.value) && errors.push(item);
+                        !self.validators[item](val) && errors.push(item);
                     });
                 }
                 if (errors.length) {
@@ -1359,7 +1363,6 @@ var FormGenerator = function () {
                 }
                 // Locate the right object in the output and add the value to it
                 // if no jsKeychain we are on the first level of the object so we just return the whole output object
-                var val = elm.getAttribute('elm-value');
                 var parentObj = void 0;
                 jsKeychain ? parentObj = eval('self.output.' + jsKeychain) : parentObj = _this7.output;
                 parentObj[lastKey] = val;
