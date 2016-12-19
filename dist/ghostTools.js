@@ -1,6 +1,6 @@
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 /**
  * ------------------------------------------------------------------------
@@ -160,9 +160,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * https://github.com/Andrinoid/ElementGenerator.js
  * ------------------------------------------------------------------------
  */
+
 var Elm = function () {
     //Simple element generator. Mootools style
     //tries to find method for keys in options and run it
+
     function Elm(type, options, parent, injectType) {
         _classCallCheck(this, Elm);
 
@@ -379,7 +381,7 @@ var Modal = function () {
                 this.backdrop = new Elm('div.modal-backdrop', document.body);
             }
 
-            var header = this.defaults.title ? '<div class="modal-header">\n                    <button type="button" class="close"><span>\xD7</span></button>\n                    <h4 class="modal-title" id="myModalLabel">' + this.defaults.title + '</h4>\n                </div>' : '<button type="button" class="close standalone"><span>×</span></button>';
+            var header = this.defaults.title ? '<div class="modal-header">\n                    <button type="button" class="close"><span>×</span></button>\n                    <h4 class="modal-title" id="myModalLabel">' + this.defaults.title + '</h4>\n                </div>' : '<button type="button" class="close standalone"><span>×</span></button>';
 
             var main = '\n                <div class="js_modal fadeInDown">\n                    <div class="js_dialog ' + sizeClass + '">\n                        <div class="modal-content">\n                            ' + header + '\n                            <div class="modal-body">\n                                <div>' + this.defaults.message + '</div>\n                            </div>\n                        </div>\n                    </div>\n                </div>';
 
@@ -421,7 +423,7 @@ var Modal = function () {
         value: function _close() {
             var _this3 = this;
 
-            var cb = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function () {};
+            var cb = arguments.length <= 0 || arguments[0] === undefined ? function () {} : arguments[0];
 
             if (this.defaults.withBackdrop) {
                 Utils.fadeOutRemove(this.backdrop);
@@ -546,7 +548,7 @@ var Alert = function () {
                 this.backdrop = new Elm('div.modal-backdrop', document.body);
             }
 
-            var header = this.defaults.title ? '<div class="modal-header">\n                    <button type="button" class="close"><span>\xD7</span></button>\n                    <h4 class="modal-title" id="myModalLabel">' + this.defaults.title + '</h4>\n                </div>' : '<button type="button" class="close standalone"><span>×</span></button>';
+            var header = this.defaults.title ? '<div class="modal-header">\n                    <button type="button" class="close"><span>×</span></button>\n                    <h4 class="modal-title" id="myModalLabel">' + this.defaults.title + '</h4>\n                </div>' : '<button type="button" class="close standalone"><span>×</span></button>';
 
             var main = '\n                <div class="js_modal fadeInDown">\n                    <div class="js_dialog ' + sizeClass + '">\n                        <div class="modal-content">\n                            ' + header + '\n                            <div class="modal-body">\n                                <div>' + this.defaults.message + '</div>\n                            </div>\n                        </div>\n                    </div>\n                </div>';
 
@@ -597,7 +599,7 @@ var Alert = function () {
         value: function _close() {
             var _this3 = this;
 
-            var cb = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function () {};
+            var cb = arguments.length <= 0 || arguments[0] === undefined ? function () {} : arguments[0];
 
             if (this.defaults.withBackdrop) {
                 Utils.fadeOutRemove(this.backdrop);
@@ -629,7 +631,7 @@ Alert.prototype.closeAll = function () {
 };
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -814,6 +816,7 @@ var FormGenerator = function () {
 
     _createClass(FormGenerator, [{
         key: 'onChange',
+        //TODO add validatiors
         value: function onChange(e) {}
 
         /**
@@ -824,7 +827,7 @@ var FormGenerator = function () {
     }, {
         key: 'getKeychain',
         value: function getKeychain(el) {
-            var raw = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+            var raw = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
 
             //var keyList = ['value']; //list is reversed so this is the end key // reference for adding value to the end
             var keyList = []; //list is reversed so this is the end key
@@ -843,8 +846,8 @@ var FormGenerator = function () {
         value: function getAllKeychains() {
             var _this = this;
 
-            var prefix = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-            var suffix = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+            var prefix = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+            var suffix = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 
             prefix = prefix ? prefix += '.' : '';
             suffix = suffix ? '.' + suffix : '';
@@ -881,7 +884,7 @@ var FormGenerator = function () {
     }, {
         key: 'getCycleKey',
         value: function getCycleKey(key) {
-            var reverse = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+            var reverse = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
 
             if (this.arrayIndex || this.arrayIndex === 0) {
                 if (reverse) {
@@ -983,7 +986,7 @@ var FormGenerator = function () {
     }, {
         key: 'subFormWrapper',
         value: function subFormWrapper(parent) {
-            var toggle = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+            var toggle = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
 
             var key = this.getCycleKey(this.currentKey);
             var label = void 0;
@@ -1628,7 +1631,7 @@ var Droppad = function () {
         function Droppad(elm, options) {
             _classCallCheck(this, Droppad);
 
-            var _this = _possibleConstructorReturn(this, (Droppad.__proto__ || Object.getPrototypeOf(Droppad)).call(this));
+            var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Droppad).call(this));
 
             var defaultOpt = JSON.parse(JSON.stringify(Default));
             _this.defaults = Utils.extend(defaultOpt, options);
@@ -1860,7 +1863,6 @@ var Droppad = function () {
                 }
                 formData.append('file', file, file.name); //file.name is not required Check server side implementation of this
 
-
                 var xhr = new XMLHttpRequest();
                 //add trailing slash if doesn't exists
                 var url = this.defaults.url;
@@ -1895,6 +1897,7 @@ var Droppad = function () {
                     totals: Utils.range(files.length, 0, 0),
                     loads: Utils.range(files.length, 0, 0) };
 
+                // returns e.q [0,0,0] for three files
                 this.filesLenght = files.length;
 
                 if (this.defaults.customHandler) {
@@ -2039,16 +2042,20 @@ var Loader = function () {
 
     var Default = {
         template: '0', // 0 or 1
-        parent: document.body
+        parent: document.body,
+        allowMany: false
     };
 
     var Loader = function () {
         function Loader(options) {
             _classCallCheck(this, Loader);
 
-            this.__proto__.removeAll();
-            this.__proto__.instances.push(this);
+            this.id = 'loader-' + ++this.__proto__.counter;
             this.defaults = Utils.extend(Default, options);
+            if (!this.defaults.allowMany) {
+                this.__proto__.removeAll();
+            }
+            this.__proto__.instances[this.id] = this;
             this.createDOM();
         }
 
@@ -2056,6 +2063,7 @@ var Loader = function () {
             key: 'createDOM',
             value: function createDOM() {
                 var wrapper = document.createElement('div');
+                wrapper.id = this.id;
                 wrapper.className = 'simpleLoader';
                 wrapper.innerHTML = Templates[this.defaults.template];
                 this.defaults.parent.appendChild(wrapper);
@@ -2063,10 +2071,9 @@ var Loader = function () {
         }, {
             key: 'remove',
             value: function remove() {
-                var loaders = document.querySelectorAll('.simpleLoader');
-                for (var i = 0; i < loaders.length; i++) {
-                    loaders[i].parentNode.removeChild(loaders[i]);
-                }
+                var loader = document.querySelector('#' + this.id);
+                loader.parentNode.removeChild(loader);
+                delete this.__proto__.instances[this.id];
             }
         }]);
 
@@ -2075,9 +2082,10 @@ var Loader = function () {
 
     return Loader;
 }();
-Loader.prototype.instances = [];
+Loader.prototype.instances = {};
+Loader.prototype.counter = 0;
 Loader.prototype.removeAll = function () {
-    this.instances.forEach(function (item) {
+    Utils.foreach(this.instances, function (item) {
         item.remove();
     });
     this.instances.length = 0;
@@ -2107,6 +2115,8 @@ var Backdrop = function () {
         'zIndex': 2001,
         allowMany: false,
         closeOnClick: true };
+
+    //TODO emmitt this event
 
     var Backdrop = function () {
         function Backdrop(options) {
@@ -2224,7 +2234,7 @@ var Preloader = function () {
         function Preloader(pathList, options) {
             _classCallCheck(this, Preloader);
 
-            var _this = _possibleConstructorReturn(this, (Preloader.__proto__ || Object.getPrototypeOf(Preloader)).call(this));
+            var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Preloader).call(this));
 
             _this.defaults = {
                 prefix: null

@@ -1,6 +1,6 @@
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -185,6 +185,7 @@ var FormGenerator = function () {
 
     _createClass(FormGenerator, [{
         key: 'onChange',
+        //TODO add validatiors
         value: function onChange(e) {}
 
         /**
@@ -195,7 +196,7 @@ var FormGenerator = function () {
     }, {
         key: 'getKeychain',
         value: function getKeychain(el) {
-            var raw = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+            var raw = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
 
             //var keyList = ['value']; //list is reversed so this is the end key // reference for adding value to the end
             var keyList = []; //list is reversed so this is the end key
@@ -214,8 +215,8 @@ var FormGenerator = function () {
         value: function getAllKeychains() {
             var _this = this;
 
-            var prefix = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-            var suffix = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+            var prefix = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+            var suffix = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 
             prefix = prefix ? prefix += '.' : '';
             suffix = suffix ? '.' + suffix : '';
@@ -252,7 +253,7 @@ var FormGenerator = function () {
     }, {
         key: 'getCycleKey',
         value: function getCycleKey(key) {
-            var reverse = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+            var reverse = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
 
             if (this.arrayIndex || this.arrayIndex === 0) {
                 if (reverse) {
@@ -354,7 +355,7 @@ var FormGenerator = function () {
     }, {
         key: 'subFormWrapper',
         value: function subFormWrapper(parent) {
-            var toggle = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+            var toggle = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
 
             var key = this.getCycleKey(this.currentKey);
             var label = void 0;

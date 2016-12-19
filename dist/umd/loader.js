@@ -35,16 +35,20 @@ var Loader = function () {
 
     var Default = {
         template: '0', // 0 or 1
-        parent: document.body
+        parent: document.body,
+        allowMany: false
     };
 
     var Loader = function () {
         function Loader(options) {
             _classCallCheck(this, Loader);
 
-            this.__proto__.removeAll();
-            this.__proto__.instances.push(this);
+            this.id = 'loader-' + ++this.__proto__.counter;
             this.defaults = Utils.extend(Default, options);
+            if (!this.defaults.allowMany) {
+                this.__proto__.removeAll();
+            }
+            this.__proto__.instances[this.id] = this;
             this.createDOM();
         }
 
@@ -52,6 +56,7 @@ var Loader = function () {
             key: 'createDOM',
             value: function createDOM() {
                 var wrapper = document.createElement('div');
+                wrapper.id = this.id;
                 wrapper.className = 'simpleLoader';
                 wrapper.innerHTML = Templates[this.defaults.template];
                 this.defaults.parent.appendChild(wrapper);
@@ -59,10 +64,9 @@ var Loader = function () {
         }, {
             key: 'remove',
             value: function remove() {
-                var loaders = document.querySelectorAll('.simpleLoader');
-                for (var i = 0; i < loaders.length; i++) {
-                    loaders[i].parentNode.removeChild(loaders[i]);
-                }
+                var loader = document.querySelector('#' + this.id);
+                loader.parentNode.removeChild(loader);
+                delete this.__proto__.instances[this.id];
             }
         }]);
 
@@ -71,11 +75,15 @@ var Loader = function () {
 
     return Loader;
 }();
-Loader.prototype.instances = [];
+Loader.prototype.instances = {};
+Loader.prototype.counter = 0;
 Loader.prototype.removeAll = function () {
-    this.instances.forEach(function (item) {
+    Utils.foreach(this.instances, function (item) {
         item.remove();
     });
+    // this.instances.forEach(function(item) {
+    //     item.remove();
+    // });
     this.instances.length = 0;
 };
 return Loader;

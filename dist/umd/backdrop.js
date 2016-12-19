@@ -33,6 +33,8 @@ var Backdrop = function () {
         allowMany: false,
         closeOnClick: true };
 
+    //TODO emmitt this event
+
     var Backdrop = function () {
         function Backdrop(options) {
             _classCallCheck(this, Backdrop);

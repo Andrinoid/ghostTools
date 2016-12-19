@@ -40,7 +40,7 @@ var Preloader = function () {
         function Preloader(pathList, options) {
             _classCallCheck(this, Preloader);
 
-            var _this = _possibleConstructorReturn(this, (Preloader.__proto__ || Object.getPrototypeOf(Preloader)).call(this));
+            var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Preloader).call(this));
 
             _this.defaults = {
                 prefix: null
