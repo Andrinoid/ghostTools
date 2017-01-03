@@ -194,6 +194,10 @@
             "value": "",
             "required": true
         },
+        "donttell": {
+            "type": "hidden",
+            "value": 'foobar'
+        },
         "logo": {
             "type": "image",
             "label": "Brand logo",
@@ -214,7 +218,13 @@
             "rows": 5,
             "type": "textarea",
             "label": "Short description"
-        }
+        },
+        other: {
+           type: 'textarea',
+           label: 'Annað',
+           value: '',
+           helpText: 'Ef það er eitthvað sem þú vilt koma á framfæri með þinni pöntun'
+       },
     };
 
     var formgen = new FormGenerator(schema, document.querySelector('#formWrap'));

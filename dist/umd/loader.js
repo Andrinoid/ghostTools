@@ -81,9 +81,6 @@ Loader.prototype.removeAll = function () {
     Utils.foreach(this.instances, function (item) {
         item.remove();
     });
-    // this.instances.forEach(function(item) {
-    //     item.remove();
-    // });
     this.instances.length = 0;
 };
 return Loader;

@@ -92,6 +92,12 @@ var typeModels = {
         helpText: '',
         validation: []
     },
+    hidden: {
+        element: 'input',
+        type: 'hidden',
+        value: '',
+        validation: []
+    },
     number: {
         element: 'input',
         type: 'number',
