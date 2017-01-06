@@ -518,6 +518,7 @@ class FormGenerator {
             });
 
         }
+
         /**
          * No special treatment needed
          * these elements are normal html inputs and should have onchange event
@@ -534,9 +535,6 @@ class FormGenerator {
             });
             element.addEventListener('blur', function() {
                 /**
-                * Onchange validation
-                * TODO add validation for all types
-                * TODO merge with getData validation
                 * return if no value. otherwise, loop through given validation on this model
                 * and collect those who return false and set error class on wrapper parent
                 */
@@ -594,6 +592,10 @@ class FormGenerator {
             }
         } catch (err) {
             // No childnodes defined
+        }
+
+        if(model.type === 'select') {
+            element.setAttribute('elm-value', element.options[element.selectedIndex].value);
         }
     }
 

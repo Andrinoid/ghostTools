@@ -3,10 +3,8 @@
 
 <head>
     <title>Modal demo</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
-          integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
-          integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.min.js"></script>
     <script src="http://kotturinn.com/upload/js/inline-0.9.4.js"></script>
     <style media="screen">
@@ -26,55 +24,55 @@
             display: flex;
         }
 
-        .parent > div {
+        .parent>div {
             flex-grow: 1;
         }
     </style>
 </head>
 
 <body>
-<section class="flex">
-    <div class="parent">
-        <div>df</div>
-        <div>df</div>
-        <div>df</div>
-    </div>
-</section>
-<div class="wrapper">
-    <header>
+    <section class="flex">
+        <div class="parent">
+            <div>df</div>
+            <div>df</div>
+            <div>df</div>
+        </div>
+    </section>
+    <div class="wrapper">
+        <header>
+            <div class="container">
+                <h2>GhostTools.js</h2>
+                <hr>
+            </div>
+        </header>
         <div class="container">
-            <h2>GhostTools.js</h2>
-            <hr>
-        </div>
-    </header>
-    <div class="container">
-        <div class="panel">
-            <div class="panel-heading">
-                <h2>Droppad</h2>
-            </div>
-            <div class="panel-body">
-                <div class="dropper"></div>
+            <div class="panel">
+                <div class="panel-heading">
+                    <h2>Droppad</h2>
+                </div>
+                <div class="panel-body">
+                    <div class="dropper"></div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="container">
-        <div class="panel">
-            <div class="panel-heading">
-                <h2>Form Generator</h2>
-            </div>
-            <div class="panel-body">
-                <div class="row">
-                    <div id="formWrap" class="col-sm-5"></div>
-                    <div class="col-sm-7">
+        <div class="container">
+            <div class="panel">
+                <div class="panel-heading">
+                    <h2>Form Generator</h2>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div id="formWrap" class="col-sm-5"></div>
+                        <div class="col-sm-7">
 
-                        <div>
-                            <h3>data</h3>
+                            <div>
+                                <h3>data</h3>
 
-                            <div class="mb20">
-                                <div class="btn btn-default" id="setData">Set data</div>
-                                <div class="btn btn-default" id="getData">Get data</div>
-                            </div>
+                                <div class="mb20">
+                                    <div class="btn btn-default" id="setData">Set data</div>
+                                    <div class="btn btn-default" id="getData">Get data</div>
+                                </div>
                                 <pre>
         <code>var data = {
             name: 'Andri',
@@ -88,10 +86,10 @@
             tags: ['foo', 'bar', 'baz']
             };</code>
                         </pre>
-                        </div>
-                        <h3>Schema</h3>
+                            </div>
+                            <h3>Schema</h3>
 
-                        <div>
+                            <div>
                                 <pre>
         <code>var schema = {
             _order: ['name', 'lastName', 'age'],
@@ -141,109 +139,123 @@
 
             };</code>
                         </pre>
-                        </div>
+                            </div>
 
+                        </div>
                     </div>
                 </div>
             </div>
+
         </div>
-
     </div>
-</div>
 
-<script src="./dist/ghostTools.js"></script>
-<!-- droppad example -->
-<script>
-    var droppad = new Droppad(document.querySelector('.dropper'), {
-        url: 'http://ghostlamp.com/icloud/upload/ghostlamp',
-        backgroundImage: 'http://ghostlamp.com/icloud/images/test/71l1471623700.jpeg'
-    });
-    // droppad.on('dragenter', function() {
-    //     console.log('dragenter');
-    //     //console.log(e);
-    // });
-    //
-    // droppad.on('success', function(data) {
-    //     console.log(data);
-    // });
-    // droppad.on('progress', function(data) {
-    //     console.log(data);
-    // });
-</script>
+    <script src="./dist/ghostTools.js"></script>
+    <!-- droppad example -->
+    <script>
+        var droppad = new Droppad(document.querySelector('.dropper'), {
+            url: 'http://ghostlamp.com/icloud/upload/ghostlamp',
+            backgroundImage: 'http://ghostlamp.com/icloud/images/test/71l1471623700.jpeg'
+        });
+        // droppad.on('dragenter', function() {
+        //     console.log('dragenter');
+        //     //console.log(e);
+        // });
+        //
+        // droppad.on('success', function(data) {
+        //     console.log(data);
+        // });
+        // droppad.on('progress', function(data) {
+        //     console.log(data);
+        // });
+    </script>
 
-<!-- formgenerator example  -->
-<script>
-    var data = {
-        name: 'Andri',
-        age: 30,
-        lastName: 'Birgisson',
-        img: 'http://tweecode.com/imagecloud/1470502139865_andriProfile.jpg',
-        website: {
-            url: 'foobar.com',
-            display: 'foobar'
-        },
-        tags: ['foo', 'bar', 'baz']
-    };
+    <!-- formgenerator example  -->
+    <script>
+        var data = {
+            name: 'Andri',
+            age: 30,
+            lastName: 'Birgisson',
+            img: 'http://tweecode.com/imagecloud/1470502139865_andriProfile.jpg',
+            website: {
+                url: 'foobar.com',
+                display: 'foobar'
+            },
+            tags: ['foo', 'bar', 'baz']
+        };
 
 
-    let schema = {
-        "name": {
-            "type": "text",
-            "label": "Brand name",
-            "placeholder": "The name of the brand",
-            "value": "",
-            "required": true
-        },
-        "donttell": {
-            "type": "hidden",
-            "value": 'foobar'
-        },
-        "logo": {
-            "type": "image",
-            "label": "Brand logo",
-            "backgroundUrlPrefix": "http://ghostlamp.com",
-            "url": "http://kotturinn.com/icloud/upload/ghostlamp",
-            "value": "",
-            "required": true
-        },
-        "website": {
-            "type": "text",
-            "label": "Website",
-            "placeholder": "Website",
-            "value": "",
-        },
-        "description": {
-            "value": "",
-            "placeholder": "Describe your brand in a short an concise way",
-            "rows": 5,
-            "type": "textarea",
-            "label": "Short description"
-        },
-        other: {
-           type: 'textarea',
-           label: 'Annað',
-           value: '',
-           helpText: 'Ef það er eitthvað sem þú vilt koma á framfæri með þinni pöntun'
-       },
-    };
+        let schema = {
+            "name": {
+                "type": "text",
+                "label": "Brand name",
+                "placeholder": "The name of the brand",
+                "value": "",
+            },
+            "donttell": {
+                "type": "hidden",
+                "value": 'foobar'
+            },
+            "logo": {
+                "type": "image",
+                "label": "Brand logo",
+                "backgroundUrlPrefix": "http://ghostlamp.com",
+                "url": "http://kotturinn.com/icloud/upload/ghostlamp",
+                "value": "",
+            },
+            "website": {
+                "type": "text",
+                "label": "Website",
+                "placeholder": "Website",
+                "value": "",
+            },
+            "description": {
+                "value": "",
+                "placeholder": "Describe your brand in a short an concise way",
+                "rows": 5,
+                "type": "textarea",
+                "label": "Short description"
+            },
+            "foo": {
+                type: 'select',
+                label: 'select menu',
+                childnodes: [{
+                        type: 'option',
+                        label: 'Foo',
+                        value: '9'
+                    },
+                    {
+                        type: 'option',
+                        label: 'Foo2',
+                        value: '10',
+                        selected: 'selected'
+                    }
+                ]
+            },
+            other: {
+                type: 'textarea',
+                label: 'Annað',
+                value: '',
+                helpText: 'Ef það er eitthvað sem þú vilt koma á framfæri með þinni pöntun'
+            },
+        };
 
-    var formgen = new FormGenerator(schema, document.querySelector('#formWrap'));
-    formgen.onChange = function (e) {
-        //console.log(e);
-    };
+        var formgen = new FormGenerator(schema, document.querySelector('#formWrap'));
+        formgen.onChange = function(e) {
+            //console.log(e);
+        };
 
-    var setdataBtn = document.getElementById('setData');
-    var getdataBtn = document.getElementById('getData');
-    setdataBtn.onclick = function () {
-        formgen.setData(data);
-    };
-    getdataBtn.onclick = function () {
-        var data = formgen.getData();
-        console.log(data);
-    };
-    //var schema = new SchemaDiscover(data);
-    //var formgen = new FormGenerator({}, document.querySelector('#formWrap'));
-</script>
+        var setdataBtn = document.getElementById('setData');
+        var getdataBtn = document.getElementById('getData');
+        setdataBtn.onclick = function() {
+            formgen.setData(data);
+        };
+        getdataBtn.onclick = function() {
+            var data = formgen.getData();
+            console.log(data);
+        };
+        //var schema = new SchemaDiscover(data);
+        //var formgen = new FormGenerator({}, document.querySelector('#formWrap'));
+    </script>
 </body>
 
 </html>

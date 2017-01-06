@@ -207,7 +207,11 @@ Loader.prototype.instances = {};
 Loader.prototype.counter = 0;
 Loader.prototype.removeAll = function() {
     Utils.foreach(this.instances, function(item) {
-        item.remove();
+        try {
+            item.remove();
+        } catch(err) {
+            //pass
+        }
     });
     this.instances.length = 0;
 };
