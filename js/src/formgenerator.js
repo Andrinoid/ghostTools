@@ -151,6 +151,9 @@ let typeModels = {
         backgroundImage: '',
         maxFilesize: 8, //in MB
         acceptedFiles: 'jpeg, jpg, png, gif',
+    },
+    element: {
+
     }
 };
 
@@ -463,6 +466,7 @@ class FormGenerator {
          * If item don't have type key it is treated as subform
          * this has a potential failure if the actual field name is type
          */
+
         let isSubform = !item.hasOwnProperty('type');
         if (isSubform) {
             //parent = this.subFormWrapper(parent, key);
@@ -474,6 +478,7 @@ class FormGenerator {
 
 
         let model = this.getModel(item);
+        console.log(model.type);
         let wrapper = null;
         let element = null;
 
@@ -498,12 +503,12 @@ class FormGenerator {
             });
 
         }
+
         /**
          * Image is converted to droppad using ImageCloud
          */
         else if (model.type === 'image') {
             wrapper = this.defaultWrapper(model, parent, key);
-            console.log(wrapper);
             model['data-keychain'] = this.getKeychain(wrapper);
             element = new Elm(model.element, model, wrapper);
             model.backgroundImage = model.value;
@@ -517,6 +522,11 @@ class FormGenerator {
                 this.onChange(data);
             });
 
+        }
+
+        else if(model.type === 'element') {
+            console.log(model);
+            new Elm('div', {html: model.html}, parent);
         }
 
         /**
@@ -564,7 +574,9 @@ class FormGenerator {
         if (model.value) {
             element.setAttribute('elm-value', model.value);
         } else {
-            element.setAttribute('elm-value', '');
+            try {
+                element.setAttribute('elm-value', '');
+            } catch (err) {}
         }
 
         if (model.toggle) {

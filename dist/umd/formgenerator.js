@@ -162,7 +162,8 @@ var typeModels = {
         backgroundImage: '',
         maxFilesize: 8, //in MB
         acceptedFiles: 'jpeg, jpg, png, gif'
-    }
+    },
+    element: {}
 };
 
 //TODO list
@@ -526,6 +527,7 @@ var FormGenerator = function () {
              * If item don't have type key it is treated as subform
              * this has a potential failure if the actual field name is type
              */
+
             var isSubform = !item.hasOwnProperty('type');
             if (isSubform) {
                 //parent = this.subFormWrapper(parent, key);
@@ -536,6 +538,7 @@ var FormGenerator = function () {
             }
 
             var model = this.getModel(item);
+            console.log(model.type);
             var wrapper = null;
             var element = null;
 
@@ -558,12 +561,12 @@ var FormGenerator = function () {
                     self.onChange(e);
                 });
             }
+
             /**
              * Image is converted to droppad using ImageCloud
              */
             else if (model.type === 'image') {
                     wrapper = this.defaultWrapper(model, parent, key);
-                    console.log(wrapper);
                     model['data-keychain'] = this.getKeychain(wrapper);
                     element = new Elm(model.element, model, wrapper);
                     model.backgroundImage = model.value;
@@ -576,6 +579,9 @@ var FormGenerator = function () {
                         element.setAttribute('elm-value', data.image);
                         _this4.onChange(data);
                     });
+                } else if (model.type === 'element') {
+                    console.log(model);
+                    new Elm('div', { html: model.html, parent: parent });
                 }
 
                 /**
@@ -626,7 +632,9 @@ var FormGenerator = function () {
             if (model.value) {
                 element.setAttribute('elm-value', model.value);
             } else {
-                element.setAttribute('elm-value', '');
+                try {
+                    element.setAttribute('elm-value', '');
+                } catch (err) {}
             }
 
             if (model.toggle) {
@@ -659,7 +667,7 @@ var FormGenerator = function () {
             }
 
             if (model.type === 'select') {
-                element.setAttribute('elm-value', element.options[e.selectedIndex].value);
+                element.setAttribute('elm-value', element.options[element.selectedIndex].value);
             }
         }
     }, {
