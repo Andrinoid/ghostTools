@@ -797,6 +797,11 @@ var FormGenerator = function () {
             this.parent.innerHTML = '';
             this.buildAllItems(this.form, this.parent);
         }
+    }, {
+        key: 'clear',
+        value: function clear() {
+            this.setData({});
+        }
     }]);
 
     return FormGenerator;

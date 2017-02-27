@@ -33,12 +33,14 @@ const Modalstyles = `
          }
 
          .js_modal {
+             pointer-events: none;
              z-index: 10000;
              overflow-y: scroll;
              -webkit-overflow-scrolling: touch;
              outline: 0
          }
          .js_dialog {
+             pointer-events: all;
              position: relative;
              width: auto;
              margin: 10px
@@ -320,6 +322,7 @@ class Modal {
             autoClose: false,
             autoCloseTime: 2000,
             type: 'modal',
+            outsideClick: true,
             parent: document.body
 
         };
@@ -354,6 +357,9 @@ class Modal {
 
         if (this.defaults.withBackdrop) {
             this.backdrop = new Elm('div.modal-backdrop', document.body);
+            if(this.defaults.outsideClick) {
+                this.backdrop.onclick = ()=> {this.close()}
+            }
         }
 
         let header = this.defaults.title ?

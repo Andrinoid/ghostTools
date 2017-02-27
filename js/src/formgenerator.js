@@ -741,6 +741,11 @@ class FormGenerator {
         this.buildAllItems(this.form, this.parent);
     }
 
+    clear() {
+        this.setData({});
+    }
+
+
 }
 
 class SchemaDiscover {

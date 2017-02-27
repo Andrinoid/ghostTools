@@ -581,7 +581,7 @@ var FormGenerator = function () {
                     });
                 } else if (model.type === 'element') {
                     console.log(model);
-                    new Elm('div', { html: model.html, parent: parent });
+                    new Elm('div', { html: model.html }, parent);
                 }
 
                 /**
@@ -805,6 +805,11 @@ var FormGenerator = function () {
 
             this.parent.innerHTML = '';
             this.buildAllItems(this.form, this.parent);
+        }
+    }, {
+        key: 'clear',
+        value: function clear() {
+            this.setData({});
         }
     }]);
 
