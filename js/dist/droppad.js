@@ -63,7 +63,7 @@ var Droppad = function () {
         function Droppad(elm, options) {
             _classCallCheck(this, Droppad);
 
-            var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Droppad).call(this));
+            var _this = _possibleConstructorReturn(this, (Droppad.__proto__ || Object.getPrototypeOf(Droppad)).call(this));
 
             var defaultOpt = JSON.parse(JSON.stringify(Default));
             _this.defaults = Utils.extend(defaultOpt, options);
@@ -295,6 +295,7 @@ var Droppad = function () {
                 }
                 formData.append('file', file, file.name); //file.name is not required Check server side implementation of this
 
+
                 var xhr = new XMLHttpRequest();
                 //add trailing slash if doesn't exists
                 var url = this.defaults.url;
@@ -329,7 +330,6 @@ var Droppad = function () {
                     totals: Utils.range(files.length, 0, 0),
                     loads: Utils.range(files.length, 0, 0) };
 
-                // returns e.q [0,0,0] for three files
                 this.filesLenght = files.length;
 
                 if (this.defaults.customHandler) {

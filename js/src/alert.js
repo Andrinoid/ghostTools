@@ -462,7 +462,6 @@ class Alert {
         this.__proto__.instances.pop();
         setTimeout(()=> {
             this.modal.remove();
-            Utils.removeClass(document.body, 'modal-mode');
             cb();
         }, 500);
     }
