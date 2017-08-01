@@ -5,8 +5,11 @@
     <title>Modal demo</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.min.js"></script>
     <script src="http://kotturinn.com/upload/js/inline-0.9.4.js"></script>
+
     <style media="screen">
         body {
             background: #f9f9f9;
@@ -31,13 +34,78 @@
 </head>
 
 <body>
-    <section class="flex">
-        <div class="parent">
-            <div>df</div>
-            <div>df</div>
-            <div>df</div>
+    <style>
+        .roundModal {
+            background-color: #b32927;
+            border-radius: 50%;
+            color: white;
+            width: 203px;
+            height: 203px;
+            position: relative;
+            text-align: center;
+        }
+
+        .roundModal .close {
+            background: #b32927;
+            opacity: 1;
+            color: white;
+            width: 43px;
+            height: 43px;
+            line-height: 20px;
+            border-radius: 50%;
+            top: 8px;
+            right: 10px;
+            position: absolute;
+        }
+
+        .roundModal .close:focus {
+            outline: none;
+        }
+
+        .roundModal .close span {
+            font-size: 45px;
+            text-shadow: none;
+        }
+
+        .roundModal .minus {
+            padding-top: 14px;
+            font-size: 44px;
+        }
+
+        .roundModal .content {
+            width: 160px;
+            margin: 0 auto;
+            font-size: 16px;
+        }
+
+        .roundModal .content p {
+            margin-bottom: 5px;
+        }
+
+        .roundModal .cancel {
+            font-size: 22px;
+            margin-bottom: 1px !important;
+        }
+
+        .roundModal .when {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            margin-bottom: 0 !important;
+        }
+    </style>
+    <div class="roundModal">
+        <button type="button" class="close"><span class="ion-ios-close-empty"></span></button>
+        <div class="minus">
+            <i class="fa fa-minus-circle" aria-hidden="true"></i>
         </div>
-    </section>
+        <div class="content">
+            <p>Northen Lights Tour</p>
+            <p class="cancel">CANCELLED</p>
+            <p class="when">Tomorrow</p>
+            <p class="when">10 April</p>
+        </div>
+    </div>
+    </div>
     <div class="wrapper">
         <header>
             <div class="container">
@@ -153,8 +221,8 @@
     <!-- droppad example -->
     <script>
         var droppad = new Droppad(document.querySelector('.dropper'), {
-            url: 'http://ghostlamp.com/icloud/upload/ghostlamp',
-            backgroundImage: 'http://ghostlamp.com/icloud/images/test/71l1471623700.jpeg'
+            url: 'https://ghostlamp.com/icloud/upload/ghostlamp',
+            //backgroundImage: 'http://ghostlamp.com/icloud/images/test/71l1471623700.jpeg'
         });
         // droppad.on('dragenter', function() {
         //     console.log('dragenter');

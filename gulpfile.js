@@ -18,6 +18,7 @@ var files = [
     './js/src/loader.js',
     './js/src/backdrop.js',
     './js/src/imagepreloader.js',
+    './js/src/timeline.js',
 ];
 
 gulp.task('default', ['build', 'watch']);
