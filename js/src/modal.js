@@ -33,7 +33,7 @@ const Modalstyles = `
          }
 
          .js_modal {
-             pointer-events: none;
+             /*pointer-events: none;*/
              z-index: 10000;
              overflow-y: scroll;
              -webkit-overflow-scrolling: touch;
@@ -357,9 +357,6 @@ class Modal {
 
         if (this.defaults.withBackdrop) {
             this.backdrop = new Elm('div.modal-backdrop', document.body);
-            if(this.defaults.outsideClick) {
-                this.backdrop.onclick = ()=> {this.close()}
-            }
         }
 
         let header = this.defaults.title ?
@@ -385,9 +382,14 @@ class Modal {
             html: main, 'class': `modal-theme-${this.defaults.theme}`,
             cls: this.defaults.customClass
         });
-
+        let jsModal = this.modal.querySelector('.js_modal');
+        if(this.defaults.outsideClick) {
+            jsModal.onclick = ()=> {this.close()}
+        }
         let btn = this.modal.querySelectorAll('.close, .close-trigger');
         this.chainDialog = this.modal.querySelector('.js_dialog');
+        // prevent dialog from closing onclick because of the jsModal close event
+        this.chainDialog.onclick = (e)=> {e.stopPropagation()};
 
         for (var i=0; i<btn.length; i++) {
             btn[i].addEventListener('click', ()=> { this.close() }, false);
