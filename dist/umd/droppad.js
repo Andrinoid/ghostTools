@@ -243,7 +243,6 @@ var Droppad = function () {
             value: function initThumbnails() {
                 var _this5 = this;
 
-                console.log('hello');
                 if (!this.defaults.initThumbnails.length) return;
 
                 var _loop2 = function _loop2(i) {
@@ -302,7 +301,6 @@ var Droppad = function () {
         }, {
             key: 'remove',
             value: function remove(uid) {
-                this.trigger('remove', uid);
                 delete this.uploadedFiles['uid-' + uid];
                 if (!this.uploadedFiles.length) {
                     Utils.setClass(this.dropArea, 'active');
@@ -312,6 +310,7 @@ var Droppad = function () {
                 for (var i = 0; i < elms.length; i++) {
                     Utils.fadeOutRemove(elms[i]);
                 }
+                this.trigger('remove', uid);
             }
         }, {
             key: 'dragenter',
