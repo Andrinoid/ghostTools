@@ -3,9 +3,8 @@ import Elm from './elm';
 import Emitter from './emitter';
 import Alert from './alert';
 
-
 /**
- * Events
+ * //Events
  * dragenter
  * dragover
  * ondragleave
@@ -13,7 +12,10 @@ import Alert from './alert';
  * progress
  * success
  * error
+ * start
+ * complete
  */
+
 const Droppad = (() => {
 
     /**
@@ -140,6 +142,34 @@ const Droppad = (() => {
             display: flex;
             pointer-events: none;
         }
+        .droppad-thumbnails {
+            padding-top: 20px;
+        }
+        .droppad-thumbnail {
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            display: inline-block;
+            width: 120px;
+            height: 120px;
+            margin-right: 15px;
+            margin-bottom: 15px;
+        }
+        .icon-close-button {
+            width: 30px;
+            height: 30px;
+            background: black;
+            border-radius: 50%;
+            position: absolute;
+            right: -10px;
+            top: -10px;
+            cursor: pointer;
+        }
+        .icon-close-x {
+            stroke: white;
+            fill: transparent;
+            stroke-width: 3;
+        }
     `;
 
     const Default = {
@@ -154,20 +184,11 @@ const Droppad = (() => {
         showErrors: true,
         title: 'Drop Image',
         subTitle: 'or click here',
-        customHandler: false
-
-        //Event triggers
-
-        // start - Fires when an upload starts
-        // success - Fires for success on each uploaded file
-        // error
-        // complete - Fires when all files have been uploaded
-        
-        // dragover
-        // dragenter
-        // dragleave
-        // drop
-        // progress
+        customHandler: false,
+        backgroundLoading: true,
+        thumbnailLoading: true,
+        thumbnailParent: null,
+        initThumbnails: [] // ['http://example.jpg', 'http://example2.jpg']
     };
 
     let Template = `
@@ -190,23 +211,34 @@ const Droppad = (() => {
         </div>
     `;
 
+    let CloseIcon = `
+        <div class="icon-close-button">
+            <svg viewbox="0 0 40 40">
+                <path class="icon-close-x" d="M 10,10 L 30,30 M 30,10 L 10,30" />
+            </svg>
+        </div>
+    `;
+
     class Droppad extends Emitter {
 
         constructor(elm, options) {
-                super();
-                let defaultOpt = JSON.parse(JSON.stringify(Default))
-                this.defaults = Utils.extend(defaultOpt, options);
-                this.droppad = elm;
-                this.currentImage = null;
-                this.beforeElmQue = [];
-                this.afterElmQue = [];
-                this.injectStyles();
-                this.createDOM();
-                this.setEvents();
-                this.droppadElements();
-                this.setBackground();//TODO
-            }
-            // getters
+            super();
+            let defaultOpt = JSON.parse(JSON.stringify(Default))
+            this.defaults = Utils.extend(defaultOpt, options);
+            this.droppad = elm;
+            this.currentImage = null;
+            this.uid = 0
+            this.beforeElmQue = [];
+            this.afterElmQue = [];
+            this.uploadedFiles = {};
+            this.injectStyles();
+            this.createDOM();
+            this.setEvents();
+            this.droppadElements();
+            this.setBackground();
+            this.initThumbnails();
+        }
+        // getters
 
         static get Default() {
             return Default;
@@ -220,9 +252,15 @@ const Droppad = (() => {
             return Template;
         }
 
+        // setters
+        set Template(template) {
+            Template = template;
+        }
+
         injectStyles() {
             //if styles exists do nothing
-            if (document.getElementById('imagecloudStyles')) return;
+            if (document.getElementById('imagecloudStyles'))
+                return;
             var tag = document.createElement('style');
             tag.type = 'text/css';
             tag.id = 'imagecloudStyles';
@@ -235,13 +273,14 @@ const Droppad = (() => {
         }
 
         createDOM() {
-            Utils.setClass(this.droppad, 'imageCloud');
-            Utils.setClass(this.droppad, 'active');
-            Utils.setClass(this.droppad, 'droppad-clickable');
-            let template = (' ' + Template).slice(1); //Force string copy for. Bug in some  chrome versions
-            template = template.replace('*|title|*', this.defaults.title).replace('*|subTitle|*', this.defaults.subTitle);
+            this.dropArea = new Elm('div', this.droppad);
+            Utils.setClass(this.dropArea, 'imageCloud');
+            Utils.setClass(this.dropArea, 'active');
+            Utils.setClass(this.dropArea, 'droppad-clickable');
+            let template = (' ' + this.Template).slice(1); //Force string copy. Bug in some  chrome versions
+            template = template.replace('*|title|*', this.defaults.title || '').replace('*|subTitle|*', this.defaults.subTitle || '');
 
-            this.droppad.innerHTML = template;
+            this.dropArea.innerHTML = template;
             this.el_clickableInput = new Elm('input.droppad-input', {
                 type: 'file',
                 id: 'id-' + Math.floor(Math.random() * 100), //TODO remove
@@ -251,7 +290,15 @@ const Droppad = (() => {
                     this.upload(e.target.files);
                 },
                 multiple: true
-            }, this.droppad);
+            }, this.dropArea);
+            if(this.defaults.thumbnailLoading) {
+                if(!this.defaults.thumbnailParent) {
+                    this.el_thumbails = new Elm('div.droppad-thumbnails', this.droppad);
+                } else {
+                    this.el_thumbails = this.defaults.thumbnailParent
+                }
+            }
+
         }
 
         setEvents() {
@@ -263,19 +310,19 @@ const Droppad = (() => {
                     e.preventDefault();
                 }
             }
-            this.droppad.ondragenter = (e) => {
+            this.dropArea.ondragenter = (e) => {
                 noPropagation(e);
                 this.dragenter(e);
             };
-            this.droppad.ondragover = (e) => {
+            this.dropArea.ondragover = (e) => {
                 noPropagation(e);
                 this.dragover(e);
             };
-            this.droppad.ondragleave = (e) => {
+            this.dropArea.ondragleave = (e) => {
                 noPropagation(e);
                 this.dragleave(e);
             };
-            this.droppad.ondrop = (e) => {
+            this.dropArea.ondrop = (e) => {
                 noPropagation(e);
                 this.drop(e);
             };
@@ -295,29 +342,37 @@ const Droppad = (() => {
         }
 
         droppadElements() {
-            this.el_fallback = this.droppad.querySelector('.fallBack');
-            this.el_loadedImage = this.droppad.querySelector('.loadedImage');
-            this.el_progressbar = this.droppad.querySelector('.progressbar');
+            // get the template elements
+            this.el_fallback = this.dropArea.querySelector('.fallBack');
+            this.el_loadedImage = this.dropArea.querySelector('.loadedImage');
+            this.el_progressbar = this.dropArea.querySelector('.progressbar');
+        }
+
+        uploadModalTrigger() {
+            //Method to call if you need external trigger like button
+            this.el_clickableInput.click()
         }
 
         setBackground() {
+            if(!this.defaults.backgroundImage) return;
             let prefix = (this.defaults.backgroundUrlPrefix === '') ? '' : this.defaults.backgroundUrlPrefix.replace(/\/?$/, '/');
             let url = prefix + this.defaults.backgroundImage;
-            this.droppad.style.backgroundImage = `url(${url})`;
+            this.dropArea.style.backgroundImage = `url(${url})`;
         }
 
         showAsBackground(files) {
             /**
              * let the images fade in 500ms
              */
-            Utils.removeClass(this.droppad, 'active');
-            for (let i = 0; i < files.length; i++) {
+            Utils.removeClass(this.dropArea, 'active');
+            let len = files.length > this.defaults.maxFiles ? this.defaults.maxFiles : files.length;
+            for (let i = 0; i < len; i++) {
                 let elBefore = new Elm('div.loadedImage', {
                     css: {
                         'opacity': 1
                     }
-                }, this.droppad.querySelector('.beforeLoad'));
-                let elAfter = new Elm('div.fallBack', this.droppad.querySelector('.afterLoad'));
+                }, this.dropArea.querySelector('.beforeLoad'));
+                let elAfter = new Elm('div.fallBack', {cls:'uid-' + files[i].uid}, this.dropArea.querySelector('.afterLoad'));
                 this.beforeElmQue.push(elBefore);
                 this.afterElmQue.push(elAfter);
                 let file = files[i];
@@ -334,28 +389,86 @@ const Droppad = (() => {
 
         }
 
+        initThumbnails() {
+            if(!this.defaults.initThumbnails.length) return;
+            for (let i = 0; i < this.defaults.initThumbnails.length; i++) {
+                let uid = ++this.uid;
+                let imageUrl = this.defaults.initThumbnails[i]
+                let thumb = new Elm('div.droppad-thumbnail', {
+                    cls: 'uid-' + uid,
+                    html: CloseIcon,
+                    //click: () => {this.remove(files[i]['uid'])} // this would be a nice place to enlarge the thumbnail
+                }, this.el_thumbails);
+                let close = thumb.querySelector('.icon-close-button');
+                close.addEventListener('click', ()=> {this.remove(uid)}, false);
+                thumb.style.backgroundImage = 'url(' + imageUrl + ')';
+                this.uploadedFiles['uid-' + this.uid] = {image: imageUrl, file: {uid: uid}};
+            }
+        }
+
+        createThumbnails(files) {
+            let len = files.length > this.defaults.maxFiles ? this.defaults.maxFiles : files.length;
+            for (let i = 0; i < len; i++) {
+                let thumb = new Elm('div.droppad-thumbnail', {
+                    cls: 'uid-' + files[i]['uid'],
+                    html: CloseIcon,
+                    //click: () => {this.remove(files[i]['uid'])} // this would be a nice place to enlarge the thumbnail
+                }, this.el_thumbails);
+                let close = thumb.querySelector('.icon-close-button');
+                close.addEventListener('click', ()=> {this.remove(files[i]['uid'])}, false);
+
+                let file = files[i];
+                var reader = new FileReader();
+                reader.onload = (event) => {
+                    thumb.style.backgroundImage = 'url(' + event.target.result + ')';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        remove(uid) {
+            delete this.uploadedFiles['uid-' + uid];
+            if(!this.uploadedFiles.length) {
+                Utils.setClass(this.dropArea, 'active');
+            }
+            // elms can be thumbnail and / or backgroundImage
+            let elms = this.droppad.querySelectorAll('.uid-' + uid);
+            for(let i = 0; i < elms.length; i++) {
+                Utils.fadeOutRemove(elms[i]);
+            }
+            this.trigger('remove', uid);
+        }
+
         dragenter(e) {
-            Utils.setClass(this.droppad, 'dragenter');
+            Utils.setClass(this.dropArea, 'dragenter');
             this.trigger('dragenter', e);
         }
 
         dragover(e) {
-            Utils.removeClass(this.droppad, 'dragover');
+            Utils.removeClass(this.dropArea, 'dragover');
             this.trigger('dragover', e);
         }
 
         dragleave(e) {
-            Utils.removeClass(this.droppad, 'dragover');
+            Utils.removeClass(this.dropArea, 'dragover');
             this.trigger('dragleave', e);
         }
 
         drop(e) {
-            Utils.removeClass(this.droppad, 'dragover');
+            Utils.removeClass(this.dropArea, 'dragover');
             this.trigger('drop', e);
             var files = e.target.files || e.dataTransfer.files;
-            //var file = files[0];
 
-            this.showAsBackground(files);
+            //Add reference id to each file so we can access it throug thumbnails
+            for(let i = 0; i < files.length; i++) {
+                files[i]['uid'] = ++this.uid;
+            }
+            if (this.defaults.backgroundLoading) {
+                this.showAsBackground(files);
+            }
+            if (this.defaults.thumbnailLoading) {
+                this.createThumbnails(files);
+            }
             this.upload(files);
         }
 
@@ -391,7 +504,7 @@ const Droppad = (() => {
 
             let headers = {
                 'X-Requested-With': 'XMLHttpRequest',
-                'Accept': '*/*',
+                'Accept': '*/*'
             };
 
             let formData = new FormData();
@@ -407,13 +520,13 @@ const Droppad = (() => {
                         });
                     }
                 });
+                this.remove(document.querySelectorAll('.uid-' + file.uid));
                 return;
             }
-            formData.append('file', file, file.name); //file.name is not required Check server side implementation of this
-
+            formData.append('file', file, file.name);
 
             let xhr = new XMLHttpRequest();
-            //add trailing slash if doesn't exists
+            //add tailing slash if doesn't exists
             let url = this.defaults.url
             xhr.open('POST', url, true);
             for (var key in headers) {
@@ -449,25 +562,27 @@ const Droppad = (() => {
 
             this.filesLenght = files.length;
 
-            if(this.defaults.customHandler){
+            if (this.defaults.customHandler) {
                 this.defaults.customHandler(files);
-                return;
-            }
-
-            if (files.length > this.defaults.maxFiles) {
-                const err = 'The maximum amount of files you can upload is ' + this.defaults.maxFiles;
-                this.trigger('error', err);
-                if (this.defaults.showErrors) {
-                    new Alert('danger', {
-                        message: err,
-                        timer: 6000
-                    });
-                }
                 return;
             }
 
             for (let i = 0; i < files.length; i++) {
                 let file = files[i];
+
+                let counter = i + 1;
+                if (counter > this.defaults.maxFiles) {
+                    const err = 'The maximum amount of files you can upload is ' + this.defaults.maxFiles;
+                    this.trigger('error', err);
+                    if (this.defaults.showErrors) {
+                        new Alert('danger', {
+                            message: err,
+                            timer: 6000
+                        });
+                    }
+                    break;
+                }
+
                 this.uploadSingle(file, i);
             }
         }
@@ -482,22 +597,25 @@ const Droppad = (() => {
 
         uploadSuccess(data, file) {
             data['file'] = file;
-            this.trigger('success', data);
+            this.uploadedFiles['uid-' + file.uid] = data;
 
+            this.trigger('success', data);
             this.el_progressbar.style.display = 'none';
             this.el_progressbar.style.width = 0;
 
             let elBefore = this.beforeElmQue.shift();
             let elAfter = this.afterElmQue.shift();
-            elAfter.style.opacity = 1;
-            elBefore.style.opacity = 0;
+            if (this.defaults.backgroundLoading) {
+                elAfter.style.opacity = 1;
+                elBefore.style.opacity = 0;
+            }
             this.currentImage = data;
             setTimeout(() => {
                 this.el_progressbar.style.display = 'block';
             }, 400);
 
             this.successCounter = this.successCounter ? (this.successCounter + 1) : 1;
-            if(this.filesLenght === this.successCounter){
+            if (this.filesLenght === this.successCounter) {
                 this.trigger('complete');
                 this.successCounter = 0;
                 this.filesLenght = 0;
@@ -510,16 +628,29 @@ const Droppad = (() => {
             new Alert('danger', 'not successfull');
         }
 
-        //add to Utils?
+        getUploadedFiles() {
+            return this.uploadedFiles;
+        }
+
         formatBytes(bytes) {
             var kb = 1024;
             var ndx = Math.floor(Math.log(bytes) / Math.log(kb));
-            var fileSizeTypes = ["bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+            var fileSizeTypes = [
+                "bytes",
+                "KB",
+                "MB",
+                "GB",
+                "TB",
+                "PB",
+                "EB",
+                "ZB",
+                "YB"
+            ];
 
             return {
-                size: +(bytes / kb / kb).toFixed(2),
+                size: + (bytes / kb / kb).toFixed(2),
                 type: fileSizeTypes[ndx],
-                human: +(bytes / kb / kb).toFixed(2) + fileSizeTypes[ndx]
+                human: + (bytes / kb / kb).toFixed(2) + fileSizeTypes[ndx]
             };
         }
     }

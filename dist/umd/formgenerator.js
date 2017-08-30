@@ -538,7 +538,6 @@ var FormGenerator = function () {
             }
 
             var model = this.getModel(item);
-            console.log(model.type);
             var wrapper = null;
             var element = null;
 
@@ -580,7 +579,6 @@ var FormGenerator = function () {
                         _this4.onChange(data);
                     });
                 } else if (model.type === 'element') {
-                    console.log(model);
                     new Elm('div', { html: model.html }, parent);
                 }
 

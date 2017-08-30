@@ -478,7 +478,6 @@ class FormGenerator {
 
 
         let model = this.getModel(item);
-        console.log(model.type);
         let wrapper = null;
         let element = null;
 
@@ -525,7 +524,6 @@ class FormGenerator {
         }
 
         else if(model.type === 'element') {
-            console.log(model);
             new Elm('div', {html: model.html}, parent);
         }
 

@@ -1,6 +1,6 @@
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 /**
  * ------------------------------------------------------------------------
@@ -160,9 +160,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * https://github.com/Andrinoid/ElementGenerator.js
  * ------------------------------------------------------------------------
  */
+
 var Elm = function () {
     //Simple element generator. Mootools style
     //tries to find method for keys in options and run it
+
     function Elm(type, options, parent, injectType) {
         _classCallCheck(this, Elm);
 
@@ -380,7 +382,7 @@ var Modal = function () {
                 this.backdrop = new Elm('div.modal-backdrop', document.body);
             }
 
-            var header = this.defaults.title ? '<div class="modal-header">\n                    <button type="button" class="close"><span>\xD7</span></button>\n                    <h4 class="modal-title" id="myModalLabel">' + this.defaults.title + '</h4>\n                </div>' : '<button type="button" class="close standalone"><span>×</span></button>';
+            var header = this.defaults.title ? '<div class="modal-header">\n                    <button type="button" class="close"><span>×</span></button>\n                    <h4 class="modal-title" id="myModalLabel">' + this.defaults.title + '</h4>\n                </div>' : '<button type="button" class="close standalone"><span>×</span></button>';
 
             var main = '\n                <div class="js_modal fadeInDown">\n                    <div class="js_dialog ' + sizeClass + '">\n                        <div class="modal-content">\n                            ' + header + '\n                            <div class="modal-body">\n                                <div>' + this.defaults.message + '</div>\n                            </div>\n                        </div>\n                    </div>\n                </div>';
 
@@ -431,7 +433,7 @@ var Modal = function () {
         value: function _close() {
             var _this3 = this;
 
-            var cb = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function () {};
+            var cb = arguments.length <= 0 || arguments[0] === undefined ? function () {} : arguments[0];
 
             if (this.defaults.withBackdrop) {
                 Utils.fadeOutRemove(this.backdrop);
@@ -556,7 +558,7 @@ var Alert = function () {
                 this.backdrop = new Elm('div.modal-backdrop', document.body);
             }
 
-            var header = this.defaults.title ? '<div class="modal-header">\n                    <button type="button" class="close"><span>\xD7</span></button>\n                    <h4 class="modal-title" id="myModalLabel">' + this.defaults.title + '</h4>\n                </div>' : '<button type="button" class="close standalone"><span>×</span></button>';
+            var header = this.defaults.title ? '<div class="modal-header">\n                    <button type="button" class="close"><span>×</span></button>\n                    <h4 class="modal-title" id="myModalLabel">' + this.defaults.title + '</h4>\n                </div>' : '<button type="button" class="close standalone"><span>×</span></button>';
 
             var main = '\n                <div class="js_modal fadeInDown">\n                    <div class="js_dialog ' + sizeClass + '">\n                        <div class="modal-content">\n                            ' + header + '\n                            <div class="modal-body">\n                                <div>' + this.defaults.message + '</div>\n                            </div>\n                        </div>\n                    </div>\n                </div>';
 
@@ -607,7 +609,7 @@ var Alert = function () {
         value: function _close() {
             var _this3 = this;
 
-            var cb = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function () {};
+            var cb = arguments.length <= 0 || arguments[0] === undefined ? function () {} : arguments[0];
 
             if (this.defaults.withBackdrop) {
                 Utils.fadeOutRemove(this.backdrop);
@@ -638,7 +640,7 @@ Alert.prototype.closeAll = function () {
 };
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -830,6 +832,7 @@ var FormGenerator = function () {
 
     _createClass(FormGenerator, [{
         key: 'onChange',
+        //TODO add validatiors
         value: function onChange(e) {}
 
         /**
@@ -840,7 +843,7 @@ var FormGenerator = function () {
     }, {
         key: 'getKeychain',
         value: function getKeychain(el) {
-            var raw = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+            var raw = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
 
             //var keyList = ['value']; //list is reversed so this is the end key // reference for adding value to the end
             var keyList = []; //list is reversed so this is the end key
@@ -859,8 +862,8 @@ var FormGenerator = function () {
         value: function getAllKeychains() {
             var _this = this;
 
-            var prefix = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-            var suffix = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+            var prefix = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+            var suffix = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 
             prefix = prefix ? prefix += '.' : '';
             suffix = suffix ? '.' + suffix : '';
@@ -897,7 +900,7 @@ var FormGenerator = function () {
     }, {
         key: 'getCycleKey',
         value: function getCycleKey(key) {
-            var reverse = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+            var reverse = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
 
             if (this.arrayIndex || this.arrayIndex === 0) {
                 if (reverse) {
@@ -999,7 +1002,7 @@ var FormGenerator = function () {
     }, {
         key: 'subFormWrapper',
         value: function subFormWrapper(parent) {
-            var toggle = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+            var toggle = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
 
             var key = this.getCycleKey(this.currentKey);
             var label = void 0;
@@ -1014,20 +1017,22 @@ var FormGenerator = function () {
             }, parent);
             var body = new Elm('div.panel-body', panel);
             if (toggle) {
+                (function () {
 
-                var plus = new Elm('span', {
-                    cls: 'glyphicon glyphicon-plus',
-                    css: {
-                        'margin-left': '10px',
-                        'cursor': 'pointer',
-                        'font-size': '16px'
-                    }
-                }, label);
-                label.addEventListener('click', function (e) {
-                    panel.style.display = 'block';
-                    Utils.fadeOutRemove(plus);
-                });
-                panel.style.display = 'none';
+                    var plus = new Elm('span', {
+                        cls: 'glyphicon glyphicon-plus',
+                        css: {
+                            'margin-left': '10px',
+                            'cursor': 'pointer',
+                            'font-size': '16px'
+                        }
+                    }, label);
+                    label.addEventListener('click', function (e) {
+                        panel.style.display = 'block';
+                        Utils.fadeOutRemove(plus);
+                    });
+                    panel.style.display = 'none';
+                })();
             }
 
             return body;
@@ -1164,7 +1169,6 @@ var FormGenerator = function () {
             }
 
             var model = this.getModel(item);
-            console.log(model.type);
             var wrapper = null;
             var element = null;
 
@@ -1206,7 +1210,6 @@ var FormGenerator = function () {
                         _this4.onChange(data);
                     });
                 } else if (model.type === 'element') {
-                    console.log(model);
                     new Elm('div', { html: model.html }, parent);
                 }
 
@@ -1264,19 +1267,21 @@ var FormGenerator = function () {
             }
 
             if (model.toggle) {
-                var label = wrapper.previousElementSibling;
-                var plus = new Elm('span', {
-                    cls: 'glyphicon glyphicon-plus',
-                    css: {
-                        'margin-left': '10px',
-                        'cursor': 'pointer'
-                    }
-                }, label);
-                label.addEventListener('click', function (e) {
-                    wrapper.style.display = 'block';
-                    Utils.fadeOutRemove(plus);
-                });
-                wrapper.style.display = 'none';
+                (function () {
+                    var label = wrapper.previousElementSibling;
+                    var plus = new Elm('span', {
+                        cls: 'glyphicon glyphicon-plus',
+                        css: {
+                            'margin-left': '10px',
+                            'cursor': 'pointer'
+                        }
+                    }, label);
+                    label.addEventListener('click', function (e) {
+                        wrapper.style.display = 'block';
+                        Utils.fadeOutRemove(plus);
+                    });
+                    wrapper.style.display = 'none';
+                })();
             }
             // Some form elements have children. E.g select menus
             try {
@@ -1600,7 +1605,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 /**
- * Events
+ * //Events
  * dragenter
  * dragover
  * ondragleave
@@ -1608,7 +1613,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  * progress
  * success
  * error
+ * start
+ * complete
  */
+
 var Droppad = function () {
 
     /**
@@ -1616,7 +1624,7 @@ var Droppad = function () {
      * Constants
      * ------------------------------------------------------------------------
      */
-    var STYLES = '\n        .imageCloud {\n            position: relative;\n            background-size: cover;\n            background-position: 50% 50%;\n            cursor: pointer;\n            font-family: arial, serif;\n            min-height: 200px;\n            display: flex;\n        }\n        .imageCloud input {\n            position: absolute;\n            top: 0;\n            right: 0;\n            bottom: 0;\n            left: 0;\n        }\n        .imageCloud .dropSheet {\n            position: absolute;\n            top: 0;\n            bottom: 0;\n            left: 0;\n            right: 0;\n            background: rgba(0, 0, 0, 0.5);\n            text-align: center;\n            padding: 10px;\n            opacity: 0;\n            transition: ease all 0.5s;\n            pointer-events: none;\n        }\n\n        .imageCloud .dropSheet.shown {\n            background: rgba(0, 0, 0, 0);\n            opacity: 1;\n        }\n\n        .imageCloud:hover .dropSheet {\n            background: rgba(0, 0, 0, 0.5);\n            opacity: 1;\n        }\n        .imageCloud:hover .dropSheet > div .dropLabel {\n            text-shadow: none;\n        }\n        .imageCloud.active {\n            background: rgba(0, 0, 0, 0.5);\n            background-size: cover;\n            background-position: center;\n        }\n\n        .imageCloud .dropSheet > div {\n            padding: 10px;\n            color: white;\n            border: dashed 2px #fff;\n            position: absolute;\n            top: 10px;\n            bottom: 10px;\n            left: 10px;\n            right: 10px;\n        }\n\n        .imageCloud .dropSheet > div .dropLabel {\n            position: absolute;\n            top: 50%;\n            left: 50%;\n            transform: translate(-50%, -50%);\n            transition: ease all 0.5s;\n            text-shadow: rgb(122, 122, 122) 1.5px 1.5px 0px, 0px 0px 9px rgba(0, 0, 0, 0.45);\n            width: 100%;\n        }\n\n        .imageCloud .dropSheet > div p {\n            font-size: 18px;\n        }\n\n        .imageCloud .fallBack {\n            flex-grow: 1;\n            pointer-events: none;\n            background-color: gray;\n            background-size: cover;\n            background-position: center;\n        }\n\n        .imageCloud .loadedImage {\n            flex-grow: 1;\n            pointer-events: none;\n            opacity: 0;\n            transition: ease opacity 0.5s;\n            background-size: cover;\n            background-position: center;\n            -webkit-filter: grayscale(100%); /* Chrome, Safari, Opera */\n            filter: grayscale(100%);\n        }\n        .imageCloud .progressbar {\n            position: absolute;\n            top: 0;\n            left: 0;\n            height: 6px;\n            width: 0%;\n            background: #4caf50;\n            z-index: 1;\n            transition: ease all 1s\n        }\n        .droppad-input {\n            position: absolute;\n            top: 0;\n            left: 0;\n            height: 0;\n            width: 0;\n            visibility: hidden;\n        }\n        .fillSpace {\n            position: absolute;\n            top: 0;\n            left: 0;\n            right: 0;\n            bottom: 0;\n            display: flex;\n            pointer-events: none;\n        }\n    ';
+    var STYLES = '\n        .imageCloud {\n            position: relative;\n            background-size: cover;\n            background-position: 50% 50%;\n            cursor: pointer;\n            font-family: arial, serif;\n            min-height: 200px;\n            display: flex;\n        }\n        .imageCloud input {\n            position: absolute;\n            top: 0;\n            right: 0;\n            bottom: 0;\n            left: 0;\n        }\n        .imageCloud .dropSheet {\n            position: absolute;\n            top: 0;\n            bottom: 0;\n            left: 0;\n            right: 0;\n            background: rgba(0, 0, 0, 0.5);\n            text-align: center;\n            padding: 10px;\n            opacity: 0;\n            transition: ease all 0.5s;\n            pointer-events: none;\n        }\n\n        .imageCloud .dropSheet.shown {\n            background: rgba(0, 0, 0, 0);\n            opacity: 1;\n        }\n\n        .imageCloud:hover .dropSheet {\n            background: rgba(0, 0, 0, 0.5);\n            opacity: 1;\n        }\n        .imageCloud:hover .dropSheet > div .dropLabel {\n            text-shadow: none;\n        }\n        .imageCloud.active {\n            background: rgba(0, 0, 0, 0.5);\n            background-size: cover;\n            background-position: center;\n        }\n\n        .imageCloud .dropSheet > div {\n            padding: 10px;\n            color: white;\n            border: dashed 2px #fff;\n            position: absolute;\n            top: 10px;\n            bottom: 10px;\n            left: 10px;\n            right: 10px;\n        }\n\n        .imageCloud .dropSheet > div .dropLabel {\n            position: absolute;\n            top: 50%;\n            left: 50%;\n            transform: translate(-50%, -50%);\n            transition: ease all 0.5s;\n            text-shadow: rgb(122, 122, 122) 1.5px 1.5px 0px, 0px 0px 9px rgba(0, 0, 0, 0.45);\n            width: 100%;\n        }\n\n        .imageCloud .dropSheet > div p {\n            font-size: 18px;\n        }\n\n        .imageCloud .fallBack {\n            flex-grow: 1;\n            pointer-events: none;\n            background-color: gray;\n            background-size: cover;\n            background-position: center;\n        }\n\n        .imageCloud .loadedImage {\n            flex-grow: 1;\n            pointer-events: none;\n            opacity: 0;\n            transition: ease opacity 0.5s;\n            background-size: cover;\n            background-position: center;\n            -webkit-filter: grayscale(100%); /* Chrome, Safari, Opera */\n            filter: grayscale(100%);\n        }\n        .imageCloud .progressbar {\n            position: absolute;\n            top: 0;\n            left: 0;\n            height: 6px;\n            width: 0%;\n            background: #4caf50;\n            z-index: 1;\n            transition: ease all 1s\n        }\n        .droppad-input {\n            position: absolute;\n            top: 0;\n            left: 0;\n            height: 0;\n            width: 0;\n            visibility: hidden;\n        }\n        .fillSpace {\n            position: absolute;\n            top: 0;\n            left: 0;\n            right: 0;\n            bottom: 0;\n            display: flex;\n            pointer-events: none;\n        }\n        .droppad-thumbnails {\n            padding-top: 20px;\n        }\n        .droppad-thumbnail {\n            background-size: cover;\n            background-position: center;\n            position: relative;\n            display: inline-block;\n            width: 120px;\n            height: 120px;\n            margin-right: 15px;\n            margin-bottom: 15px;\n        }\n        .icon-close-button {\n            width: 30px;\n            height: 30px;\n            background: black;\n            border-radius: 50%;\n            position: absolute;\n            right: -10px;\n            top: -10px;\n            cursor: pointer;\n        }\n        .icon-close-x {\n            stroke: white;\n            fill: transparent;\n            stroke-width: 3;\n        }\n    ';
 
     var Default = {
         backgroundUrlPrefix: '',
@@ -1630,23 +1638,16 @@ var Droppad = function () {
         showErrors: true,
         title: 'Drop Image',
         subTitle: 'or click here',
-        customHandler: false
-
-        //Event triggers
-
-        // start - Fires when an upload starts
-        // success - Fires for success on each uploaded file
-        // error
-        // complete - Fires when all files have been uploaded
-
-        // dragover
-        // dragenter
-        // dragleave
-        // drop
-        // progress
+        customHandler: false,
+        backgroundLoading: true,
+        thumbnailLoading: true,
+        thumbnailParent: null,
+        initThumbnails: [] // ['http://example.jpg', 'http://example2.jpg']
     };
 
     var Template = '\n        <div class="progressbar"></div>\n        <div class="fillSpace afterLoad">\n\n        </div>\n        <div class="fillSpace beforeLoad">\n\n        </div>\n        <div class="dropSheet shown">\n            <div>\n                <div class="dropLabel">\n                    <p>*|title|*</p>\n                    <p>\n                        <small>*|subTitle|*</small>\n                    </p>\n                </div>\n            </div>\n        </div>\n    ';
+
+    var CloseIcon = '\n        <div class="icon-close-button">\n            <svg viewbox="0 0 40 40">\n                <path class="icon-close-x" d="M 10,10 L 30,30 M 30,10 L 10,30" />\n            </svg>\n        </div>\n    ';
 
     var Droppad = function (_Emitter) {
         _inherits(Droppad, _Emitter);
@@ -1654,19 +1655,22 @@ var Droppad = function () {
         function Droppad(elm, options) {
             _classCallCheck(this, Droppad);
 
-            var _this = _possibleConstructorReturn(this, (Droppad.__proto__ || Object.getPrototypeOf(Droppad)).call(this));
+            var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Droppad).call(this));
 
             var defaultOpt = JSON.parse(JSON.stringify(Default));
             _this.defaults = Utils.extend(defaultOpt, options);
             _this.droppad = elm;
             _this.currentImage = null;
+            _this.uid = 0;
             _this.beforeElmQue = [];
             _this.afterElmQue = [];
+            _this.uploadedFiles = {};
             _this.injectStyles();
             _this.createDOM();
             _this.setEvents();
             _this.droppadElements();
-            _this.setBackground(); //TODO
+            _this.setBackground();
+            _this.initThumbnails();
             return _this;
         }
         // getters
@@ -1691,13 +1695,14 @@ var Droppad = function () {
             value: function createDOM() {
                 var _this2 = this;
 
-                Utils.setClass(this.droppad, 'imageCloud');
-                Utils.setClass(this.droppad, 'active');
-                Utils.setClass(this.droppad, 'droppad-clickable');
-                var template = (' ' + Template).slice(1); //Force string copy for. Bug in some  chrome versions
-                template = template.replace('*|title|*', this.defaults.title).replace('*|subTitle|*', this.defaults.subTitle);
+                this.dropArea = new Elm('div', this.droppad);
+                Utils.setClass(this.dropArea, 'imageCloud');
+                Utils.setClass(this.dropArea, 'active');
+                Utils.setClass(this.dropArea, 'droppad-clickable');
+                var template = (' ' + this.Template).slice(1); //Force string copy. Bug in some  chrome versions
+                template = template.replace('*|title|*', this.defaults.title || '').replace('*|subTitle|*', this.defaults.subTitle || '');
 
-                this.droppad.innerHTML = template;
+                this.dropArea.innerHTML = template;
                 this.el_clickableInput = new Elm('input.droppad-input', {
                     type: 'file',
                     id: 'id-' + Math.floor(Math.random() * 100), //TODO remove
@@ -1707,7 +1712,14 @@ var Droppad = function () {
                         _this2.upload(e.target.files);
                     },
                     multiple: true
-                }, this.droppad);
+                }, this.dropArea);
+                if (this.defaults.thumbnailLoading) {
+                    if (!this.defaults.thumbnailParent) {
+                        this.el_thumbails = new Elm('div.droppad-thumbnails', this.droppad);
+                    } else {
+                        this.el_thumbails = this.defaults.thumbnailParent;
+                    }
+                }
             }
         }, {
             key: 'setEvents',
@@ -1722,19 +1734,19 @@ var Droppad = function () {
                         e.preventDefault();
                     }
                 }
-                this.droppad.ondragenter = function (e) {
+                this.dropArea.ondragenter = function (e) {
                     noPropagation(e);
                     _this3.dragenter(e);
                 };
-                this.droppad.ondragover = function (e) {
+                this.dropArea.ondragover = function (e) {
                     noPropagation(e);
                     _this3.dragover(e);
                 };
-                this.droppad.ondragleave = function (e) {
+                this.dropArea.ondragleave = function (e) {
                     noPropagation(e);
                     _this3.dragleave(e);
                 };
-                this.droppad.ondrop = function (e) {
+                this.dropArea.ondrop = function (e) {
                     noPropagation(e);
                     _this3.drop(e);
                 };
@@ -1755,16 +1767,24 @@ var Droppad = function () {
         }, {
             key: 'droppadElements',
             value: function droppadElements() {
-                this.el_fallback = this.droppad.querySelector('.fallBack');
-                this.el_loadedImage = this.droppad.querySelector('.loadedImage');
-                this.el_progressbar = this.droppad.querySelector('.progressbar');
+                // get the template elements
+                this.el_fallback = this.dropArea.querySelector('.fallBack');
+                this.el_loadedImage = this.dropArea.querySelector('.loadedImage');
+                this.el_progressbar = this.dropArea.querySelector('.progressbar');
+            }
+        }, {
+            key: 'uploadModalTrigger',
+            value: function uploadModalTrigger() {
+                //Method to call if you need external trigger like button
+                this.el_clickableInput.click();
             }
         }, {
             key: 'setBackground',
             value: function setBackground() {
+                if (!this.defaults.backgroundImage) return;
                 var prefix = this.defaults.backgroundUrlPrefix === '' ? '' : this.defaults.backgroundUrlPrefix.replace(/\/?$/, '/');
                 var url = prefix + this.defaults.backgroundImage;
-                this.droppad.style.backgroundImage = 'url(' + url + ')';
+                this.dropArea.style.backgroundImage = 'url(' + url + ')';
             }
         }, {
             key: 'showAsBackground',
@@ -1774,15 +1794,16 @@ var Droppad = function () {
                 /**
                  * let the images fade in 500ms
                  */
-                Utils.removeClass(this.droppad, 'active');
+                Utils.removeClass(this.dropArea, 'active');
+                var len = files.length > this.defaults.maxFiles ? this.defaults.maxFiles : files.length;
 
                 var _loop = function _loop(i) {
                     var elBefore = new Elm('div.loadedImage', {
                         css: {
                             'opacity': 1
                         }
-                    }, _this4.droppad.querySelector('.beforeLoad'));
-                    var elAfter = new Elm('div.fallBack', _this4.droppad.querySelector('.afterLoad'));
+                    }, _this4.dropArea.querySelector('.beforeLoad'));
+                    var elAfter = new Elm('div.fallBack', { cls: 'uid-' + files[i].uid }, _this4.dropArea.querySelector('.afterLoad'));
                     _this4.beforeElmQue.push(elBefore);
                     _this4.afterElmQue.push(elAfter);
                     var file = files[i];
@@ -1798,39 +1819,121 @@ var Droppad = function () {
                     reader.readAsDataURL(file);
                 };
 
-                for (var i = 0; i < files.length; i++) {
+                for (var i = 0; i < len; i++) {
                     var reader;
 
                     _loop(i);
                 }
             }
         }, {
+            key: 'initThumbnails',
+            value: function initThumbnails() {
+                var _this5 = this;
+
+                if (!this.defaults.initThumbnails.length) return;
+
+                var _loop2 = function _loop2(i) {
+                    var uid = ++_this5.uid;
+                    var imageUrl = _this5.defaults.initThumbnails[i];
+                    var thumb = new Elm('div.droppad-thumbnail', {
+                        cls: 'uid-' + uid,
+                        html: CloseIcon
+                    }, //click: () => {this.remove(files[i]['uid'])} // this would be a nice place to enlarge the thumbnail
+                    _this5.el_thumbails);
+                    var close = thumb.querySelector('.icon-close-button');
+                    close.addEventListener('click', function () {
+                        _this5.remove(uid);
+                    }, false);
+                    thumb.style.backgroundImage = 'url(' + imageUrl + ')';
+                    _this5.uploadedFiles['uid-' + _this5.uid] = { image: imageUrl, file: { uid: uid } };
+                };
+
+                for (var i = 0; i < this.defaults.initThumbnails.length; i++) {
+                    _loop2(i);
+                }
+            }
+        }, {
+            key: 'createThumbnails',
+            value: function createThumbnails(files) {
+                var _this6 = this;
+
+                var len = files.length > this.defaults.maxFiles ? this.defaults.maxFiles : files.length;
+
+                var _loop3 = function _loop3(i) {
+                    var thumb = new Elm('div.droppad-thumbnail', {
+                        cls: 'uid-' + files[i]['uid'],
+                        html: CloseIcon
+                    }, //click: () => {this.remove(files[i]['uid'])} // this would be a nice place to enlarge the thumbnail
+                    _this6.el_thumbails);
+                    var close = thumb.querySelector('.icon-close-button');
+                    close.addEventListener('click', function () {
+                        _this6.remove(files[i]['uid']);
+                    }, false);
+
+                    var file = files[i];
+                    reader = new FileReader();
+
+                    reader.onload = function (event) {
+                        thumb.style.backgroundImage = 'url(' + event.target.result + ')';
+                    };
+                    reader.readAsDataURL(file);
+                };
+
+                for (var i = 0; i < len; i++) {
+                    var reader;
+
+                    _loop3(i);
+                }
+            }
+        }, {
+            key: 'remove',
+            value: function remove(uid) {
+                delete this.uploadedFiles['uid-' + uid];
+                if (!this.uploadedFiles.length) {
+                    Utils.setClass(this.dropArea, 'active');
+                }
+                // elms can be thumbnail and / or backgroundImage
+                var elms = this.droppad.querySelectorAll('.uid-' + uid);
+                for (var i = 0; i < elms.length; i++) {
+                    Utils.fadeOutRemove(elms[i]);
+                }
+                this.trigger('remove', uid);
+            }
+        }, {
             key: 'dragenter',
             value: function dragenter(e) {
-                Utils.setClass(this.droppad, 'dragenter');
+                Utils.setClass(this.dropArea, 'dragenter');
                 this.trigger('dragenter', e);
             }
         }, {
             key: 'dragover',
             value: function dragover(e) {
-                Utils.removeClass(this.droppad, 'dragover');
+                Utils.removeClass(this.dropArea, 'dragover');
                 this.trigger('dragover', e);
             }
         }, {
             key: 'dragleave',
             value: function dragleave(e) {
-                Utils.removeClass(this.droppad, 'dragover');
+                Utils.removeClass(this.dropArea, 'dragover');
                 this.trigger('dragleave', e);
             }
         }, {
             key: 'drop',
             value: function drop(e) {
-                Utils.removeClass(this.droppad, 'dragover');
+                Utils.removeClass(this.dropArea, 'dragover');
                 this.trigger('drop', e);
                 var files = e.target.files || e.dataTransfer.files;
-                //var file = files[0];
 
-                this.showAsBackground(files);
+                //Add reference id to each file so we can access it throug thumbnails
+                for (var i = 0; i < files.length; i++) {
+                    files[i]['uid'] = ++this.uid;
+                }
+                if (this.defaults.backgroundLoading) {
+                    this.showAsBackground(files);
+                }
+                if (this.defaults.thumbnailLoading) {
+                    this.createThumbnails(files);
+                }
                 this.upload(files);
             }
         }, {
@@ -1862,7 +1965,7 @@ var Droppad = function () {
         }, {
             key: 'uploadSingle',
             value: function uploadSingle(file, id) {
-                var _this5 = this;
+                var _this7 = this;
 
                 var headers = {
                     'X-Requested-With': 'XMLHttpRequest',
@@ -1874,21 +1977,21 @@ var Droppad = function () {
                 var errors = this.validate(file);
                 if (errors.length) {
                     Utils.foreach(errors, function (err) {
-                        _this5.trigger('error', err);
-                        if (_this5.defaults.showErrors) {
+                        _this7.trigger('error', err);
+                        if (_this7.defaults.showErrors) {
                             new Alert('danger', {
                                 message: err,
                                 timer: 6000
                             });
                         }
                     });
+                    this.remove(document.querySelectorAll('.uid-' + file.uid));
                     return;
                 }
-                formData.append('file', file, file.name); //file.name is not required Check server side implementation of this
-
+                formData.append('file', file, file.name);
 
                 var xhr = new XMLHttpRequest();
-                //add trailing slash if doesn't exists
+                //add tailing slash if doesn't exists
                 var url = this.defaults.url;
                 xhr.open('POST', url, true);
                 for (var key in headers) {
@@ -1899,16 +2002,16 @@ var Droppad = function () {
                     if (xhr.readyState !== 4) return;
                     var data = Utils.attemptJson(xhr.responseText);
                     if (xhr.status === 200) {
-                        _this5.uploadSuccess(data, file);
+                        _this7.uploadSuccess(data, file);
                     } else {
-                        _this5.uploadError(data);
+                        _this7.uploadError(data);
                         //TODO show this to the user
                     }
                 };
                 xhr.upload.addEventListener('progress', function (e) {
-                    _this5.chunkTotal.totals[id] = e.total;
-                    _this5.chunkTotal.loads[id] = e.loaded;
-                    _this5.uploadProgress();
+                    _this7.chunkTotal.totals[id] = e.total;
+                    _this7.chunkTotal.loads[id] = e.loaded;
+                    _this7.uploadProgress();
                 }, false);
 
                 xhr.send(formData);
@@ -1921,6 +2024,7 @@ var Droppad = function () {
                     totals: Utils.range(files.length, 0, 0),
                     loads: Utils.range(files.length, 0, 0) };
 
+                // returns e.q [0,0,0] for three files
                 this.filesLenght = files.length;
 
                 if (this.defaults.customHandler) {
@@ -1928,20 +2032,22 @@ var Droppad = function () {
                     return;
                 }
 
-                if (files.length > this.defaults.maxFiles) {
-                    var err = 'The maximum amount of files you can upload is ' + this.defaults.maxFiles;
-                    this.trigger('error', err);
-                    if (this.defaults.showErrors) {
-                        new Alert('danger', {
-                            message: err,
-                            timer: 6000
-                        });
-                    }
-                    return;
-                }
-
                 for (var i = 0; i < files.length; i++) {
                     var file = files[i];
+
+                    var counter = i + 1;
+                    if (counter > this.defaults.maxFiles) {
+                        var err = 'The maximum amount of files you can upload is ' + this.defaults.maxFiles;
+                        this.trigger('error', err);
+                        if (this.defaults.showErrors) {
+                            new Alert('danger', {
+                                message: err,
+                                timer: 6000
+                            });
+                        }
+                        break;
+                    }
+
                     this.uploadSingle(file, i);
                 }
             }
@@ -1961,21 +2067,24 @@ var Droppad = function () {
         }, {
             key: 'uploadSuccess',
             value: function uploadSuccess(data, file) {
-                var _this6 = this;
+                var _this8 = this;
 
                 data['file'] = file;
-                this.trigger('success', data);
+                this.uploadedFiles['uid-' + file.uid] = data;
 
+                this.trigger('success', data);
                 this.el_progressbar.style.display = 'none';
                 this.el_progressbar.style.width = 0;
 
                 var elBefore = this.beforeElmQue.shift();
                 var elAfter = this.afterElmQue.shift();
-                elAfter.style.opacity = 1;
-                elBefore.style.opacity = 0;
+                if (this.defaults.backgroundLoading) {
+                    elAfter.style.opacity = 1;
+                    elBefore.style.opacity = 0;
+                }
                 this.currentImage = data;
                 setTimeout(function () {
-                    _this6.el_progressbar.style.display = 'block';
+                    _this8.el_progressbar.style.display = 'block';
                 }, 400);
 
                 this.successCounter = this.successCounter ? this.successCounter + 1 : 1;
@@ -1991,9 +2100,11 @@ var Droppad = function () {
                 this.trigger('error', data);
                 new Alert('danger', 'not successfull');
             }
-
-            //add to Utils?
-
+        }, {
+            key: 'getUploadedFiles',
+            value: function getUploadedFiles() {
+                return this.uploadedFiles;
+            }
         }, {
             key: 'formatBytes',
             value: function formatBytes(bytes) {
@@ -2016,6 +2127,12 @@ var Droppad = function () {
             key: 'Template',
             get: function get() {
                 return Template;
+            }
+
+            // setters
+            ,
+            set: function set(template) {
+                Template = template;
             }
         }], [{
             key: 'Default',
@@ -2143,6 +2260,8 @@ var Backdrop = function () {
         allowMany: false,
         closeOnClick: true };
 
+    //TODO emmitt this event
+
     var Backdrop = function () {
         function Backdrop(options) {
             _classCallCheck(this, Backdrop);
@@ -2259,7 +2378,7 @@ var Preloader = function () {
         function Preloader(pathList, options) {
             _classCallCheck(this, Preloader);
 
-            var _this = _possibleConstructorReturn(this, (Preloader.__proto__ || Object.getPrototypeOf(Preloader)).call(this));
+            var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Preloader).call(this));
 
             _this.defaults = {
                 prefix: null

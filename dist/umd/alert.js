@@ -153,7 +153,6 @@ var Alert = function () {
             this.__proto__.instances.pop();
             setTimeout(function () {
                 _this3.modal.remove();
-                Utils.removeClass(document.body, 'modal-mode');
                 cb();
             }, 500);
         }
