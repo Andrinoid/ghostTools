@@ -116,7 +116,7 @@ class Elm {
             this.element.style[prop] = obj[prop];
         }
     }
-    
+
     click(fn) {
         this.element.addEventListener('click', function (e) {
             fn(e);
@@ -129,12 +129,19 @@ class Elm {
         });
     }
 
-    inject(to) {
-        let parent = Utils.normalizeElement(to);
-        if(this.injectType === 'top') {
-            parent.insertBefore(this.element, parent.childNodes[0]);
-        } else {
-            parent.appendChild(this.element);
+    inject(elm) {
+        let refElm = Utils.normalizeElement(elm);
+        if(this.injectType === 'top') { // append as first child of refElm
+            refElm.insertBefore(this.element, refElm.childNodes[0]);
+        } else if(this.injectType === 'before')  { // append before refElm
+            parent = refElm.parentNode;
+            refElm.parentNode.insertBefore(this.element, refElm);
+        } else if(this.injectType === 'after') { // append after refElm
+            parent = refElm.parentNode;
+            refElm.parentNode.insertBefore(this.element, refElm.nextSibling);
+        }
+        else { // append as last child of refElm
+            refElm.appendChild(this.element);
         }
     }
 

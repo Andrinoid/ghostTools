@@ -155,12 +155,22 @@ var Elm = function () {
         }
     }, {
         key: 'inject',
-        value: function inject(to) {
-            var parent = Utils.normalizeElement(to);
+        value: function inject(elm) {
+            var refElm = Utils.normalizeElement(elm);
             if (this.injectType === 'top') {
-                parent.insertBefore(this.element, parent.childNodes[0]);
+                // append as first child of refElm
+                refElm.insertBefore(this.element, refElm.childNodes[0]);
+            } else if (this.injectType === 'before') {
+                // append before refElm
+                parent = refElm.parentNode;
+                refElm.parentNode.insertBefore(this.element, refElm);
+            } else if (this.injectType === 'after') {
+                // append after refElm
+                parent = refElm.parentNode;
+                refElm.parentNode.insertBefore(this.element, refElm.nextSibling);
             } else {
-                parent.appendChild(this.element);
+                // append as last child of refElm
+                refElm.appendChild(this.element);
             }
         }
     }]);
