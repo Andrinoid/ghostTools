@@ -122,11 +122,22 @@
     <script src="./dist/ghostTools.js"></script>
     <!-- droppad example -->
     <script>
+        new Modal({
+            message: '<div class="dropmodal"></div>',
+            onOpen: function() {
+                new Droppad(document.querySelector('.dropmodal'), {
+                    url: 'https://ghostlamp.com/icloud/upload/ghostlamp',
+                    backgroundLoading: false,
+                    //initThumbnails: ['https://ghostlamp.com//icloud/images/ghostlamp/2344635l1504092560.jpeg', 'https://ghostlamp.com/icloud/images/ghostlamp/2344636l1504092560.png']
+                    //thumbnailParent: document.body
+                });
+            }
+        });
         var droppad = new Droppad(document.querySelector('.dropper'), {
             url: 'https://ghostlamp.com/icloud/upload/ghostlamp',
             backgroundLoading: false,
-            thumbnailLoading: true,
-            initThumbnails: ['https://ghostlamp.com//icloud/images/ghostlamp/2344635l1504092560.jpeg', 'https://ghostlamp.com/icloud/images/ghostlamp/2344636l1504092560.png']
+
+            //initThumbnails: ['https://ghostlamp.com//icloud/images/ghostlamp/2344635l1504092560.jpeg', 'https://ghostlamp.com/icloud/images/ghostlamp/2344636l1504092560.png']
             //thumbnailParent: document.body
         });
         droppad.on('remove', function() {
@@ -237,6 +248,6 @@
         //var schema = new SchemaDiscover(data);
         //var formgen = new FormGenerator({}, document.querySelector('#formWrap'));
     </script>
-</body>
+    </body>
 
 </html>

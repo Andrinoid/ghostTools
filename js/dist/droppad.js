@@ -44,7 +44,7 @@ var Droppad = function () {
         subTitle: 'or click here',
         customHandler: false,
         backgroundLoading: true,
-        thumbnailLoading: true,
+        thumbnailLoading: false,
         thumbnailParent: null,
         initThumbnails: [] // ['http://example.jpg', 'http://example2.jpg']
     };
@@ -157,14 +157,25 @@ var Droppad = function () {
                 var self = this;
                 // add event to document and listen for droppad-clickable elements
                 if (!this.__proto__.isClickable) {
-                    document.addEventListener('click', function (e) {
-                        var clsList = Array.prototype.slice.call(e.target.classList);
-                        if (clsList.indexOf('droppad-clickable') > -1) {
-                            var droppad = Utils.findAncestor(e.target, 'imageCloud');
-                            var input = droppad.querySelector('.droppad-input');
-                            input.click();
-                        }
-                    });
+                    (function () {
+                        var clickInput = function clickInput(e) {
+                            var clsList = Array.prototype.slice.call(e.target.classList);
+                            if (clsList.indexOf('droppad-clickable') > -1) {
+                                var droppad = Utils.findAncestor(e.target, 'imageCloud');
+                                var input = droppad.querySelector('.droppad-input');
+                                input.click();
+                            }
+                        };
+                        // bellow works in most cases. passing the document click to .droppad-clickable
+                        // droppad-clickable triggers click on the input element for its droppad
+                        document.addEventListener('click', function (e) {
+                            clickInput(e);
+                        });
+                        // In some cases elements does not allow click through. This is a fix for thouse cases
+                        _this3.dropArea.addEventListener('click', function (e) {
+                            clickInput(e);
+                        });
+                    })();
                 }
                 this.__proto__.isClickable = true;
             }

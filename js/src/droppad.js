@@ -186,7 +186,7 @@ const Droppad = (() => {
         subTitle: 'or click here',
         customHandler: false,
         backgroundLoading: true,
-        thumbnailLoading: true,
+        thumbnailLoading: false,
         thumbnailParent: null,
         initThumbnails: [] // ['http://example.jpg', 'http://example2.jpg']
     };
@@ -329,14 +329,24 @@ const Droppad = (() => {
             let self = this;
             // add event to document and listen for droppad-clickable elements
             if (!this.__proto__.isClickable) {
-                document.addEventListener('click', (e) => {
+                const clickInput = (e)=> {
                     var clsList = Array.prototype.slice.call(e.target.classList);
                     if (clsList.indexOf('droppad-clickable') > -1) {
                         let droppad = Utils.findAncestor(e.target, 'imageCloud');
                         let input = droppad.querySelector('.droppad-input')
                         input.click();
                     }
+                }
+                // bellow works in most cases. passing the document click to .droppad-clickable
+                // droppad-clickable triggers click on the input element for its droppad
+                document.addEventListener('click', (e) => {
+                    clickInput(e);
                 });
+                // In some cases elements does not allow click through. This is a fix for thouse cases
+                this.dropArea.addEventListener('click', (e) => {
+                    clickInput(e);
+                });
+
             }
             this.__proto__.isClickable = true;
         }
