@@ -426,8 +426,13 @@ var Modal = function () {
     }, {
         key: '_injectTemplate',
         value: function _injectTemplate() {
+            var _this3 = this;
+
             this.parent.appendChild(this.modal);
-            this.defaults.onOpen();
+            //Some js generated content may depend on parent with. setTimeout makes sure everything is in place before onOpen in called
+            setTimeout(function () {
+                _this3.defaults.onOpen();
+            });
         }
     }, {
         key: '_injectStyles',
@@ -441,7 +446,7 @@ var Modal = function () {
     }, {
         key: '_close',
         value: function _close() {
-            var _this3 = this;
+            var _this4 = this;
 
             var cb = arguments.length <= 0 || arguments[0] === undefined ? function () {} : arguments[0];
 
@@ -450,7 +455,7 @@ var Modal = function () {
             }
             Utils.setClass(this.chainDialog, 'fadeOutTop');
             setTimeout(function () {
-                _this3.modal.remove();
+                _this4.modal.remove();
                 Utils.removeClass(document.body, 'modal-mode');
                 cb();
             }, 500);
@@ -1914,7 +1919,8 @@ var Droppad = function () {
                     Utils.setClass(this.dropArea, 'active');
                 }
                 // elms can be thumbnail and / or backgroundImage
-                var elms = this.droppad.querySelectorAll('.uid-' + uid);
+                var elms = document.querySelectorAll('.uid-' + uid);
+                console.log(elms);
                 for (var i = 0; i < elms.length; i++) {
                     Utils.fadeOutRemove(elms[i]);
                 }
@@ -2124,7 +2130,11 @@ var Droppad = function () {
         }, {
             key: 'getUploadedFiles',
             value: function getUploadedFiles() {
-                return this.uploadedFiles;
+                var li = [];
+                for (var key in this.uploadedFiles) {
+                    li.push(this.defaults.backgroundUrlPrefix + this.uploadedFiles[key].image);
+                }
+                return li;
             }
         }, {
             key: 'formatBytes',

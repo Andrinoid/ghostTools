@@ -106,8 +106,13 @@ var Modal = function () {
     }, {
         key: '_injectTemplate',
         value: function _injectTemplate() {
+            var _this3 = this;
+
             this.parent.appendChild(this.modal);
-            this.defaults.onOpen();
+            //Some js generated content may depend on parent with. setTimeout makes sure everything is in place before onOpen in called
+            setTimeout(function () {
+                _this3.defaults.onOpen();
+            });
         }
     }, {
         key: '_injectStyles',
@@ -121,7 +126,7 @@ var Modal = function () {
     }, {
         key: '_close',
         value: function _close() {
-            var _this3 = this;
+            var _this4 = this;
 
             var cb = arguments.length <= 0 || arguments[0] === undefined ? function () {} : arguments[0];
 
@@ -130,7 +135,7 @@ var Modal = function () {
             }
             Utils.setClass(this.chainDialog, 'fadeOutTop');
             setTimeout(function () {
-                _this3.modal.remove();
+                _this4.modal.remove();
                 Utils.removeClass(document.body, 'modal-mode');
                 cb();
             }, 500);

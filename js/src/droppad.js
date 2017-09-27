@@ -442,7 +442,8 @@ const Droppad = (() => {
                 Utils.setClass(this.dropArea, 'active');
             }
             // elms can be thumbnail and / or backgroundImage
-            let elms = this.droppad.querySelectorAll('.uid-' + uid);
+            let elms = document.querySelectorAll('.uid-' + uid);
+            console.log(elms);
             for(let i = 0; i < elms.length; i++) {
                 Utils.fadeOutRemove(elms[i]);
             }
@@ -639,7 +640,11 @@ const Droppad = (() => {
         }
 
         getUploadedFiles() {
-            return this.uploadedFiles;
+            let li = [];
+            for(let key in this.uploadedFiles) {
+                li.push(this.defaults.backgroundUrlPrefix + this.uploadedFiles[key].image);
+            }
+            return li;
         }
 
         formatBytes(bytes) {

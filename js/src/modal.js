@@ -403,7 +403,10 @@ class Modal {
 
     _injectTemplate() {
         this.parent.appendChild(this.modal);
-        this.defaults.onOpen();
+        //Some js generated content may depend on parent with. setTimeout makes sure everything is in place before onOpen in called
+        setTimeout(()=> {
+            this.defaults.onOpen();
+        })
     }
 
     _injectStyles() {

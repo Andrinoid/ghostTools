@@ -308,7 +308,8 @@ var Droppad = function () {
                     Utils.setClass(this.dropArea, 'active');
                 }
                 // elms can be thumbnail and / or backgroundImage
-                var elms = this.droppad.querySelectorAll('.uid-' + uid);
+                var elms = document.querySelectorAll('.uid-' + uid);
+                console.log(elms);
                 for (var i = 0; i < elms.length; i++) {
                     Utils.fadeOutRemove(elms[i]);
                 }
@@ -518,7 +519,11 @@ var Droppad = function () {
         }, {
             key: 'getUploadedFiles',
             value: function getUploadedFiles() {
-                return this.uploadedFiles;
+                var li = [];
+                for (var key in this.uploadedFiles) {
+                    li.push(this.defaults.backgroundUrlPrefix + this.uploadedFiles[key].image);
+                }
+                return li;
             }
         }, {
             key: 'formatBytes',
