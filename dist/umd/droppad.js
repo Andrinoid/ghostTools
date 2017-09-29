@@ -311,7 +311,6 @@ var Droppad = function () {
                 }
                 // elms can be thumbnail and / or backgroundImage
                 var elms = document.querySelectorAll('.uid-' + uid);
-                console.log(elms);
                 for (var i = 0; i < elms.length; i++) {
                     Utils.fadeOutRemove(elms[i]);
                 }
@@ -338,7 +337,6 @@ var Droppad = function () {
         }, {
             key: 'drop',
             value: function drop(e) {
-                console.log('drop', e);
                 Utils.removeClass(this.dropArea, 'dragover');
                 this.trigger('drop', e);
                 var files = e.target.files || e.dataTransfer.files;
