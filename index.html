@@ -124,7 +124,19 @@
     <script src="./dist/ghostTools.js"></script>
     <!-- droppad example -->
     <script>
+    new Modal({
+      message: '<div class="dropmodal"></div>',
+      onOpen: function() {
+          new Droppad(document.querySelector('.dropmodal'), {
+              url: 'https://ghostlamp.com/icloud/upload/ghostlamp',
+              backgroundLoading: false,
+              thumbnailLoading: true,
+              //initThumbnails: ['https://ghostlamp.com//icloud/images/ghostlamp/2344635l1504092560.jpeg', 'https://ghostlamp.com/icloud/images/ghostlamp/2344636l1504092560.png']
 
+              //thumbnailParent: document.body
+          });
+      }
+  });
         var droppad = new Droppad(document.querySelector('.dropper'), {
             url: 'https://ghostlamp.com/icloud/upload/ghostlamp',
             backgroundLoading: false,
@@ -224,20 +236,20 @@
             },
         };
 
-        var formgen = new FormGenerator(schema, document.querySelector('#formWrap'));
-        formgen.onChange = function(e) {
-            //console.log(e);
-        };
-
-        var setdataBtn = document.getElementById('setData');
-        var getdataBtn = document.getElementById('getData');
-        setdataBtn.onclick = function() {
-            formgen.setData(data);
-        };
-        getdataBtn.onclick = function() {
-            var data = formgen.getData();
-            console.log(data);
-        };
+        // var formgen = new FormGenerator(schema, document.querySelector('#formWrap'));
+        // formgen.onChange = function(e) {
+        //     //console.log(e);
+        // };
+        //
+        // var setdataBtn = document.getElementById('setData');
+        // var getdataBtn = document.getElementById('getData');
+        // setdataBtn.onclick = function() {
+        //     formgen.setData(data);
+        // };
+        // getdataBtn.onclick = function() {
+        //     var data = formgen.getData();
+        //     console.log(data);
+        // };
         //var schema = new SchemaDiscover(data);
         //var formgen = new FormGenerator({}, document.querySelector('#formWrap'));
     </script>

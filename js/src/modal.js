@@ -384,12 +384,16 @@ class Modal {
         });
         let jsModal = this.modal.querySelector('.js_modal');
         if(this.defaults.outsideClick) {
-            jsModal.onclick = ()=> {this.close()}
+            jsModal.onclick = (e)=> {
+                //close only if clicked outside of js_dialog
+                if(!Utils.findAncestor(e.target, 'js_dialog')) {
+                    this.close();
+                }
+            }
         }
         let btn = this.modal.querySelectorAll('.close, .close-trigger');
         this.chainDialog = this.modal.querySelector('.js_dialog');
-        // prevent dialog from closing onclick because of the jsModal close event
-        this.chainDialog.onclick = (e)=> {e.stopPropagation()};
+
 
         for (var i=0; i<btn.length; i++) {
             btn[i].addEventListener('click', ()=> { this.close() }, false);

@@ -111,9 +111,7 @@ var Droppad = function () {
                     type: 'file',
                     id: 'id-' + Math.floor(Math.random() * 100), //TODO remove
                     change: function change(e) {
-                        //let file = e.target.files[0];
-                        _this2.showAsBackground(e.target.files);
-                        _this2.upload(e.target.files);
+                        _this2.drop(e);
                     },
                     multiple: true
                 }, this.dropArea);
@@ -166,13 +164,8 @@ var Droppad = function () {
                                 input.click();
                             }
                         };
-                        // bellow works in most cases. passing the document click to .droppad-clickable
-                        // droppad-clickable triggers click on the input element for its droppad
+
                         document.addEventListener('click', function (e) {
-                            clickInput(e);
-                        });
-                        // In some cases elements does not allow click through. This is a fix for thouse cases
-                        _this3.dropArea.addEventListener('click', function (e) {
                             clickInput(e);
                         });
                     })();
@@ -309,7 +302,6 @@ var Droppad = function () {
                 }
                 // elms can be thumbnail and / or backgroundImage
                 var elms = document.querySelectorAll('.uid-' + uid);
-                console.log(elms);
                 for (var i = 0; i < elms.length; i++) {
                     Utils.fadeOutRemove(elms[i]);
                 }

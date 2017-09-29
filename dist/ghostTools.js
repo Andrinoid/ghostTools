@@ -402,16 +402,15 @@ var Modal = function () {
             });
             var jsModal = this.modal.querySelector('.js_modal');
             if (this.defaults.outsideClick) {
-                jsModal.onclick = function () {
-                    _this2.close();
+                jsModal.onclick = function (e) {
+                    //close only if clicked outside of js_dialog
+                    if (!Utils.findAncestor(e.target, 'js_dialog')) {
+                        _this2.close();
+                    }
                 };
             }
             var btn = this.modal.querySelectorAll('.close, .close-trigger');
             this.chainDialog = this.modal.querySelector('.js_dialog');
-            // prevent dialog from closing onclick because of the jsModal close event
-            this.chainDialog.onclick = function (e) {
-                e.stopPropagation();
-            };
 
             for (var i = 0; i < btn.length; i++) {
                 btn[i].addEventListener('click', function () {
@@ -1722,9 +1721,7 @@ var Droppad = function () {
                     type: 'file',
                     id: 'id-' + Math.floor(Math.random() * 100), //TODO remove
                     change: function change(e) {
-                        //let file = e.target.files[0];
-                        _this2.showAsBackground(e.target.files);
-                        _this2.upload(e.target.files);
+                        _this2.drop(e);
                     },
                     multiple: true
                 }, this.dropArea);
@@ -1777,13 +1774,8 @@ var Droppad = function () {
                                 input.click();
                             }
                         };
-                        // bellow works in most cases. passing the document click to .droppad-clickable
-                        // droppad-clickable triggers click on the input element for its droppad
+
                         document.addEventListener('click', function (e) {
-                            clickInput(e);
-                        });
-                        // In some cases elements does not allow click through. This is a fix for thouse cases
-                        _this3.dropArea.addEventListener('click', function (e) {
                             clickInput(e);
                         });
                     })();
@@ -1920,7 +1912,6 @@ var Droppad = function () {
                 }
                 // elms can be thumbnail and / or backgroundImage
                 var elms = document.querySelectorAll('.uid-' + uid);
-                console.log(elms);
                 for (var i = 0; i < elms.length; i++) {
                     Utils.fadeOutRemove(elms[i]);
                 }

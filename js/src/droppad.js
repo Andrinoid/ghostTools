@@ -285,9 +285,7 @@ const Droppad = (() => {
                 type: 'file',
                 id: 'id-' + Math.floor(Math.random() * 100), //TODO remove
                 change: (e) => {
-                    //let file = e.target.files[0];
-                    this.showAsBackground(e.target.files);
-                    this.upload(e.target.files);
+                    this.drop(e);
                 },
                 multiple: true
             }, this.dropArea);
@@ -333,17 +331,12 @@ const Droppad = (() => {
                     var clsList = Array.prototype.slice.call(e.target.classList);
                     if (clsList.indexOf('droppad-clickable') > -1) {
                         let droppad = Utils.findAncestor(e.target, 'imageCloud');
-                        let input = droppad.querySelector('.droppad-input')
+                        let input = droppad.querySelector('.droppad-input');
                         input.click();
                     }
                 }
-                // bellow works in most cases. passing the document click to .droppad-clickable
-                // droppad-clickable triggers click on the input element for its droppad
+
                 document.addEventListener('click', (e) => {
-                    clickInput(e);
-                });
-                // In some cases elements does not allow click through. This is a fix for thouse cases
-                this.dropArea.addEventListener('click', (e) => {
                     clickInput(e);
                 });
 
@@ -443,7 +436,6 @@ const Droppad = (() => {
             }
             // elms can be thumbnail and / or backgroundImage
             let elms = document.querySelectorAll('.uid-' + uid);
-            console.log(elms);
             for(let i = 0; i < elms.length; i++) {
                 Utils.fadeOutRemove(elms[i]);
             }
