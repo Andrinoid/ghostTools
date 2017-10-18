@@ -40,7 +40,7 @@ var Timeline = function () {
         function Timeline(wrapper, options) {
             _classCallCheck(this, Timeline);
 
-            var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Timeline).call(this));
+            var _this = _possibleConstructorReturn(this, (Timeline.__proto__ || Object.getPrototypeOf(Timeline)).call(this));
 
             var defaultOpt = JSON.parse(JSON.stringify(Default));
             _this.defaults = Utils.extend(defaultOpt, options);
@@ -91,7 +91,7 @@ var Timeline = function () {
         }, {
             key: 'setData',
             value: function setData() {
-                var data = arguments.length <= 0 || arguments[0] === undefined ? this.defaults.data : arguments[0];
+                var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.defaults.data;
 
                 this.data = data;
                 this.drawTimeline();

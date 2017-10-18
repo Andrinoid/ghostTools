@@ -1,6 +1,6 @@
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 /**
  * ------------------------------------------------------------------------
@@ -160,11 +160,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * https://github.com/Andrinoid/ElementGenerator.js
  * ------------------------------------------------------------------------
  */
-
 var Elm = function () {
     //Simple element generator. Mootools style
     //tries to find method for keys in options and run it
-
     function Elm(type, options, parent, injectType) {
         _classCallCheck(this, Elm);
 
@@ -330,7 +328,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * Creates Modal
  * ------------------------------------------------------------------------
  */
-var Modalstyles = '\n        /* Modal styles */\n         body.modal-mode {\n             overflow: hidden !important\n         }\n         .modal-body,\n         .modal-title {\n             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;\n             line-height: 1.42857143;\n             color: #333\n         }\n         .js_modal,\n         .modal-backdrop {\n             position: fixed;\n             top: 0;\n             right: 0;\n             bottom: 0;\n             left: 0\n         }\n         .modal-backdrop {\n             z-index: 1040;\n             background-color: #000;\n             opacity: .5\n         }\n\n         .js_modal {\n             /*pointer-events: none;*/\n             z-index: 10000;\n             overflow-y: scroll;\n             -webkit-overflow-scrolling: touch;\n             outline: 0\n         }\n         .js_dialog {\n             pointer-events: all;\n             position: relative;\n             width: auto;\n             margin: 10px\n         }\n         .modal-header .close {\n             margin-top: -2px;\n             position: static;\n             height: 30px;\n         }\n         .modal-theme-blue .close {\n             text-shadow: none;\n             opacity: 1;\n             font-size: 31px;\n             font-weight: normal;\n         }\n         .modal-theme-blue .close span {\n             color: white;\n         }\n         .modal-theme-blue .close span:hover {\n             color: #fbc217;\n         }\n         .close.standalone {\n             position: absolute;\n             right: 15px;\n             top: 13px;\n             z-index: 1;\n             height: 30px;\n         }\n         .modal-title {\n             margin: 0;\n             font-size: 18px;\n             font-weight: 500\n         }\n         button.close {\n             -webkit-appearance: none;\n             padding: 0;\n             cursor: pointer;\n             background: 0 0;\n             border: 0\n         }\n         .modal-content {\n             position: relative;\n             background-color: #fff;\n             background-clip: padding-box;\n             border-radius: 2px;\n             outline: 0;\n             box-shadow: 0 3px 9px rgba(0, 0, 0, .5)\n         }\n         .modal-theme-blue .modal-content {\n            background-color: #4a6173;\n         }\n         .modal-header {\n             min-height: 16.43px;\n             padding: 15px;\n             border-bottom: 1px solid #e5e5e5;\n             min-height: 30px\n         }\n         .modal-theme-blue .modal-header {\n            border-bottom: none;\n         }\n         .modal-body {\n             position: relative;\n             padding: 15px;\n             font-size: 14px\n         }\n         .close {\n             float: right;\n             font-size: 21px;\n             font-weight: 700;\n             line-height: 1;\n             color: #000;\n             text-shadow: 0 1px 0 #fff;\n             opacity: .2\n         }\n         .js_dialog.js_modal-full {\n            margin: 0;\n            height: 100%;\n            width: 100%;\n         }\n         .js_dialog.js_modal-full .modal-content {\n            border: none;\n            box-shadow: none;\n            border-radius: 0;\n            height: 100%;\n         }\n         @media (min-width: 768px) {\n             .js_dialog {\n                 width: 600px;\n                 margin: 30px auto\n             }\n             .modal-content {\n                 box-shadow: 0 5px 15px rgba(0, 0, 0, .5)\n             }\n             .js_modal-sm {\n                 width: 300px\n             }\n         }\n         @media (min-width: 992px) {\n             .js_modal-lg {\n                 width: 980px\n             }\n         }\n\n         .ghost-focus {\n             background: transparent;\n             z-index: 1000;\n         }\n\n\n         /*** Animations ***/\n         @-webkit-keyframes fadeInDown {\n             from {\n                 opacity: 0;\n                 -webkit-transform: translate3d(0, -10px, 0);\n                 transform: translate3d(0, -10px, 0);\n             }\n             to {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none;\n             }\n         }\n         @keyframes fadeInDown {\n             from {\n                 opacity: 0;\n                 -webkit-transform: translate3d(0, -10px, 0);\n                 transform: translate3d(0, -10px, 0);\n             }\n             to {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none;\n             }\n         }\n         @-webkit-keyframes fadeInTop {\n             from {\n                 opacity: 0;\n                 -webkit-transform: translate3d(0, 10px, 0);\n                 transform: translate3d(0, 10px, 0);\n             }\n             to {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none;\n             }\n         }\n         @keyframes fadeInTop {\n             from {\n                 opacity: 0;\n                 -webkit-transform: translate3d(0, 10px, 0);\n                 transform: translate3d(0, 10px, 0);\n             }\n             to {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none;\n             }\n         }\n         @-webkit-keyframes fadeOutTop {\n             0% {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none\n             }\n             100% {\n                 opacity: 0;\n                 -webkit-transform: translate3d(0, -10px, 0);\n                 transform: translate3d(0, -10px, 0)\n             }\n         }\n         @keyframes fadeOutTop {\n             0% {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none\n             }\n             100% {\n                 opacity: 0;\n                 -webkit-transform: translate3d(0, -10px, 0);\n                 transform: translate3d(0, -10px, 0)\n             }\n         }\n         @-webkit-keyframes fadeInLeft {\n             from {\n                 opacity: 0;\n                 -webkit-transform: translate3d(-10px, 0, 0);\n                 transform: translate3d(-10px, 0, 0);\n             }\n             to {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none;\n             }\n         }\n         @keyframes fadeInLeft {\n             from {\n                 opacity: 0;\n                 -webkit-transform: translate3d(-10px, 0, 0);\n                 transform: translate3d(-10px, 0, 0);\n             }\n             to {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none;\n             }\n         }\n         @-webkit-keyframes fadeInRight {\n             from {\n                 opacity: 0;\n                 -webkit-transform: translate3d(10px, 0, 0);\n                 transform: translate3d(10px, 0, 0);\n             }\n             to {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none;\n             }\n         }\n         @keyframes fadeInRight {\n             from {\n                 opacity: 0;\n                 -webkit-transform: translate3d(10px, 0, 0);\n                 transform: translate3d(10px, 0, 0);\n             }\n             to {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none;\n             }\n         }\n         .fadeInDown,\n         .fadeInLeft,\n         .fadeInRight,\n         .fadeInTop,\n         .fadeOutTop{\n             -webkit-animation-fill-mode: both;\n             -webkit-animation-duration: .5s;\n             animation-duration: .5s;\n             animation-fill-mode: both;\n         }\n         .fadeInDown {\n             -webkit-animation-name: fadeInDown;\n             animation-name: fadeInDown;\n         }\n         .fadeInLeft {\n             -webkit-animation-name: fadeInLeft;\n             animation-name: fadeInLeft;\n         }\n         .fadeInRight {\n             -webkit-animation-name: fadeInRight;\n             animation-name: fadeInRight;\n         }\n         .fadeInTop {\n             -webkit-animation-name: fadeInTop;\n             animation-name: fadeInTop;\n         }\n         .fadeOutTop {\n             -webkit-animation-name: fadeOutTop;\n             animation-name: fadeOutTop;\n         }';
+var Modalstyles = '\n        /* Modal styles */\n         body.modal-mode {\n             overflow: hidden !important\n         }\n         .modal-body,\n         .modal-title {\n             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;\n             line-height: 1.42857143;\n             color: #333\n         }\n         .js_modal,\n         .modal-backdrop {\n             position: fixed;\n             top: 0;\n             right: 0;\n             bottom: 0;\n             left: 0\n         }\n         .modal-backdrop {\n             z-index: 1040;\n             background-color: #000;\n             opacity: .5\n         }\n\n         .modal-cover-photo img{\n            width: 100%;\n         }\n\n         .js_modal {\n             /*pointer-events: none;*/\n             z-index: 10000;\n             overflow-y: scroll;\n             -webkit-overflow-scrolling: touch;\n             outline: 0\n         }\n         .js_dialog {\n             pointer-events: all;\n             position: relative;\n             width: auto;\n             margin: 10px\n         }\n         .modal-header .close {\n             margin-top: -2px;\n             position: static;\n             height: 30px;\n         }\n         .modal-theme-blue .close {\n             text-shadow: none;\n             opacity: 1;\n             font-size: 31px;\n             font-weight: normal;\n         }\n         .modal-theme-blue .close span {\n             color: white;\n         }\n         .modal-theme-blue .close span:hover {\n             color: #fbc217;\n         }\n         .close.standalone {\n             position: absolute;\n             right: 15px;\n             top: 13px;\n             z-index: 1;\n             height: 30px;\n         }\n         .modal-title {\n             margin: 0;\n             font-size: 18px;\n             font-weight: 500\n         }\n         button.close {\n             -webkit-appearance: none;\n             padding: 0;\n             cursor: pointer;\n             background: 0 0;\n             border: 0\n         }\n         .modal-content {\n             position: relative;\n             background-color: #fff;\n             background-clip: padding-box;\n             border-radius: 2px;\n             outline: 0;\n             box-shadow: 0 3px 9px rgba(0, 0, 0, .5)\n         }\n         .modal-theme-blue .modal-content {\n            background-color: #4a6173;\n         }\n         .modal-header {\n             min-height: 16.43px;\n             padding: 15px;\n             border-bottom: 1px solid #e5e5e5;\n             min-height: 30px\n         }\n         .modal-theme-blue .modal-header {\n            border-bottom: none;\n         }\n         .modal-body {\n             position: relative;\n             padding: 15px;\n             font-size: 14px\n         }\n         .close {\n             float: right;\n             font-size: 21px;\n             font-weight: 700;\n             line-height: 1;\n             color: #000;\n             text-shadow: 0 1px 0 #fff;\n             opacity: .2\n         }\n         .js_dialog.js_modal-full {\n            margin: 0;\n            height: 100%;\n            width: 100%;\n         }\n         .js_dialog.js_modal-full .modal-content {\n            border: none;\n            box-shadow: none;\n            border-radius: 0;\n            height: 100%;\n         }\n         @media (min-width: 768px) {\n             .js_dialog {\n                 width: 600px;\n                 margin: 30px auto\n             }\n             .modal-content {\n                 box-shadow: 0 5px 15px rgba(0, 0, 0, .5)\n             }\n             .js_modal-sm {\n                 width: 300px\n             }\n         }\n         @media (min-width: 992px) {\n             .js_modal-lg {\n                 width: 980px\n             }\n         }\n\n         .ghost-focus {\n             background: transparent;\n             z-index: 1000;\n         }\n\n\n         /*** Animations ***/\n         @-webkit-keyframes fadeInDown {\n             from {\n                 opacity: 0;\n                 -webkit-transform: translate3d(0, -10px, 0);\n                 transform: translate3d(0, -10px, 0);\n             }\n             to {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none;\n             }\n         }\n         @keyframes fadeInDown {\n             from {\n                 opacity: 0;\n                 -webkit-transform: translate3d(0, -10px, 0);\n                 transform: translate3d(0, -10px, 0);\n             }\n             to {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none;\n             }\n         }\n         @-webkit-keyframes fadeInTop {\n             from {\n                 opacity: 0;\n                 -webkit-transform: translate3d(0, 10px, 0);\n                 transform: translate3d(0, 10px, 0);\n             }\n             to {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none;\n             }\n         }\n         @keyframes fadeInTop {\n             from {\n                 opacity: 0;\n                 -webkit-transform: translate3d(0, 10px, 0);\n                 transform: translate3d(0, 10px, 0);\n             }\n             to {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none;\n             }\n         }\n         @-webkit-keyframes fadeOutTop {\n             0% {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none\n             }\n             100% {\n                 opacity: 0;\n                 -webkit-transform: translate3d(0, -10px, 0);\n                 transform: translate3d(0, -10px, 0)\n             }\n         }\n         @keyframes fadeOutTop {\n             0% {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none\n             }\n             100% {\n                 opacity: 0;\n                 -webkit-transform: translate3d(0, -10px, 0);\n                 transform: translate3d(0, -10px, 0)\n             }\n         }\n         @-webkit-keyframes fadeInLeft {\n             from {\n                 opacity: 0;\n                 -webkit-transform: translate3d(-10px, 0, 0);\n                 transform: translate3d(-10px, 0, 0);\n             }\n             to {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none;\n             }\n         }\n         @keyframes fadeInLeft {\n             from {\n                 opacity: 0;\n                 -webkit-transform: translate3d(-10px, 0, 0);\n                 transform: translate3d(-10px, 0, 0);\n             }\n             to {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none;\n             }\n         }\n         @-webkit-keyframes fadeInRight {\n             from {\n                 opacity: 0;\n                 -webkit-transform: translate3d(10px, 0, 0);\n                 transform: translate3d(10px, 0, 0);\n             }\n             to {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none;\n             }\n         }\n         @keyframes fadeInRight {\n             from {\n                 opacity: 0;\n                 -webkit-transform: translate3d(10px, 0, 0);\n                 transform: translate3d(10px, 0, 0);\n             }\n             to {\n                 opacity: 1;\n                 -webkit-transform: none;\n                 transform: none;\n             }\n         }\n         .fadeInDown,\n         .fadeInLeft,\n         .fadeInRight,\n         .fadeInTop,\n         .fadeOutTop{\n             -webkit-animation-fill-mode: both;\n             -webkit-animation-duration: .5s;\n             animation-duration: .5s;\n             animation-fill-mode: both;\n         }\n         .fadeInDown {\n             -webkit-animation-name: fadeInDown;\n             animation-name: fadeInDown;\n         }\n         .fadeInLeft {\n             -webkit-animation-name: fadeInLeft;\n             animation-name: fadeInLeft;\n         }\n         .fadeInRight {\n             -webkit-animation-name: fadeInRight;\n             animation-name: fadeInRight;\n         }\n         .fadeInTop {\n             -webkit-animation-name: fadeInTop;\n             animation-name: fadeInTop;\n         }\n         .fadeOutTop {\n             -webkit-animation-name: fadeOutTop;\n             animation-name: fadeOutTop;\n         }';
 
 var Modal = function () {
     function Modal(options) {
@@ -339,6 +337,7 @@ var Modal = function () {
         this.defaults = {
             title: '',
             message: '',
+            coverPhoto: '',
             theme: 'classic',
             withBackdrop: true,
             size: 'normal', //large small full
@@ -392,9 +391,11 @@ var Modal = function () {
                 this.backdrop = new Elm('div.modal-backdrop', document.body);
             }
 
-            var header = this.defaults.title ? '<div class="modal-header">\n                    <button type="button" class="close"><span>×</span></button>\n                    <h4 class="modal-title" id="myModalLabel">' + this.defaults.title + '</h4>\n                </div>' : '<button type="button" class="close standalone"><span>×</span></button>';
+            var header = this.defaults.title ? '<div class="modal-header">\n                    <button type="button" class="close"><span>\xD7</span></button>\n                    <h4 class="modal-title" id="myModalLabel">' + this.defaults.title + '</h4>\n                </div>' : '<button type="button" class="close standalone"><span>×</span></button>';
 
-            var main = '\n                <div class="js_modal fadeInDown">\n                    <div class="js_dialog ' + sizeClass + '">\n                        <div class="modal-content">\n                            ' + header + '\n                            <div class="modal-body">\n                                <div>' + this.defaults.message + '</div>\n                            </div>\n                        </div>\n                    </div>\n                </div>';
+            var coverPhoto = this.defaults.coverPhoto ? '\n            <div class="modal-cover-photo">\n                <img src="' + this.defaults.coverPhoto + '" alt="Modal cover photo" />\n            </div>\n        ' : '';
+
+            var main = '\n                <div class="js_modal fadeInDown">\n                    <div class="js_dialog ' + sizeClass + '">\n                        <div class="modal-content">\n                            ' + header + '\n                            ' + coverPhoto + '\n                            <div class="modal-body">\n                                <div>' + this.defaults.message + '</div>\n                            </div>\n                        </div>\n                    </div>\n                </div>';
 
             this.modal = new Elm('div', {
                 html: main, 'class': 'modal-theme-' + this.defaults.theme,
@@ -447,7 +448,7 @@ var Modal = function () {
         value: function _close() {
             var _this4 = this;
 
-            var cb = arguments.length <= 0 || arguments[0] === undefined ? function () {} : arguments[0];
+            var cb = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function () {};
 
             if (this.defaults.withBackdrop) {
                 Utils.fadeOutRemove(this.backdrop);
@@ -572,7 +573,7 @@ var Alert = function () {
                 this.backdrop = new Elm('div.modal-backdrop', document.body);
             }
 
-            var header = this.defaults.title ? '<div class="modal-header">\n                    <button type="button" class="close"><span>×</span></button>\n                    <h4 class="modal-title" id="myModalLabel">' + this.defaults.title + '</h4>\n                </div>' : '<button type="button" class="close standalone"><span>×</span></button>';
+            var header = this.defaults.title ? '<div class="modal-header">\n                    <button type="button" class="close"><span>\xD7</span></button>\n                    <h4 class="modal-title" id="myModalLabel">' + this.defaults.title + '</h4>\n                </div>' : '<button type="button" class="close standalone"><span>×</span></button>';
 
             var main = '\n                <div class="js_modal fadeInDown">\n                    <div class="js_dialog ' + sizeClass + '">\n                        <div class="modal-content">\n                            ' + header + '\n                            <div class="modal-body">\n                                <div>' + this.defaults.message + '</div>\n                            </div>\n                        </div>\n                    </div>\n                </div>';
 
@@ -623,7 +624,7 @@ var Alert = function () {
         value: function _close() {
             var _this3 = this;
 
-            var cb = arguments.length <= 0 || arguments[0] === undefined ? function () {} : arguments[0];
+            var cb = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function () {};
 
             if (this.defaults.withBackdrop) {
                 Utils.fadeOutRemove(this.backdrop);
@@ -654,7 +655,7 @@ Alert.prototype.closeAll = function () {
 };
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -846,7 +847,6 @@ var FormGenerator = function () {
 
     _createClass(FormGenerator, [{
         key: 'onChange',
-        //TODO add validatiors
         value: function onChange(e) {}
 
         /**
@@ -857,7 +857,7 @@ var FormGenerator = function () {
     }, {
         key: 'getKeychain',
         value: function getKeychain(el) {
-            var raw = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+            var raw = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
             //var keyList = ['value']; //list is reversed so this is the end key // reference for adding value to the end
             var keyList = []; //list is reversed so this is the end key
@@ -876,8 +876,8 @@ var FormGenerator = function () {
         value: function getAllKeychains() {
             var _this = this;
 
-            var prefix = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
-            var suffix = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+            var prefix = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+            var suffix = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
             prefix = prefix ? prefix += '.' : '';
             suffix = suffix ? '.' + suffix : '';
@@ -914,7 +914,7 @@ var FormGenerator = function () {
     }, {
         key: 'getCycleKey',
         value: function getCycleKey(key) {
-            var reverse = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+            var reverse = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
             if (this.arrayIndex || this.arrayIndex === 0) {
                 if (reverse) {
@@ -1016,7 +1016,7 @@ var FormGenerator = function () {
     }, {
         key: 'subFormWrapper',
         value: function subFormWrapper(parent) {
-            var toggle = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+            var toggle = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
             var key = this.getCycleKey(this.currentKey);
             var label = void 0;
@@ -1031,22 +1031,20 @@ var FormGenerator = function () {
             }, parent);
             var body = new Elm('div.panel-body', panel);
             if (toggle) {
-                (function () {
 
-                    var plus = new Elm('span', {
-                        cls: 'glyphicon glyphicon-plus',
-                        css: {
-                            'margin-left': '10px',
-                            'cursor': 'pointer',
-                            'font-size': '16px'
-                        }
-                    }, label);
-                    label.addEventListener('click', function (e) {
-                        panel.style.display = 'block';
-                        Utils.fadeOutRemove(plus);
-                    });
-                    panel.style.display = 'none';
-                })();
+                var plus = new Elm('span', {
+                    cls: 'glyphicon glyphicon-plus',
+                    css: {
+                        'margin-left': '10px',
+                        'cursor': 'pointer',
+                        'font-size': '16px'
+                    }
+                }, label);
+                label.addEventListener('click', function (e) {
+                    panel.style.display = 'block';
+                    Utils.fadeOutRemove(plus);
+                });
+                panel.style.display = 'none';
             }
 
             return body;
@@ -1281,21 +1279,19 @@ var FormGenerator = function () {
             }
 
             if (model.toggle) {
-                (function () {
-                    var label = wrapper.previousElementSibling;
-                    var plus = new Elm('span', {
-                        cls: 'glyphicon glyphicon-plus',
-                        css: {
-                            'margin-left': '10px',
-                            'cursor': 'pointer'
-                        }
-                    }, label);
-                    label.addEventListener('click', function (e) {
-                        wrapper.style.display = 'block';
-                        Utils.fadeOutRemove(plus);
-                    });
-                    wrapper.style.display = 'none';
-                })();
+                var label = wrapper.previousElementSibling;
+                var plus = new Elm('span', {
+                    cls: 'glyphicon glyphicon-plus',
+                    css: {
+                        'margin-left': '10px',
+                        'cursor': 'pointer'
+                    }
+                }, label);
+                label.addEventListener('click', function (e) {
+                    wrapper.style.display = 'block';
+                    Utils.fadeOutRemove(plus);
+                });
+                wrapper.style.display = 'none';
             }
             // Some form elements have children. E.g select menus
             try {
@@ -1669,7 +1665,7 @@ var Droppad = function () {
         function Droppad(elm, options) {
             _classCallCheck(this, Droppad);
 
-            var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Droppad).call(this));
+            var _this = _possibleConstructorReturn(this, (Droppad.__proto__ || Object.getPrototypeOf(Droppad)).call(this));
 
             var defaultOpt = JSON.parse(JSON.stringify(Default));
             _this.defaults = Utils.extend(defaultOpt, options);
@@ -1765,20 +1761,18 @@ var Droppad = function () {
                 var self = this;
                 // add event to document and listen for droppad-clickable elements
                 if (!this.__proto__.isClickable) {
-                    (function () {
-                        var clickInput = function clickInput(e) {
-                            var clsList = Array.prototype.slice.call(e.target.classList);
-                            if (clsList.indexOf('droppad-clickable') > -1) {
-                                var droppad = Utils.findAncestor(e.target, 'imageCloud');
-                                var input = droppad.querySelector('.droppad-input');
-                                input.click();
-                            }
-                        };
+                    var clickInput = function clickInput(e) {
+                        var clsList = Array.prototype.slice.call(e.target.classList);
+                        if (clsList.indexOf('droppad-clickable') > -1) {
+                            var droppad = Utils.findAncestor(e.target, 'imageCloud');
+                            var input = droppad.querySelector('.droppad-input');
+                            input.click();
+                        }
+                    };
 
-                        document.addEventListener('click', function (e) {
-                            clickInput(e);
-                        });
-                    })();
+                    document.addEventListener('click', function (e) {
+                        clickInput(e);
+                    });
                 }
                 this.__proto__.isClickable = true;
             }
@@ -1856,8 +1850,7 @@ var Droppad = function () {
                     var thumb = new Elm('div.droppad-thumbnail', {
                         cls: 'uid-' + uid,
                         html: CloseIcon
-                    }, //click: () => {this.remove(files[i]['uid'])} // this would be a nice place to enlarge the thumbnail
-                    _this5.el_thumbails);
+                    }, _this5.el_thumbails);
                     var close = thumb.querySelector('.icon-close-button');
                     close.addEventListener('click', function () {
                         _this5.remove(uid);
@@ -1881,8 +1874,7 @@ var Droppad = function () {
                     var thumb = new Elm('div.droppad-thumbnail', {
                         cls: 'uid-' + files[i]['uid'],
                         html: CloseIcon
-                    }, //click: () => {this.remove(files[i]['uid'])} // this would be a nice place to enlarge the thumbnail
-                    _this6.el_thumbails);
+                    }, _this6.el_thumbails);
                     var close = thumb.querySelector('.icon-close-button');
                     close.addEventListener('click', function () {
                         _this6.remove(files[i]['uid']);
@@ -2042,7 +2034,6 @@ var Droppad = function () {
                     totals: Utils.range(files.length, 0, 0),
                     loads: Utils.range(files.length, 0, 0) };
 
-                // returns e.q [0,0,0] for three files
                 this.filesLenght = files.length;
 
                 if (this.defaults.customHandler) {
@@ -2282,8 +2273,6 @@ var Backdrop = function () {
         allowMany: false,
         closeOnClick: true };
 
-    //TODO emmitt this event
-
     var Backdrop = function () {
         function Backdrop(options) {
             _classCallCheck(this, Backdrop);
@@ -2400,7 +2389,7 @@ var Preloader = function () {
         function Preloader(pathList, options) {
             _classCallCheck(this, Preloader);
 
-            var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Preloader).call(this));
+            var _this = _possibleConstructorReturn(this, (Preloader.__proto__ || Object.getPrototypeOf(Preloader)).call(this));
 
             _this.defaults = {
                 prefix: null
@@ -2506,7 +2495,7 @@ var Timeline = function () {
         function Timeline(wrapper, options) {
             _classCallCheck(this, Timeline);
 
-            var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Timeline).call(this));
+            var _this = _possibleConstructorReturn(this, (Timeline.__proto__ || Object.getPrototypeOf(Timeline)).call(this));
 
             var defaultOpt = JSON.parse(JSON.stringify(Default));
             _this.defaults = Utils.extend(defaultOpt, options);
@@ -2557,7 +2546,7 @@ var Timeline = function () {
         }, {
             key: 'setData',
             value: function setData() {
-                var data = arguments.length <= 0 || arguments[0] === undefined ? this.defaults.data : arguments[0];
+                var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.defaults.data;
 
                 this.data = data;
                 this.drawTimeline();

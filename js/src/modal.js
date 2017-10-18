@@ -32,6 +32,10 @@ const Modalstyles = `
              opacity: .5
          }
 
+         .modal-cover-photo img{
+            width: 100%;
+         }
+
          .js_modal {
              /*pointer-events: none;*/
              z-index: 10000;
@@ -310,6 +314,7 @@ class Modal {
         this.defaults = {
             title: '',
             message: '',
+            coverPhoto: '',
             theme: 'classic',
             withBackdrop: true,
             size: 'normal',//large small full
@@ -365,12 +370,19 @@ class Modal {
                     <h4 class="modal-title" id="myModalLabel">${this.defaults.title}</h4>
                 </div>` : '<button type="button" class="close standalone"><span>×</span></button>';
 
+        let coverPhoto = this.defaults.coverPhoto ? 
+        `
+            <div class="modal-cover-photo">
+                <img src="${this.defaults.coverPhoto}" alt="Modal cover photo" />
+            </div>
+        ` : '';
 
         let main = `
                 <div class="js_modal fadeInDown">
                     <div class="js_dialog ${sizeClass}">
                         <div class="modal-content">
                             ${header}
+                            ${coverPhoto}
                             <div class="modal-body">
                                 <div>${this.defaults.message}</div>
                             </div>
@@ -389,14 +401,14 @@ class Modal {
                 if(!Utils.findAncestor(e.target, 'js_dialog')) {
                     this.close();
                 }
-            }
+            };
         }
         let btn = this.modal.querySelectorAll('.close, .close-trigger');
         this.chainDialog = this.modal.querySelector('.js_dialog');
 
 
         for (var i=0; i<btn.length; i++) {
-            btn[i].addEventListener('click', ()=> { this.close() }, false);
+            btn[i].addEventListener('click', ()=> { this.close(); }, false);
         }
 
         if (this.defaults.type === 'modal') {
@@ -410,7 +422,7 @@ class Modal {
         //Some js generated content may depend on parent with. setTimeout makes sure everything is in place before onOpen in called
         setTimeout(()=> {
             this.defaults.onOpen();
-        })
+        });
     }
 
     _injectStyles() {

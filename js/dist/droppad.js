@@ -59,7 +59,7 @@ var Droppad = function () {
         function Droppad(elm, options) {
             _classCallCheck(this, Droppad);
 
-            var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Droppad).call(this));
+            var _this = _possibleConstructorReturn(this, (Droppad.__proto__ || Object.getPrototypeOf(Droppad)).call(this));
 
             var defaultOpt = JSON.parse(JSON.stringify(Default));
             _this.defaults = Utils.extend(defaultOpt, options);
@@ -155,20 +155,18 @@ var Droppad = function () {
                 var self = this;
                 // add event to document and listen for droppad-clickable elements
                 if (!this.__proto__.isClickable) {
-                    (function () {
-                        var clickInput = function clickInput(e) {
-                            var clsList = Array.prototype.slice.call(e.target.classList);
-                            if (clsList.indexOf('droppad-clickable') > -1) {
-                                var droppad = Utils.findAncestor(e.target, 'imageCloud');
-                                var input = droppad.querySelector('.droppad-input');
-                                input.click();
-                            }
-                        };
+                    var clickInput = function clickInput(e) {
+                        var clsList = Array.prototype.slice.call(e.target.classList);
+                        if (clsList.indexOf('droppad-clickable') > -1) {
+                            var droppad = Utils.findAncestor(e.target, 'imageCloud');
+                            var input = droppad.querySelector('.droppad-input');
+                            input.click();
+                        }
+                    };
 
-                        document.addEventListener('click', function (e) {
-                            clickInput(e);
-                        });
-                    })();
+                    document.addEventListener('click', function (e) {
+                        clickInput(e);
+                    });
                 }
                 this.__proto__.isClickable = true;
             }
@@ -246,8 +244,7 @@ var Droppad = function () {
                     var thumb = new Elm('div.droppad-thumbnail', {
                         cls: 'uid-' + uid,
                         html: CloseIcon
-                    }, //click: () => {this.remove(files[i]['uid'])} // this would be a nice place to enlarge the thumbnail
-                    _this5.el_thumbails);
+                    }, _this5.el_thumbails);
                     var close = thumb.querySelector('.icon-close-button');
                     close.addEventListener('click', function () {
                         _this5.remove(uid);
@@ -271,8 +268,7 @@ var Droppad = function () {
                     var thumb = new Elm('div.droppad-thumbnail', {
                         cls: 'uid-' + files[i]['uid'],
                         html: CloseIcon
-                    }, //click: () => {this.remove(files[i]['uid'])} // this would be a nice place to enlarge the thumbnail
-                    _this6.el_thumbails);
+                    }, _this6.el_thumbails);
                     var close = thumb.querySelector('.icon-close-button');
                     close.addEventListener('click', function () {
                         _this6.remove(files[i]['uid']);
@@ -432,7 +428,6 @@ var Droppad = function () {
                     totals: Utils.range(files.length, 0, 0),
                     loads: Utils.range(files.length, 0, 0) };
 
-                // returns e.q [0,0,0] for three files
                 this.filesLenght = files.length;
 
                 if (this.defaults.customHandler) {

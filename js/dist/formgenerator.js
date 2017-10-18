@@ -1,6 +1,6 @@
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -192,7 +192,6 @@ var FormGenerator = function () {
 
     _createClass(FormGenerator, [{
         key: 'onChange',
-        //TODO add validatiors
         value: function onChange(e) {}
 
         /**
@@ -203,7 +202,7 @@ var FormGenerator = function () {
     }, {
         key: 'getKeychain',
         value: function getKeychain(el) {
-            var raw = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+            var raw = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
             //var keyList = ['value']; //list is reversed so this is the end key // reference for adding value to the end
             var keyList = []; //list is reversed so this is the end key
@@ -222,8 +221,8 @@ var FormGenerator = function () {
         value: function getAllKeychains() {
             var _this = this;
 
-            var prefix = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
-            var suffix = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+            var prefix = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+            var suffix = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
             prefix = prefix ? prefix += '.' : '';
             suffix = suffix ? '.' + suffix : '';
@@ -260,7 +259,7 @@ var FormGenerator = function () {
     }, {
         key: 'getCycleKey',
         value: function getCycleKey(key) {
-            var reverse = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+            var reverse = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
             if (this.arrayIndex || this.arrayIndex === 0) {
                 if (reverse) {
@@ -362,7 +361,7 @@ var FormGenerator = function () {
     }, {
         key: 'subFormWrapper',
         value: function subFormWrapper(parent) {
-            var toggle = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+            var toggle = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
             var key = this.getCycleKey(this.currentKey);
             var label = void 0;
@@ -377,22 +376,20 @@ var FormGenerator = function () {
             }, parent);
             var body = new Elm('div.panel-body', panel);
             if (toggle) {
-                (function () {
 
-                    var plus = new Elm('span', {
-                        cls: 'glyphicon glyphicon-plus',
-                        css: {
-                            'margin-left': '10px',
-                            'cursor': 'pointer',
-                            'font-size': '16px'
-                        }
-                    }, label);
-                    label.addEventListener('click', function (e) {
-                        panel.style.display = 'block';
-                        Utils.fadeOutRemove(plus);
-                    });
-                    panel.style.display = 'none';
-                })();
+                var plus = new Elm('span', {
+                    cls: 'glyphicon glyphicon-plus',
+                    css: {
+                        'margin-left': '10px',
+                        'cursor': 'pointer',
+                        'font-size': '16px'
+                    }
+                }, label);
+                label.addEventListener('click', function (e) {
+                    panel.style.display = 'block';
+                    Utils.fadeOutRemove(plus);
+                });
+                panel.style.display = 'none';
             }
 
             return body;
@@ -627,21 +624,19 @@ var FormGenerator = function () {
             }
 
             if (model.toggle) {
-                (function () {
-                    var label = wrapper.previousElementSibling;
-                    var plus = new Elm('span', {
-                        cls: 'glyphicon glyphicon-plus',
-                        css: {
-                            'margin-left': '10px',
-                            'cursor': 'pointer'
-                        }
-                    }, label);
-                    label.addEventListener('click', function (e) {
-                        wrapper.style.display = 'block';
-                        Utils.fadeOutRemove(plus);
-                    });
-                    wrapper.style.display = 'none';
-                })();
+                var label = wrapper.previousElementSibling;
+                var plus = new Elm('span', {
+                    cls: 'glyphicon glyphicon-plus',
+                    css: {
+                        'margin-left': '10px',
+                        'cursor': 'pointer'
+                    }
+                }, label);
+                label.addEventListener('click', function (e) {
+                    wrapper.style.display = 'block';
+                    Utils.fadeOutRemove(plus);
+                });
+                wrapper.style.display = 'none';
             }
             // Some form elements have children. E.g select menus
             try {
