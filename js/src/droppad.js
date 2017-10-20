@@ -223,11 +223,11 @@ const Droppad = (() => {
 
         constructor(elm, options) {
             super();
-            let defaultOpt = JSON.parse(JSON.stringify(Default))
+            let defaultOpt = JSON.parse(JSON.stringify(Default));
             this.defaults = Utils.extend(defaultOpt, options);
             this.droppad = elm;
             this.currentImage = null;
-            this.uid = 0
+            this.uid = 0;
             this.beforeElmQue = [];
             this.afterElmQue = [];
             this.uploadedFiles = {};
@@ -293,7 +293,7 @@ const Droppad = (() => {
                 if(!this.defaults.thumbnailParent) {
                     this.el_thumbails = new Elm('div.droppad-thumbnails', this.droppad);
                 } else {
-                    this.el_thumbails = this.defaults.thumbnailParent
+                    this.el_thumbails = this.defaults.thumbnailParent;
                 }
             }
 
@@ -334,7 +334,7 @@ const Droppad = (() => {
                         let input = droppad.querySelector('.droppad-input');
                         input.click();
                     }
-                }
+                };
 
                 document.addEventListener('click', (e) => {
                     clickInput(e);
@@ -353,7 +353,7 @@ const Droppad = (() => {
 
         uploadModalTrigger() {
             //Method to call if you need external trigger like button
-            this.el_clickableInput.click()
+            this.el_clickableInput.click();
         }
 
         setBackground() {
@@ -396,14 +396,14 @@ const Droppad = (() => {
             if(!this.defaults.initThumbnails.length) return;
             for (let i = 0; i < this.defaults.initThumbnails.length; i++) {
                 let uid = ++this.uid;
-                let imageUrl = this.defaults.initThumbnails[i]
+                let imageUrl = this.defaults.initThumbnails[i];
                 let thumb = new Elm('div.droppad-thumbnail', {
                     cls: 'uid-' + uid,
                     html: CloseIcon,
                     //click: () => {this.remove(files[i]['uid'])} // this would be a nice place to enlarge the thumbnail
                 }, this.el_thumbails);
                 let close = thumb.querySelector('.icon-close-button');
-                close.addEventListener('click', ()=> {this.remove(uid)}, false);
+                close.addEventListener('click', ()=> {this.remove(uid);}, false);
                 thumb.style.backgroundImage = 'url(' + imageUrl + ')';
                 this.uploadedFiles['uid-' + this.uid] = {image: imageUrl, file: {uid: uid}};
             }
@@ -413,12 +413,12 @@ const Droppad = (() => {
             let len = files.length > this.defaults.maxFiles ? this.defaults.maxFiles : files.length;
             for (let i = 0; i < len; i++) {
                 let thumb = new Elm('div.droppad-thumbnail', {
-                    cls: 'uid-' + files[i]['uid'],
+                    cls: 'uid-' + files[i].uid,
                     html: CloseIcon,
                     //click: () => {this.remove(files[i]['uid'])} // this would be a nice place to enlarge the thumbnail
                 }, this.el_thumbails);
                 let close = thumb.querySelector('.icon-close-button');
-                close.addEventListener('click', ()=> {this.remove(files[i]['uid'])}, false);
+                close.addEventListener('click', ()=> {this.remove(files[i].uid);}, false);
 
                 let file = files[i];
                 var reader = new FileReader();
@@ -464,7 +464,7 @@ const Droppad = (() => {
 
             //Add reference id to each file so we can access it throug thumbnails
             for(let i = 0; i < files.length; i++) {
-                files[i]['uid'] = ++this.uid;
+                files[i].uid = ++this.uid;
             }
             if (this.defaults.backgroundLoading) {
                 this.showAsBackground(files);
@@ -482,7 +482,7 @@ const Droppad = (() => {
                 function size(file) {
                     const maxFilesize = self.defaults.maxFilesize * 1024 * 1024;
                     if (file.size > maxFilesize) {
-                        errors.push(`File is ${self.formatBytes(file.size).human}. Thats larger than the maximum file size ${self.formatBytes(maxFilesize).human}`)
+                        errors.push(`File is ${self.formatBytes(file.size).human}. Thats larger than the maximum file size ${self.formatBytes(maxFilesize).human}`);
                     }
                 },
                 function type(file) {
@@ -491,7 +491,7 @@ const Droppad = (() => {
                     let acceptedFiles = self.defaults.acceptedFiles.replace(/ /g, '').split(',');
                     // Check if mimeType is allowed
                     if (acceptedFiles.indexOf(mimeType) < 0) {
-                        errors.push(`File type ${mimeType} is not allowed`)
+                        errors.push(`File type ${mimeType} is not allowed`);
                     }
                 }
             ];
@@ -530,7 +530,7 @@ const Droppad = (() => {
 
             let xhr = new XMLHttpRequest();
             //add tailing slash if doesn't exists
-            let url = this.defaults.url
+            let url = this.defaults.url;
             xhr.open('POST', url, true);
             for (var key in headers) {
                 xhr.setRequestHeader(key, headers[key]);
@@ -546,7 +546,8 @@ const Droppad = (() => {
                     this.uploadError(data);
                     //TODO show this to the user
                 }
-            }
+            };
+
             xhr.upload.addEventListener('progress', (e) => {
                 this.chunkTotal.totals[id] = e.total;
                 this.chunkTotal.loads[id] = e.loaded;
@@ -599,7 +600,7 @@ const Droppad = (() => {
         }
 
         uploadSuccess(data, file) {
-            data['file'] = file;
+            data.file = file;
             this.uploadedFiles['uid-' + file.uid] = data;
 
             this.trigger('success', data);
