@@ -188,7 +188,8 @@ const Droppad = (() => {
         backgroundLoading: true,
         thumbnailLoading: false,
         thumbnailParent: null,
-        initThumbnails: [] // ['http://example.jpg', 'http://example2.jpg']
+        initThumbnails: [], // ['http://example.jpg', 'http://example2.jpg'],
+        headers: {}
     };
 
     let Template = `
@@ -505,10 +506,15 @@ const Droppad = (() => {
 
         uploadSingle(file, id) {
 
-            let headers = {
-                'X-Requested-With': 'XMLHttpRequest',
-                'Accept': '*/*'
-            };
+            let headers = this.defaults.headers || {};
+            
+            if(!headers['X-Requested-With']){
+                headers['X-Requested-With'] = 'XMLHttpRequest';
+            }
+            
+            if(!headers['Accept']){
+                headers['Accept'] = '*/*';
+            }
 
             let formData = new FormData();
 
