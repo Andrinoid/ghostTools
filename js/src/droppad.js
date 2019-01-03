@@ -506,7 +506,7 @@ const Droppad = (() => {
 
         uploadSingle(file, id) {
 
-            let headers = this.default.headers || {};
+            let headers = this.defaults.headers || {};
             
             if(!headers['X-Requested-With']){
                 headers['X-Requested-With'] = 'XMLHttpRequest';
