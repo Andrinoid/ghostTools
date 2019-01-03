@@ -188,8 +188,8 @@ const Droppad = (() => {
         backgroundLoading: true,
         thumbnailLoading: false,
         thumbnailParent: null,
-        initThumbnails: [] // ['http://example.jpg', 'http://example2.jpg'],
-        headers: {},
+        initThumbnails: [], // ['http://example.jpg', 'http://example2.jpg'],
+        headers: {}
     };
 
     let Template = `
